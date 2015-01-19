@@ -1,0 +1,22 @@
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- Author: jorojas -->
+ 
+<struts>
+    <!-- Add your configuration elements here -->
+    <!-- modulo de Prueba -->
+    <package name="prueba" namespace="/prueba" extends="default">
+        <action name="pruebaAction">
+            <interceptor-ref name="sessionExpirayStack" />
+            <interceptor-ref name="FuncionAccesoInterceptor">
+                <param name="idModulo">CHGUAR</param>
+                <param name="idFuncion">CONGENO</param> <!-- Se colocó esta funcion a propósito para que arrojara mensaje de acceso denegado -->
+            </interceptor-ref>
+                 
+            <result name="success">/WEB-INF/web/inicio/perfil.jsp</result>
+        </action>
+    </package>
+    
+</struts>
