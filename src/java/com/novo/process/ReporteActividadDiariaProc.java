@@ -170,6 +170,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         //Calcular %Rep
         totalesCO.setPorcRep(juridica.getPorcRep());
         
+        
         this.reporteCo.put("juridica", juridica);
         this.reporteCo.put("totales", totalesCO);
         
@@ -366,6 +367,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
             
         } catch(Exception ex){
             log.error(ex);
+            ex.printStackTrace();
         }
         
         return myWorkBook;

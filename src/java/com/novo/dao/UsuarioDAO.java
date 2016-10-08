@@ -43,8 +43,11 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery,RCConfig{
         
         log.info("Ejecutando ["+query+"]"+UsuarioDAO.INFORMIX);
         try{
+            log.info("equis" +ds);
             Dbinterface dbi=ds.get(UsuarioDAO.INFORMIX);
+             
             dbi.dbreset();
+           
         
             if (dbi.executeQuery(query) == 0){
                 if (dbi.nextRecord()){

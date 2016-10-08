@@ -76,10 +76,11 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            dbi.dbClose();
+            //dbi.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica dia "+this.pais);
             log.error("Causa: "+e);
+            e.printStackTrace();
         }
         
         log.info("obtenerTarjEmitidasPersonaJurDia [cantidad: "+cantidad+"]"+this.pais);
@@ -128,10 +129,11 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            dbi.dbClose();
+            //dbi.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica mes "+this.pais);
             log.error("Causa: "+e);
+            e.printStackTrace();
         }
         
         log.info("obtenerTarjEmitidasPersonaJurMes [cantidad: "+cantidad+"]"+this.pais);
@@ -182,10 +184,11 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            dbo.dbClose();
+            //dbo.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural mes "+this.pais);
             log.error("Causa: "+e);
+            e.printStackTrace();
         }
         
         return cantidad;
@@ -233,10 +236,11 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            dbo.dbClose();
+            //dbo.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural dia "+this.pais);
             log.error("Causa: "+e);
+            e.printStackTrace();
         }
         
         log.info("obtenerTarjEmitidasPersonaNatDiaVe [cantidad: "+cantidad+"]");

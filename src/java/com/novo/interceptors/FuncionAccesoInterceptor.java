@@ -43,8 +43,14 @@ public class FuncionAccesoInterceptor implements Interceptor {
     
     @Override
     public String intercept(ActionInvocation actionInvocation) throws Exception {
+         log.info("Interceptando petición...");
         Map session = actionInvocation.getInvocationContext().getSession();
         UsuarioSesion usuarioSesion = (UsuarioSesion)session.get("usuarioSesion");
+        
+        if (usuarioSesion == null) {
+            return actionInvocation.invoke();
+        }
+        
         log.info("FuncionAccesoInterceptor: Validando si ["+usuarioSesion.getIdUsuario()+"] "
                 + "tiene acceso a Perfil["+this.idPerfil+"] Módulo["+this.idModulo+"] y Función["+this.idFuncion+"]");
         
@@ -52,7 +58,7 @@ public class FuncionAccesoInterceptor implements Interceptor {
         if (!usuarioSesion.getAcTipo().equals("M")){
             if(!this.existePerfil(usuarioSesion)){
                 log.info("FuncionAccesoInterceptor: Acceso Denegado. El perfil ["+this.idPerfil+"] no está asociado al usuario");
-                session.clear();
+//                session.clear();
                 return "accesodenegado";
             }
             if(!this.existeModuloFuncion(usuarioSesion)){
@@ -60,8 +66,9 @@ public class FuncionAccesoInterceptor implements Interceptor {
                 return "accesodenegado";
             }
         }
-        log.info("FuncionAccesoInterceptor: Success.");
-        return actionInvocation.invoke();
+        String result = actionInvocation.invoke();
+        log.info("FuncionAccesoInterceptor: Success. "+ result);
+        return result;
     }
     
     private boolean existeModuloFuncion(UsuarioSesion usuarioSesion){
@@ -78,14 +85,14 @@ public class FuncionAccesoInterceptor implements Interceptor {
                 while (iteratorFuncion.hasNext()){
                     Funcion auxFuncion = (Funcion)iteratorFuncion.next();
                     if (this.idFuncion!=null){
-                        if (auxFuncion.getIdModulo().equals(this.idModulo) && auxFuncion.getIdFuncion().equals(this.idFuncion)){
+                        if (auxFuncion.getIdModulo().trim().equals(this.idModulo) && auxFuncion.getIdFuncion().trim().equals(this.idFuncion)){
                             resp=true;
                             break;
                         }
                     }
                     else{
                         //Solo se validará el módulo
-                        if (auxFuncion.getIdModulo().equals(this.idModulo)||this.idModulo==null){
+                        if (auxFuncion.getIdModulo().trim().equals(this.idModulo)||this.idModulo==null){
                             resp=true;
                             break;
                         }
@@ -98,13 +105,11 @@ public class FuncionAccesoInterceptor implements Interceptor {
     
     private boolean existePerfil(UsuarioSesion usuarioSesion){
         boolean resp=false;
-        Iterator iteratorPerfil = usuarioSesion.getPerfiles().iterator();
-        
+        Iterator iteratorPerfil = usuarioSesion.getPerfiles().iterator();        
         while (iteratorPerfil.hasNext()){
-            Perfil auxPerfil = (Perfil)iteratorPerfil.next();
-            
+            Perfil auxPerfil = (Perfil)iteratorPerfil.next();            
             if (this.idPerfil!=null){
-                if(auxPerfil.getIdPerfil().equals(this.idPerfil)){
+                if(auxPerfil.getIdPerfil().trim().equals(this.idPerfil)){
                     resp=true;
                     log.info("El perfil existe. ["+auxPerfil.getIdPerfil()+"]");
                     break;

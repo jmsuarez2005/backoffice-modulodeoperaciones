@@ -51,7 +51,6 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
     public String execute() throws Exception {
         ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha,(UsuarioSesion)this.session.get("usuarioSesion"));
 
-
         this.reporteCo = business.obtenerEmisionRecargaColombia();
         this.reportePe = business.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
         this.reporteVe = business.obtenerEmisionRecargaVenezuela();
@@ -62,7 +61,9 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         
         
         
+        
         return SUCCESS;
+        
     }
     
     public String generarExcel() throws Exception {

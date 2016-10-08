@@ -24,6 +24,7 @@
                             <center>
                                 <h3>Inicio de Sesión</h3>
                                 <s:form method="post" action="LoginAction" id="formulario">
+                                <label form="Pais" Style="padding-right: 23px" class="label">País: </label><select name="Pais" Style="width:175px"><option value="pe">peSoles</option><option value="peusd">peDolares</option><option value="ve">Venezuela</option><option value="co">Colombia</option></select>
                                 <s:textfield name="user" label="Usuario" required="true" size="25" cssStyle="width:175px;" />
                                 <s:password id="password" name="password"  label="Clave" required="true" size="25" cssStyle="width:175px;" />
                                 <s:submit value="Ingresar" onclick="javascript:enviar_formularioHash();preshow()" onload="prehide()" />

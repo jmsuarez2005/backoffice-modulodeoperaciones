@@ -1,0 +1,203 @@
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<!-- Author: jorojas -->
+ 
+<struts>
+    <!-- Add your configuration elements here -->
+    <!-- paquete de Reportes -->
+    <package name="operaciones" namespace="/operaciones" extends="default">
+        <!--action name="*ActividadDiaria" method="{1}" class="com.novo.actions.ReporteActividadDiariaAction">
+            <result name="success">/WEB-INF/web/reportes/reporteActividadDiaria.jsp</result>
+            <result name="input">/WEB-INF/web/reportes/reporteActividadDiaria.jsp</result>
+            <result name="error">/WEB-INF/web/reportes/reporteActividadDiaria.jsp</result>
+            
+            <result name="excel" type="stream">
+                <param name="contentDisposition">attachment;filename="${reportFile}"</param>
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="bufferSize">1024</param>
+            </result>
+        </action>
+        
+        <action name="*CambiosMoneda" method="{1}" class="com.novo.actions.CambiosMonedaAction">
+            <result name="success">/WEB-INF/web/reportes/cambiosMoneda.jsp</result>
+        </action-->
+        
+        <!--action name="ajusteTransacciones">    
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <param name="idModulo">123</param>
+                <param name="idFuncion">321</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />                              
+            <result name="success">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>
+        </action-->
+        
+        <action name="buscarUsuarioAjusteTransacciones" method="buscarUsuario" class="com.novo.actions.AjusteTransaccionesAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPADT</param>
+                <param name="idFuncion">AJSTBU</param>
+               
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />     
+            <result name="success">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>                              
+           <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
+           <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+        </action>
+        
+        
+        <action name="listarAjusteTransacciones" method="listar" class="com.novo.actions.AjusteTransaccionesAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPCDA</param>
+                <param name="idFuncion">CONAJU</param>
+               
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />                                   
+           <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
+           <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+        </action>
+        
+        <action name="listarAjusteTransacciones" method="listar" class="com.novo.actions.AjusteTransaccionesAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPCDA</param>
+                <!--param name="idFuncion">CONAJU</param-->
+               
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />                                   
+           <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
+           <!--result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result-->
+        </action>
+        
+        
+        <action name="registrarAjusteTransacciones" method="registrarAjuste" class="com.novo.actions.AjusteTransaccionesAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPADT</param>
+                <param name="idFuncion">AJSRAJ</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />                                   
+            <result name="success">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>
+            <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+        </action>
+        
+        <action name="actualizarAjustesAjusteTransacciones" method="actualizarAjustes" class="com.novo.actions.AjusteTransaccionesAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                 <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPADT</param>
+                <param name="idFuncion">AJSTCA</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />                                   
+            <result name="listar">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>
+            <!--result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result-->
+        </action>
+        
+        <action name="*AjusteTransacciones" method="{1}" class="com.novo.actions.AjusteTransaccionesAction" >                                   
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                 <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPADT</param>
+                
+            </interceptor-ref>
+            <result name="success">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>
+            <result name="transacciones">/WEB-INF/web/operaciones/modificarTransaccion.jsp</result>
+            <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+            <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
+            <interceptor-ref name="defaultStack" />
+        </action>
+        
+        
+        <action name="*Sobregiros" method="{1}" class="com.novo.actions.SobregirosAction" >
+             <interceptor-ref name="FuncionAccesoInterceptor" >
+                 <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOSOB</param>
+                <param name="idFuncion">CARSOB</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />                                    
+            <result name="success">/WEB-INF/web/operaciones/sobregiros.jsp</result>
+            <!-- <result name="transacciones">/WEB-INF/web/operaciones/modificarTransaccion.jsp</result>
+            <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+            <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>-->
+        </action>
+        
+        <action name="*Actualizaciones" method="{1}" class="com.novo.actions.ActualizacionesAction" >                                   
+            <result name="success">/WEB-INF/web/operaciones/actualizaciones.jsp</result>
+            <!-- <result name="transacciones">/WEB-INF/web/operaciones/modificarTransaccion.jsp</result>
+            <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+            <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>-->
+        <interceptor-ref name="defaultStack" />
+        </action>
+        
+        <action name="procesarTraslados" method="procesar" class="com.novo.actions.TrasladosAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                 <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPTRA</param>
+                <param name="idFuncion">TRASAL</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />
+            <result name="success">/WEB-INF/web/operaciones/traslados.jsp</result>
+        </action>
+        
+       
+                       
+        <action name="*Traslados" method="{1}" class="com.novo.actions.TrasladosAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                 <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOPTRA</param>
+            </interceptor-ref>
+            <result name="success">/WEB-INF/web/operaciones/traslados.jsp</result>
+            <interceptor-ref name="defaultStack" />
+        </action>
+        
+         <action name="*bloqueoDesbloqueo" method="{1}" class="com.novo.actions.bloqueoDesbloqueoAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                 <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOBDT</param>
+                <param name="idFuncion">CABDT</param>
+            </interceptor-ref>
+            <result name="success">/WEB-INF/web/operaciones/bloqueoDesbloqueo.jsp</result>
+            <interceptor-ref name="defaultStack" />
+        </action>
+        
+        <action name="*renovacion" method="{1}" class="com.novo.actions.RenovacionAction" >
+            
+            <!--<result name="success">/WEB-INF/web/operaciones/renovacion.jsp</result>-->
+           <result name="success">/WEB-INF/web/operaciones/renovacion.jsp</result>
+           <result name="consultar">/WEB-INF/web/operaciones/consultaRen.jsp</result>
+            <!--<interceptor-ref name="defaultStack" />-->
+        </action>
+        
+        
+         <action name="*ConsultaSaldo" method="{1}" class="com.novo.actions.ConsultaSaldoAction" >
+           
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOCST</param>
+                <param name="idFuncion">CACST</param>
+            </interceptor-ref>
+            <interceptor-ref name="sessionExpirayStack" />
+                
+            <result name="success">/WEB-INF/web/operaciones/ConsultaSaldo.jsp</result>
+            <result name="excel" type="stream">
+                <param name="contentDisposition">attachment;filename="${reportFile}"</param>
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="bufferSize">1024</param>
+            </result>
+            <!--<interceptor-ref name="defaultStack" />-->
+        </action>
+        
+         <!--<action name="*MonitorNovoTrans" method="{1}" class="com.novo.actions.MonitorAction"   >
+     
+           <result name="SUCCESS">/WEB-INF/web/operaciones/MonitorNovoTrans.jsp</result>
+
+        </action>-->
+        
+        
+
+
+    </package>
+    
+</struts>

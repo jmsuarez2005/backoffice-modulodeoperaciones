@@ -15,15 +15,21 @@ import java.util.Locale;
 public class TextUtil {
     
     public static String formatearDecimal(Object decimal){
+        System.out.println("RECIBIENDO -> " + decimal);
         Locale locale  = new Locale("es", "VE");
         String pattern = "###,##0.##";
         DecimalFormat decimalFormat = (DecimalFormat)NumberFormat.getNumberInstance(locale);
         decimalFormat.applyPattern(pattern);
         
+        if (decimal==null) {
+            decimal = 0.00D;
+        }
+        
         return decimalFormat.format(decimal);
     }
     
     public static String formatearEntero(int entero){
+        System.out.println("RECIBIENDO -> " + entero);
         Locale locale  = new Locale("es", "VE");
         String pattern = "#,###";
         DecimalFormat decimalFormat = (DecimalFormat)NumberFormat.getNumberInstance(locale);
@@ -44,5 +50,11 @@ public class TextUtil {
         }
         
         return truncated;
+    }
+    
+    public static void main(String[] args) {
+        double decimal = 1000000000.00;
+        System.out.println(formatearDecimal(null));
+        System.out.println(formatearDecimal(null));
     }
 }

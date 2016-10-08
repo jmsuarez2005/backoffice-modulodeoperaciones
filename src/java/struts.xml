@@ -14,6 +14,8 @@
           <interceptor name="SessionCheckInterceptor" class="com.novo.interceptors.SessionCheckInterceptor" />
           
           <interceptor name="FuncionAccesoInterceptor" class="com.novo.interceptors.FuncionAccesoInterceptor" />
+          
+          <interceptor name="FuncionAfterAccesoInterceptor" class="com.novo.interceptors.FuncionAfterAccesoInterceptor" />
             
           <interceptor-stack name="sessionExpirayStack">
      		<interceptor-ref name="SessionCheckInterceptor"/>
@@ -23,6 +25,8 @@
         </interceptors>
         
         <!-- Se aplicará esta pila (stack) de interceptores a todos los actions (controaldores) de la app -->
+       
+        
         <default-interceptor-ref name="sessionExpirayStack" />
         
         <global-results>
@@ -42,11 +46,17 @@
         <action name="LoginAction" class="com.novo.actions.LoginAction">
              <!-- Para que no ejecute el verificador de sesión, se cambia la pila de interceptores,
                   únicamente en esta acción -->
+                   <interceptor-ref name="FuncionAfterAccesoInterceptor" >
+                   <param name="idPerfil">MAJUST</param>
+                  </interceptor-ref>
+            
              <interceptor-ref name="defaultStack" />
              
             <result name="success" type="redirectAction">portal</result>
             <result name="input">/WEB-INF/web/inicio/login.jsp</result>
             <result name="error">/WEB-INF/web/inicio/login.jsp</result>
+            
+             
         </action>
         
         <!-- Action para cerrar sesión -->
@@ -88,4 +98,5 @@
 -->
     <include file="prueba.xml"/>
     <include file="reportes.xml"/>
+    <include file="operaciones.xml"/> 
 </struts>

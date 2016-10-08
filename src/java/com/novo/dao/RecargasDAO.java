@@ -81,10 +81,11 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            dbo.dbClose();
+            //////dbo.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona natural mes "+this.pais);
             log.error("Causa: "+e);
+            e.printStackTrace();
         }
         
         return monto;
@@ -137,10 +138,11 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            dbo.dbClose();
+            //////dbo.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona natural dia "+this.pais);
             log.error("Causa: "+e);
+            e.printStackTrace();
         }
         
         return monto;
@@ -193,10 +195,11 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            dbi.dbClose();
+            //dbi.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica dia "+this.pais);
             log.error("Causa: "+e);
+            e.printStackTrace();
         }
         
         return monto;
@@ -247,10 +250,11 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            dbi.dbClose();
+            //dbi.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica mes "+this.pais);
             log.error("Causa: "+e.getMessage()+" localizado en: "+e.getLocalizedMessage());
+            e.printStackTrace();
         }
         
         return monto;

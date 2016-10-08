@@ -72,9 +72,9 @@
                     <br/>
                     <s:fielderror />
                     
-                    <br/>
-                    <i style="color: #c90000"><s:property value="message" /></i>
-                    <br/>
+                    <div>        
+                        <%@include file="../include/alertMessage.jsp" %>
+                    </div>
                     
                     <!-- Todos los Paises -->
                     <table class="table reporteTable" id="tablaReporte" style="width: 100%;">

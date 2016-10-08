@@ -16,6 +16,28 @@
                     <li><s:a action="CambiosMoneda" namespace="/reportes">Cambios de Moneda</s:a></li>
                 </ul>
             </li>
+            <li><a href="">Operaciones</a>
+                <ul>
+                    <li><a href="">Ajuste de Transacciones</a>
+                        <ul>
+                            <li><s:a action="AjusteTransacciones" namespace="/operaciones">Ajuste de Transacciones</s:a></li>
+                            <li><s:a action="ajusteTarjetaAjusteTransacciones" namespace="/operaciones">Ajuste Masivo</s:a></li>
+                            <li><s:a action="listarAjusteTransacciones" namespace="/operaciones">Consultar Ajustes</s:a></li>
+                            <li><s:a action="Traslados" namespace="/operaciones">Traslados</s:a></li>
+                             <li><s:a action="Sobregiros" namespace="/operaciones">Sobregiros</s:a></li>
+                             <li><s:a action="bloqueoDesbloqueo" namespace="/operaciones">Bloqueo/Desbloqueo</s:a></li>
+                             <li><s:a action="renovacion" namespace="/operaciones">Renovación</s:a></li>
+                             <li><s:a action="consultarrenovacion" namespace="/operaciones">ConsultarRenovación</s:a></li>
+                             <li><s:a action="ConsultaSaldo" namespace="/operaciones">Consultar Saldo</s:a></li>
+                             
+                  
+                        </ul>
+                    </li>
+                    
+                    <li><s:a action="Actualizaciones" namespace="/operaciones">Actualizacion</s:a></li>
+                    <li><s:a action="MonitorNovoTrans" namespace="/operaciones">Monitor NovoTrans</s:a></li>
+                </ul>
+            </li>
 <!--            
             <li><a href="">Elemento 2</a>
              <ul>

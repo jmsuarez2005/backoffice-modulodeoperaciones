@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package com.novo.actions;
+
 import com.novo.constants.BasicConfig;
 import com.novo.constants.RCConfig;
 import com.novo.process.UsuarioProc;
@@ -15,42 +16,44 @@ import org.apache.log4j.Logger;
  *
  * @author jorojas
  */
-public class LoginAction extends ActionSupport implements BasicConfig,RCConfig{
+public class LoginAction extends ActionSupport implements BasicConfig, RCConfig {
+
     private static Logger log = Logger.getLogger(LoginAction.class);
-    
+
     private String user;
     private String password;
     private String message, successMessage, errorMessage;
-    
+     private String Pais;
+
     public LoginAction() {
         log.info("Llamada al LoginAction");
     }
-    
-    
+
     @Override
     public String execute() throws Exception {
         String result;
         int rc;
-        UsuarioProc business= new UsuarioProc();
+        UsuarioProc business = new UsuarioProc();
+
+        ActionContext.getContext().getSession().put("pais", this.Pais);
+        business.login(this.user, this.password, this.Pais);
+        rc = business.getRc().getRc();
         
-        business.login(user, password,Utils.getConfig(BasicConfig.properties).getProperty("pais"));
-        rc=business.getRc().getRc();
-        
-        if (rc == rcUsuarioExitoso){
-            successMessage="Login Exitoso";
+
+        if (rc == rcUsuarioExitoso) {
+            successMessage = "Login Exitoso";
             ActionContext.getContext().getSession().put(USUARIO_SESION, business.getUsuarioSesion());
-            result=SUCCESS;
-        } else if (rc == rcCambiarClave){
+            result = SUCCESS;
+        } else if (rc == rcCambiarClave) {
             ActionContext.getContext().getSession().put(USUARIO_SESION, business.getUsuarioSesion());
             message = business.getRc().getMensaje();
-            result="cambiarClave";
+            result = "cambiarClave";
+        } else {
+            errorMessage = business.getRc().getMensaje();
+            result = ERROR;
         }
-        else{
-            errorMessage=business.getRc().getMensaje();
-            result=ERROR;
-        }
-        
-        log.info("Mensaje: "+message);
+
+        log.info("Mensaje: " + message);
         return result;
     }
 
@@ -93,7 +96,13 @@ public class LoginAction extends ActionSupport implements BasicConfig,RCConfig{
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
-    
-    
-    
+
+    public String getPais() {
+        return Pais;
+    }
+
+    public void setPais(String Pais) {
+        this.Pais = Pais;
+    }
+
 }

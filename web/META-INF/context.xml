@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/Operaciones">
+<Context antiJARLocking="true" path="/Operaciones">
    <!-- De esta manera están en Tomcat Local -->
   <ResourceLink global="jdbc/oracle_novodesa" name="jdbc/oracle_novodesa" type="javax.sql.DataSource"/>
   <ResourceLink global="jdbc/informix_novodesa" name="jdbc/informix_novodesa" type="javax.sql.DataSource"/>
@@ -17,6 +17,15 @@
   <ResourceLink global="jdbc/oracle_novotest" name="jdbc/oracle_novotest" type="javax.sql.DataSource"/>
   <ResourceLink global="jdbc/informix_usd" name="jdbc/informix_usd" type="javax.sql.DataSource"/>
   <ResourceLink global="jdbc/oracle_usd" name="jdbc/oracle_usd" type="javax.sql.DataSource"/>
+  
+  <ResourceLink global="jdbc/oracle_testcol" name="jdbc/oracle_testcol" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/informix_testcol" name="jdbc/informix_testcol" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/informix_testperu" name="jdbc/informix_testperu" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/oracle_testperu" name="jdbc/oracle_testperu" type="javax.sql.DataSource"/>  
+  <ResourceLink global="jdbc/informix_testven" name="jdbc/informix_testven" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/oracle_testven" name="jdbc/oracle_testven" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/informix_testusd" name="jdbc/informix_testusd" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/oracle_testusd" name="jdbc/oracle_testusd" type="javax.sql.DataSource"/>
   
   <!-- Resources del Servidor Tomcat Produccion -->
   <ResourceLink global="jdbc/oracle" name="jdbc/oracle" type="javax.sql.DataSource"/>
