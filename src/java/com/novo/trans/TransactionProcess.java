@@ -62,7 +62,7 @@ public class TransactionProcess extends NovoDAO implements TransactionProcessCon
         return trans;
     }
     
-    public Transaccion balance(Tarjeta tarjeta, String systrace, String pais) {
+    public Transaccion balance(Tarjeta tarjeta, String systrace, String pais, String exptarjeta) {
         Transaccion trans = new Transaccion();
         String ip, port, timeout, terminal,nroOrganizacion;
         ip = prop.getProperty("novotrans_ip");
@@ -73,7 +73,7 @@ public class TransactionProcess extends NovoDAO implements TransactionProcessCon
         log.info(ip+","+port+","+timeout+","+terminal+","+nroOrganizacion);
         TransactionHandler th = new TransactionHandler(ip, Integer.parseInt(port), Integer.parseInt(timeout));
         th.setNroOrganizacion(nroOrganizacion);
-        trans.setRc(th.execSaldo(ID_BALANCE, systrace, tarjeta.getNroTarjeta(), terminal, "CONSULTA POR TRASLADO", "0", "0"));
+        trans.setRc(th.execSaldo(ID_BALANCE, systrace, tarjeta.getNroTarjeta(), terminal, "CONSULTA POR TRASLADO", "0", "0",exptarjeta));
         trans.setTransRespCode(th.getRespCode());
         trans.setMsg("");
         trans.setSaldo(Utils.formatMontoGenerico(Double.parseDouble(th.getSaldoDisponible()) / 100, prop.getProperty("pais")));

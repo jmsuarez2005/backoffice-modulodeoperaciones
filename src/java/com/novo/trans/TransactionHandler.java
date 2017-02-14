@@ -162,7 +162,7 @@ public class TransactionHandler {
         String sMonto = "";
         DecimalFormat df = new DecimalFormat();
         df.applyPattern("0;0");
-        sMonto = df.format(Float.parseFloat(monto) * 100);
+        sMonto = df.format(Float.parseFloat(Double.toString(Utils.desFormatMonto(monto) * 100)));
         return (sMonto);
     }
 
@@ -359,7 +359,7 @@ public class TransactionHandler {
      * @return -5; //"ATENCION RESPONSE["+respCode+"] NOT ZERO. Operacion no
      * realizada";
      */
-    public int execSaldo(String idCanal, String systemtrace, String tarjeta, String terminal, String nomcomercio, String cedula, String montoComision) {
+    public int execSaldo(String idCanal, String systemtrace, String tarjeta, String terminal, String nomcomercio, String cedula, String montoComision, String expTarjeta) {
         int rc = 0;
         log.info("execSaldo [Start]");
         log.info("execSaldo idCanal         : " + idCanal);
@@ -369,8 +369,9 @@ public class TransactionHandler {
         log.info("execSaldo nomcomercio     : " + nomcomercio);
         log.info("execSaldo cedula          : " + cedula);
         log.info("execSaldo montoComision   : " + montoComision);
+        log.info("execSaldo Fecha expiracion tarjeta : " + expTarjeta);
 
-        String sSendBuff = mkSendBuff(idCanal, terminal, tarjeta, cedula, makeMonto("0"), makeMonto(montoComision), nomcomercio, systemtrace);
+        String sSendBuff = mkSendBuff(idCanal, cedula, terminal, tarjeta, makeMonto("0"), makeMonto(montoComision), nomcomercio, systemtrace, expTarjeta);
         log.debug("Trama Enviada al Novotrans: " + sSendBuff);
         String sResp = cl.sendReceive(sSendBuff);
 

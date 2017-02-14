@@ -103,7 +103,7 @@ public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacc
             return Tarjeta;
         }
 
-        handler.execSaldo("1080", systrace, Tarjeta.getNroTarjeta(), terminal, nro_cliente, Nro_Organizacion(), "0");
+        handler.execSaldo("1080", systrace, Tarjeta.getNroTarjeta(), terminal, nro_cliente, Nro_Organizacion(), "0",exptarjeta);
 
         if (handler.getRespCode().equals("00")) {
             Tarjeta.setSaldoDisponible(Utils.formatMontoGenerico(Double.parseDouble(handler.getSaldoDisponible()) / 100.0D, "Pe"));

@@ -220,7 +220,7 @@ public class ReporteTransacciones implements BasicConfig {
         TransactionProcess tp = new TransactionProcess(appName, databases, pais);
         String systrace = tp.getSystrace();
         Transaccion trans = new Transaccion();
-        trans= tp.balance(tarjeta, systrace, pais);
+        trans= tp.balance(tarjeta, systrace, pais,tarjeta.getFechaExpiracion());
         
         if(trans.getRc()==0){
             tarjeta.setSaldoDisponible(trans.getSaldo()); 
