@@ -52,11 +52,29 @@ public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacc
         String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM systables where tabid = 1";
 
         Dbinterface dbi = (Dbinterface) this.ds.get("informix");
+        Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbi.dbreset();
         TransactionHandler handler = null;
         String terminal = "";
         String nro_cliente = "";
         String tipo_ajuste = "";
+        String exptarjeta = "";
+       
+
+        String sql6 = "select substr(fec_expira,3) || substr(fec_expira,0,2) as fec_expira from MAESTRO_CONSOLIDADO_TEBCA where nro_cuenta = '0000" + Tarjeta.getNroTarjeta().substring(0, 14) + "00" + "'";
+
+        if (dbo.executeQuery(sql6) == 0) {
+            if (dbo.nextRecord()) {
+                exptarjeta = dbo.getFieldString("fec_expira");
+            }
+
+            dbo.dbClose();
+        } else {
+            dbo.dbClose();
+            Tarjeta.setSaldoDisponible("La tarjeta no posee fecha de expiración");
+            return Tarjeta;
+        }
+        
 
         if (dbi.executeQuery(sql1) == 0) {
             if (dbi.nextRecord()) {
@@ -71,7 +89,7 @@ public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacc
             return Tarjeta;
         }
 
-        Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
+       // Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         boolean existe = false;
 
         String systrace = "";
