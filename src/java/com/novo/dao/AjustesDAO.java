@@ -26,6 +26,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -51,14 +52,14 @@ public class AjustesDAO extends NovoDAO implements BasicConfig,AjustesTransaccio
         String sql = "";
         Dbinterface dbo = ds.get("oracle");
         Dbinterface dbi = ds.get("informix");
-        if (!banderaFiltro == false) { //cambio (!)
+        if (!banderaFiltro) { //cambio (!)
             sql = "select mpt.*,mct.FEC_EXPIRA from  maestro_plastico_tebca mpt, maestro_consolidado_tebca mct where mpt.nro_cuenta = '0000"+filtro+"' and  substr(mpt.NRO_CUENTA,0,18) = substr(mct.NRO_CUENTA,0,18) and mct.CON_ESTATUS in ('1','2') ";
         } else {
             sql = "select cp.*,mpt.*,mct.FEC_EXPIRA from CONFIG_PRODUCTOS cp , maestro_plastico_tebca mpt, maestro_consolidado_tebca mct where mpt.SUBBIN  between substr(cp.NUMCUENTAI,0,8) and substr(cp.NUMCUENTAF,0,8) and mpt.id_ext_per = '"+filtro+"' and substr(mpt.NRO_CUENTA,0,18) = substr(mct.NRO_CUENTA,0,18) and mct.CON_ESTATUS in ('1','2') ";
-            if(!prefix.equals("")&&prefix!=null){
-                sql = "select cp.*,mpt.*,mct.FEC_EXPIRA from CONFIG_PRODUCTOS cp , maestro_plastico_tebca mpt, maestro_consolidado_tebca mct where mpt.SUBBIN  between substr(cp.NUMCUENTAI,0,8) and substr(cp.NUMCUENTAF,0,8) and mpt.id_ext_per = '"+filtro+"' and cp.prefix = '"+prefix+"' and substr(mpt.NRO_CUENTA,0,18) = substr(mct.NRO_CUENTA,0,18) and mct.CON_ESTATUS in ('1','2') ";
+            if(!prefix.equals("") && prefix!=null){
+                sql += " and cp.prefix = '"+prefix+"'";
             }
-            if(!rif.equals("")&&rif!=null){
+            if(!rif.equals("") && rif!=null){
                 sql += " and mpt.id_ext_emp = '"+rif+"'";
             }
         }        
@@ -160,7 +161,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig,AjustesTransaccio
     
     public List<Empresa> getEmpresasDAO(){
         Dbinterface dbi = ds.get("informix");
-        String sql = "select accodcia, acnomcia, acrif,acnomciacorto  from empresas";              
+        String sql = "select accodcia, acnomcia, acrif,acnomciacorto  from empresas where cstatus = 'A'"; 
         List<Empresa> empresas = new ArrayList<Empresa>();
         Empresa empresa = new Empresa();
         log.info("sql ["+sql+"]");
@@ -586,6 +587,38 @@ public String RegistrarAjusteDAO(String tarjeta, String monto, String codigoAjus
         return codigos;
     }
     
+    public String numLote ()
+    {
+        Dbinterface dbi = ds.get("informix");
+        dbi.dbreset();
+        int cont1 = 0;
+        String fechanumlote;
+        String respuesta="";
+        SimpleDateFormat fecha = new SimpleDateFormat("yyMMdd");
+        fechanumlote =fecha.format(new Date());
+        
+        
+        
+        String sql = "select max(acnumlote) + 1 as LOTE from teb_lote where accodcia = '1' and to_char(dtfechorcarga,'%y%m%d') ="+fechanumlote+"";
+        
+        if (dbi.executeQuery(sql)==0)
+        { 
+            if(dbi.nextRecord()) {
+               respuesta = dbi.getFieldString("LOTE");
+               if(respuesta.equals(""))
+               {
+                  respuesta = fechanumlote+"00";
+               }
+            }
+            
+        }else{
+            log.info("No se pudo consultar el numero de lote");
+        }
+        
+        return respuesta;
+    }
+    
+    
     public int makeUpdatesDAO(List<Tarjeta> tarjetas, List<CamposActualizacion> campos,String usuario){
         Dbinterface dbi = ds.get("informix");
         dbi.dbreset();
@@ -595,8 +628,15 @@ public String RegistrarAjusteDAO(String tarjeta, String monto, String codigoAjus
         String nombre = "";
         String apellido = "";
         log.info("User : "+usuario);
-        String sql = "INSERT INTO teb_lote( accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga)" +
-                    "VALUES( '0101010101', '1','A', 0.00, "+tarjetas.size()+", NULL, '"+usuario+"', current, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Actualizacion', (select acprefix from teb_productos where '"+tarjetas.get(0).getNroTarjeta() +"' between acnumcuentai and acnumcuentaf), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00)" ;
+        String acnumlote = numLote();
+        
+        if (acnumlote.equals(""))
+        {
+            return -1;
+        }
+        
+        String sql = "INSERT INTO teb_lote( accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga, acnumlote)" +
+                    "VALUES( '0101010101', '1','A', 0.00, "+tarjetas.size()+", NULL, '"+usuario+"', current, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Actualizacion', (select acprefix from teb_productos where '"+tarjetas.get(0).getNroTarjeta() +"' between acnumcuentai and acnumcuentaf), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, "+acnumlote+")";
         log.info("sql ["+sql+"]: makeUpdatesDAO() se inserta el lote");
         if(dbi.executeQuery(sql)==0){
             sql= "select acidlote from teb_lote where accodusuarioc = '"+usuario+"' and ctipolote = 'A' and cestatus ='3' order by acidlote desc";
