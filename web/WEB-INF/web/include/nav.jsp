@@ -27,7 +27,7 @@
                              <li><s:a action="Sobregiros" namespace="/operaciones">Sobregiros</s:a></li>
                              <li><s:a action="bloqueoDesbloqueo" namespace="/operaciones">Bloqueo/Desbloqueo</s:a></li>
                              <li><s:a action="renovacion" namespace="/operaciones">Renovación</s:a></li>
-                             <li><s:a action="consultarrenovacion" namespace="/operaciones">ConsultarRenovación</s:a></li>
+                             <li><s:a action="consultarrenovacion" namespace="/operaciones">Consultar Renovación</s:a></li>
                              <li><s:a action="ConsultaSaldo" namespace="/operaciones">Consultar Saldo</s:a></li>
                              
                   
@@ -35,7 +35,7 @@
                     </li>
                     
                     <li><s:a action="Actualizaciones" namespace="/operaciones">Actualizacion</s:a></li>
-                    <li><s:a action="MonitorNovoTrans" namespace="/operaciones">Monitor NovoTrans</s:a></li>
+              
                 </ul>
             </li>
 <!--            
