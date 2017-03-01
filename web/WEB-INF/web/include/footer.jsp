@@ -1,3 +1,4 @@
+<%@page import="java.util.Calendar"%>
 <%@taglib uri="/struts-tags" prefix="s" %>
 <s:bean name="com.novo.util.Version" var="version" />
 <div class="footerBG" data-module="footer">
@@ -6,11 +7,12 @@
         <table style="width:100%;border-spacing: 0;border-collapse: collapse">
             <tbody>
                 <tr>
-                    <td style="width:50%; text-align:left; vertical-align:top;">
+                    
                         <img src="../recursos/images/logo-novopayment.png" alt="novopayment" style="float:left; margin-right:15px;" />
                         <s:property value="@com.novo.constants.BasicConfig@appNameExtended" />, Versión <s:property value="#version.version" /><br/>
-                        Powered by Novopayment, Inc. Todos los derechos reservados.
-                    </td>
+                         &copy;<%= Calendar.getInstance().get(Calendar.YEAR)%> NovoPayment Inc. All rights reserved.
+                         
+                    
                     <td style="width:50%; text-align:right; vertical-align:top;">
                         <s:if test="%{#session.usuarioSesion!=null}">
                             <span class="user">
