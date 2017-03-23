@@ -179,8 +179,8 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
                     uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE = NULL, FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
                 } else {
                     //actualizando los maestros en caso de bloqueo
-                    uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE="+selectedBloqueo+" WHERE NRO_CUENTA=0000" + Tarjeta;
-                    uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE="+selectedBloqueo+", FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
+                    uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE='"+selectedBloqueo+"' WHERE NRO_CUENTA=0000" + Tarjeta;
+                    uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE='"+selectedBloqueo+"', FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
                 }
                 
                 log.debug("sql #1 ["+uf+"]");
