@@ -54,7 +54,7 @@ public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
             if (respuesta.equals("ok")) {
                 ajuste.setDescripcion("Procesado");
             } else if (respuesta.equals("existe")) {
-                ajuste.setDescripcion("La Tarjeta ya existe para hacer un sobregiro");
+                ajuste.setDescripcion("La Tarjeta ya existe para hacer un bloqueo");
             } else {
                 ajuste.setDescripcion("Anulado");
             }
@@ -110,7 +110,7 @@ public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
     }
 
     public String RegistrarBloqueoDesblqueoDAO(String Tarjeta, String idUsuario, String selectedBloqueo) {
-        String sql2 = "Select NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA";
+        //String sql2 = "Select NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA";
 
         String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM systables where tabid = 1";
 
@@ -120,8 +120,8 @@ public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
         dbo.dbreset();
         TransactionHandler handler = null;
         String terminal = "";
-        String nro_cliente = "";
-        String tipo_ajuste = "";
+        //String nro_cliente = "";
+        //String tipo_ajuste = "";
         String exptarjeta = "";
 
         String sql6 = "select substr(fec_expira,3) || substr(fec_expira,0,2) as fec_expira from MAESTRO_CONSOLIDADO_TEBCA where nro_cuenta = '0000" + Tarjeta.substring(0, 14) + "00" + "'";
@@ -149,8 +149,6 @@ public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
             return "error";
         }
 
-        String sql5 = "select count(*) as respuesta from novo_bloqueo where nro_tarjeta=" + Tarjeta + "";
-
         boolean existe = false;
 
         if (!existe) {
@@ -166,30 +164,36 @@ public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
 
             if (handler.getRespCode().equals("00")) {
                 String sql = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', '" + handler.getRespCode() + "')";
-                String uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE= '" + selectedBloqueo + "' WHERE NRO_CUENTA=0000" + Tarjeta;
-                String uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE= '" + selectedBloqueo + "' WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
-
+                String uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE=NULL WHERE NRO_CUENTA=0000" + Tarjeta;
+                String uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE = NULL, FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
+                
+                log.debug("sql #1 ["+uf+"]");
+                log.debug("sql #2 ["+uf2+"]");
+                
                 dbo.dbreset();
 
                 if (dbo.executeQuery(sql) == 0) {
                     if (dbo.executeQuery(uf) == 0) {
                         if (dbo.executeQuery(uf2) == 0) {
                             dbo.dbClose();
+                            log.info("La tarjeta " + Tarjeta + "fue desbloqueada, código respuesta" + handler.getRespCode());
                             return "ok";
                         }
                         dbo.dbClose();
+                        log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
                         return "error";
                     }
 
                     dbo.dbClose();
+                    log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
                     return "error";
                 }
 
                 dbo.dbClose();
+                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
                 return "error";
+                
             }
-
-            log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
 
             String sql4 = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', 'La tarjeta no pudo ser bloqueada" + handler.getRespCode() + "')";
             if (dbo.executeQuery(sql4) == 0) {
