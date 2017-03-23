@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
  */
 public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacciones {
 
-    private static Logger log = Logger.getLogger(bloqueoDesbloqueoDAO.class);
+    private static Logger log = Logger.getLogger(BloqueoDesbloqueoDAO.class);
 
     public ConsultaDAO(String dbproperty, String[] databases, String pais) {
         super(dbproperty, databases, pais);

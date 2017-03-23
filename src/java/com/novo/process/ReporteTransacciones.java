@@ -6,7 +6,7 @@ package com.novo.process;
 
 import com.novo.constants.BasicConfig;
 import com.novo.dao.AjustesDAO;
-import com.novo.dao.bloqueoDesbloqueoDAO;
+import com.novo.dao.BloqueoDesbloqueoDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.CamposActualizacion;
 import com.novo.model.Empresa;
@@ -126,7 +126,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
     
     public List<TBloqueo> getTipoBloqueo() {
-    bloqueoDesbloqueoDAO dao = new bloqueoDesbloqueoDAO("operaciones", databases, this.pais);
+    BloqueoDesbloqueoDAO dao = new BloqueoDesbloqueoDAO("operaciones", databases, this.pais);
 
     List tipoBloqueo = dao.getTipoBloqueoDAO();
 

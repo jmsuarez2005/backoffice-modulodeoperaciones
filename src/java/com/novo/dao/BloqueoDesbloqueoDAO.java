@@ -22,17 +22,17 @@ import org.apache.log4j.Logger;
  *
  * @author rgomez
  */
-public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, AjustesTransacciones {
+public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, AjustesTransacciones {
 
     private List<TBloqueo> bloqueo;
-    private static Logger log = Logger.getLogger(bloqueoDesbloqueoDAO.class);
+    private static Logger log = Logger.getLogger(BloqueoDesbloqueoDAO.class);
     List<Ajuste> ajustes;
 
     public List<Ajuste> getAjustes() {
         return this.ajustes;
     }
 
-    public bloqueoDesbloqueoDAO(String dbproperty, String[] databases, String pais) {
+    public BloqueoDesbloqueoDAO(String dbproperty, String[] databases, String pais) {
         super(dbproperty, databases, pais);
     }
 
@@ -111,7 +111,9 @@ public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
 
     public String RegistrarBloqueoDesblqueoDAO(String Tarjeta, String idUsuario, String selectedBloqueo) {
         //String sql2 = "Select NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA";
-
+        String uf = "";
+        String uf2 = "";
+        String trn = "";
         String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM systables where tabid = 1";
 
         Dbinterface dbi = (Dbinterface) this.ds.get("informix");
@@ -160,12 +162,26 @@ public class bloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
                 systrace = dbo.getFieldString("NEXTVAL");
             }
 
-            handler.execBloqueo("0", systrace, Tarjeta, terminal, "SERVICIO DE ACTIVACION", "", Nro_Organizacion(), selectedBloqueo, exptarjeta);
+            if (selectedBloqueo.equals("00")){
+                trn = "SERVICIO DE ACTIVACION";
+            } else {
+                trn = "SERVICIO DE BLOQUEO";
+            }
+            
+            //enviando operacion a novotrans
+            handler.execBloqueo("0", systrace, Tarjeta, terminal, trn, "", Nro_Organizacion(), selectedBloqueo, exptarjeta);
 
             if (handler.getRespCode().equals("00")) {
                 String sql = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', '" + handler.getRespCode() + "')";
-                String uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE=NULL WHERE NRO_CUENTA=0000" + Tarjeta;
-                String uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE = NULL, FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
+                if (selectedBloqueo.equals("00")){
+                    //actualizando los maestros en caso de activacion
+                    uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE=NULL WHERE NRO_CUENTA=0000" + Tarjeta;
+                    uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE = NULL, FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
+                } else {
+                    //actualizando los maestros en caso de bloqueo
+                    uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE="+selectedBloqueo+" WHERE NRO_CUENTA=0000" + Tarjeta;
+                    uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE="+selectedBloqueo+", FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
+                }
                 
                 log.debug("sql #1 ["+uf+"]");
                 log.debug("sql #2 ["+uf2+"]");

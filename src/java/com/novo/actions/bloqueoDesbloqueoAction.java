@@ -6,7 +6,7 @@
 package com.novo.actions;
 
 import com.novo.constants.BasicConfig;
-import com.novo.dao.bloqueoDesbloqueoDAO;
+import com.novo.dao.BloqueoDesbloqueoDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.TAjuste;
 import com.novo.model.TBloqueo;
@@ -106,7 +106,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
         TBloqueo ajuste = new TBloqueo();
         Ajuste ajusteB = new Ajuste();
         boolean procesoOk = true;
-        bloqueoDesbloqueoDAO bloqueo = new bloqueoDesbloqueoDAO("operaciones", databases, this.pais);
+        BloqueoDesbloqueoDAO bloqueo = new BloqueoDesbloqueoDAO("operaciones", databases, this.pais);
         try {
             log.info(this.file.getAbsolutePath() + " " + this.file.getCanonicalPath());
 
