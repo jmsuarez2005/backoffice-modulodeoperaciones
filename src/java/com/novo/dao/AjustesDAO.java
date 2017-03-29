@@ -52,16 +52,20 @@ public class AjustesDAO extends NovoDAO implements BasicConfig,AjustesTransaccio
         String sql = "";
         Dbinterface dbo = ds.get("oracle");
         Dbinterface dbi = ds.get("informix");
+     
         if (!banderaFiltro) { //cambio (!)
             sql = "select mpt.*,mct.FEC_EXPIRA from  maestro_plastico_tebca mpt, maestro_consolidado_tebca mct where mpt.nro_cuenta = '0000"+filtro+"' and  substr(mpt.NRO_CUENTA,0,18) = substr(mct.NRO_CUENTA,0,18) and mct.CON_ESTATUS in ('1','2') ";
+            log.info("query get tarjetas dao "  +sql);
         } else {
             sql = "select cp.*,mpt.*,mct.FEC_EXPIRA from CONFIG_PRODUCTOS cp , maestro_plastico_tebca mpt, maestro_consolidado_tebca mct where mpt.SUBBIN  between substr(cp.NUMCUENTAI,0,8) and substr(cp.NUMCUENTAF,0,8) and mpt.id_ext_per = '"+filtro+"' and substr(mpt.NRO_CUENTA,0,18) = substr(mct.NRO_CUENTA,0,18) and mct.CON_ESTATUS in ('1','2') ";
+            log.info("query get tarjetas dao" +sql);
+            
             if(!prefix.equals("") && prefix!=null){
                 sql += " and cp.prefix = '"+prefix+"'";
             }
-            if(!rif.equals("") && rif!=null){
-                sql += " and mpt.id_ext_emp = '"+rif+"'";
-            }
+//            if(!rif.equals("") && rif!=null){
+//                sql += " and mpt.id_ext_emp = '"+rif+"'";
+//            }
         }        
         dbo.dbreset();
         log.info("sql [" + sql + "]");

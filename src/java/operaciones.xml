@@ -162,11 +162,16 @@
         </action>
         
         <action name="*renovacion" method="{1}" class="com.novo.actions.RenovacionAction" >
-            
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                 <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MORENT</param>
+                <param name="idFuncion">CARENT</param>
+           </interceptor-ref>
             <!--<result name="success">/WEB-INF/web/operaciones/renovacion.jsp</result>-->
            <result name="success">/WEB-INF/web/operaciones/renovacion.jsp</result>
            <result name="consultar">/WEB-INF/web/operaciones/consultaRen.jsp</result>
-            <!--<interceptor-ref name="defaultStack" />-->
+            
+            <interceptor-ref name="defaultStack" />
         </action>
         
         

@@ -74,12 +74,12 @@ public class FuncionAfterAccesoInterceptor implements Interceptor {
                             + "tiene acceso a Perfil[" + idPerfil + "] Módulo[" + idModulo + "] y Función[" + idFuncion + "]");
 
                     if (!usuarioSesion.getAcTipo().equals("M")) {
-                        if (!existePerfil(usuarioSesion, idPerfil)) {
+                        if (idPerfil != null && !existePerfil(usuarioSesion, idPerfil)) {
                             log.info("FuncionAccesoInterceptor: Acceso Denegado. El perfil [" + idPerfil + "] no está asociado al usuario");
                             session.clear();
                             invocation.setResultCode("accesodenegado");
                         }
-                        if (!existeModuloFuncion(usuarioSesion, idModulo, idFuncion)) {
+                        if ((idModulo!=null || idFuncion!=null) && !existeModuloFuncion(usuarioSesion, idModulo, idFuncion)) {
                             log.info("FuncionAccesoInterceptor: Acceso Denegado. El usuario no tiene acceso a Módulo[" + idModulo + "] y Función[" + idFuncion + "]");
                             session.clear();
                             invocation.setResultCode("accesodenegado");

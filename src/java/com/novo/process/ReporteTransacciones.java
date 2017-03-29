@@ -75,7 +75,7 @@ public class ReporteTransacciones implements BasicConfig {
      */
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta){
         AjustesDAO dao = new AjustesDAO(appName, databases, pais);
-        List<Tarjeta> tarjetas;
+        List<Tarjeta> tarjetas = null;
         if(documento!=null){
             tarjetas = dao.getTarjetasDAO(documento, true);
             dao.closeConection();
@@ -91,11 +91,12 @@ public class ReporteTransacciones implements BasicConfig {
     
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta,String prefix, String rif){
         AjustesDAO dao = new AjustesDAO(appName, databases, pais);
-        List<Tarjeta> tarjetas;
+        List<Tarjeta> tarjetas = null;
         if(documento!=null){
             tarjetas = dao.getTarjetasDAO(documento, true,prefix,rif);
             dao.closeConection();
             return tarjetas;
+        
         }
         if(nroTarjeta!=null){
             tarjetas = dao.getTarjetasDAO(nroTarjeta, false);

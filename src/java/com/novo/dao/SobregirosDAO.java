@@ -108,9 +108,9 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
         String tipo_ajuste = "";
         String exptarjeta = "";
 
-        String ConsultaFechaExp = "select substr(fec_expira,3) || substr(fec_expira,0,2) as fec_expira from MAESTRO_CONSOLIDADO_TEBCA where nro_cuenta= '" + Tarjeta.substring(0, 14) + "00" + "'";
+        String ConsultaFechaExp = "select substr(fec_expira,3) || substr(fec_expira,0,2) as fec_expira from MAESTRO_CONSOLIDADO_TEBCA where nro_cuenta= '0000" + Tarjeta.substring(0, 14) + "00" + "'";
 
-        if (dbo.executeQuery(sql1) == 0) {
+        if (dbo.executeQuery(ConsultaFechaExp) == 0) {
             if (dbo.nextRecord()) {
                 exptarjeta = dbo.getFieldString("fec_expira");
             }
@@ -133,7 +133,7 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
             return "error";
         }
 
-        String sql5 = "select count(*) as respuesta from novo_sobregiros where tarjeta=" + Tarjeta + " and estatus=3";
+        String sql5 = "select count(*) as respuesta from novo_sobregiros where nro_tarjeta=" + Tarjeta + " and estatus=3";
 
         boolean existe = false;
 

@@ -47,7 +47,7 @@
              <!-- Para que no ejecute el verificador de sesión, se cambia la pila de interceptores,
                   únicamente en esta acción -->
                    <interceptor-ref name="FuncionAfterAccesoInterceptor" >
-                   <param name="idPerfil">MAJUST</param>
+                   <param name="idPerfil">NPPE12</param>
                   </interceptor-ref>
             
              <interceptor-ref name="defaultStack" />
