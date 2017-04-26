@@ -63,9 +63,9 @@ public class AjustesDAO extends NovoDAO implements BasicConfig,AjustesTransaccio
             if(!prefix.equals("") && prefix!=null){
                 sql += " and cp.prefix = '"+prefix+"'";
             }
-//            if(!rif.equals("") && rif!=null){
-//                sql += " and mpt.id_ext_emp = '"+rif+"'";
-//            }
+            if(!rif.equals("") && rif!=null){
+                sql += " and mpt.id_ext_emp = '"+rif+"'";
+            }
         }        
         dbo.dbreset();
         log.info("sql [" + sql + "]");
@@ -117,6 +117,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig,AjustesTransaccio
             while(dbo.nextRecord()){
                 tarjeta.setNroTarjeta(dbo.getFieldString("nro_cuenta").substring(4));
                 tarjeta.setIdExtPer(dbo.getFieldString("id_ext_per"));
+                tarjeta.setIdExtEmp(dbo.getFieldString("id_ext_emp"));
                 tarjeta.setNombreCliente(dbo.getFieldString("nom_cliente"));
                 tarjeta.setMascara(tarjeta.getNroTarjeta().substring(0, 6)+"******"+tarjeta.getNroTarjeta().substring(12));
                 tarjetas.add(tarjeta);
@@ -124,15 +125,25 @@ public class AjustesDAO extends NovoDAO implements BasicConfig,AjustesTransaccio
             }
         }
         dbi.dbreset();
+        
         for (Tarjeta tarjetaAux : tarjetas) {
             dbi.dbreset();
             sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             log.info("sql ["+sql+"]");
             if(dbi.executeQuery(sql)==0){
                 if(dbi.nextRecord()){
-                    tarjetaAux.setCardProgram(dbi.getFieldString("acnombre"));
+                    tarjetaAux.setCardProgram(dbi.getFieldString("acnombre")); 
+                }
+                String sql1 = "select acnomciacorto from empresas where acrif = '"+tarjetaAux.getIdExtEmp()+"'";
+                log.info("sql ["+sql1+"]");
+                if(dbi.executeQuery(sql1)==0){
+                    if(dbi.nextRecord()){
+                    tarjetaAux.setNombreEmpresa(dbi.getFieldString("acnomciacorto"));
                 }
             }
+                
+            }
+            
         }
         dbo.dbClose();
         dbi.dbClose();
