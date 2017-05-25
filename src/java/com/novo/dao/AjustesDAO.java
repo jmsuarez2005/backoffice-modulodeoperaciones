@@ -218,7 +218,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig,AjustesTransaccio
         double aux=0;
         NumberFormat  doublef = new DecimalFormat("#0.00", otherSymbols);                        
         if(!tarjeta.equals("")){
-            sql = "select * from detalle_transacciones_tebca where nro_tarjeta = '0000"+tarjeta+"' ";
+            sql = "select * from detalle_transacciones_tebca where nro_tarjeta = '0000"+tarjeta+"' order by FEC_TRANSACCION desc";
             dbo.dbreset();
             log.info("sql ["+sql+"]");
             if(dbo.executeQuery(sql)==0){
