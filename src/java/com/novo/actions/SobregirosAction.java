@@ -119,6 +119,12 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
             do {
                 Row row = sheet.getRow(i);
 
+                if (row == null) {
+                    break;
+                } else if (row.getCell(0) == null) {
+                    break;
+                } 
+                
                 if (row.getCell(0).getCellType() == 3) {
                     break;
                 }
@@ -156,21 +162,24 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
 
             if (i > 500) {
                 message = "Numero de registros en el archivo excedido";
+                tipoAjustes = business.getTipoAjustes();
                 return SUCCESS;
             }
             if (procesoOk) {
 
                 message = "Carga de Archivo Exitosa. " + file.getName();
-                
+
                 if (business.checkTarjetas(ajustes).compareToIgnoreCase("error") == 0) {
 
                     message = "Error, Tarjeta Inexistente.";
+                    tipoAjustes = business.getTipoAjustes();
                     return SUCCESS;
                 }
                 sobregiros.setAjustes(ajustes);
                 sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
                 ajustex = ajustes;
 
+                tipoAjustes = business.getTipoAjustes();
                 ActionContext.getContext().getSession().put("tarjetasAct", tarjetasAct);
             }
         } catch (Exception e) {

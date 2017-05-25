@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Bloqueo/Desbloqueo</title>
+        <title>Bloqueo</title>
         <%@include file="../include/head.jsp" %>
         <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
     </head>
@@ -20,7 +20,7 @@
         <div class="container">
             <div class="content" id="content">
                 <br/>
-                <h1>Bloqueo/Desbloqueo</h1>
+                <h1>Bloqueo</h1>
                 <br/>
                 <s:if test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
@@ -58,16 +58,16 @@
                     </div>
                 </s:if>
                 <div class="panel" style="width: 900px;margin: 0 auto;"> 
-                    <s:form action="bloqueoDesbloqueo" method="post" enctype="multipart/form-data" theme = "simple">
+                    <s:form action="bloqueo" method="post" enctype="multipart/form-data" theme = "simple">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="3" style="text-align:center;">Procesar bloqueo o desbloqueo masivos</th></tr>
+                                <tr><th colspan="3" style="text-align:center;">Procesar bloqueo masivos</th></tr>
                             </thead>
                             <tbody>                                
                                 <tr>
                                     <td><label>Cargar Archivo :</label></td>
                                     <td><s:file cssClass="btn btn-info" name="file" label="File"/></td>  
-                                    <td><select name="selectedBloqueo"><option value="00">Desbloquear</option>
+                                    <td><select name="selectedBloqueo">
                                             <s:iterator value="tipoBloqueo" var="myObj1">
                                                     
                                                         <option value="<s:property value ="codigo"/>"> <s:property value ="tipo_bloque"/></option>
@@ -78,7 +78,7 @@
                                 </tr>
                                 
                                 <tr>                                    
-                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "UploadbloqueoDesbloqueo"/></td>                                   
+                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "Uploadbloqueo"/></td>                                   
                                     
                                 </tr>
 

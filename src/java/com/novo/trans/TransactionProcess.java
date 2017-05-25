@@ -29,7 +29,7 @@ public class TransactionProcess extends NovoDAO implements TransactionProcessCon
     public Transaccion cargo(Tarjeta tarjeta, String systrace, String pais){
         Transaccion trans = new Transaccion();
         String ip, port, timeout, terminal,nroOrganizacion;
-        ip = prop.getProperty("novotrans_ip");
+        ip = prop.getProperty("novotrans_ip_"+pais);
         port = prop.getProperty("novotrans_port");
         timeout = prop.getProperty("novotrans_timeout");
         terminal = prop.getProperty("terminal");
@@ -48,7 +48,7 @@ public class TransactionProcess extends NovoDAO implements TransactionProcessCon
     public Transaccion abono(Tarjeta tarjeta, String systrace, String pais){
         Transaccion trans = new Transaccion();
         String ip, port, timeout, terminal,nroOrganizacion;
-        ip = prop.getProperty("novotrans_ip");
+        ip = prop.getProperty("novotrans_ip_"+pais);
         port = prop.getProperty("novotrans_port");
         timeout = prop.getProperty("novotrans_timeout");
         terminal = prop.getProperty("terminal");
@@ -65,7 +65,7 @@ public class TransactionProcess extends NovoDAO implements TransactionProcessCon
     public Transaccion balance(Tarjeta tarjeta, String systrace, String pais, String exptarjeta) {
         Transaccion trans = new Transaccion();
         String ip, port, timeout, terminal,nroOrganizacion;
-        ip = prop.getProperty("novotrans_ip");
+        ip = prop.getProperty("novotrans_ip_"+pais);
         port = prop.getProperty("novotrans_port");
         timeout = prop.getProperty("novotrans_timeout");
         terminal = prop.getProperty("terminal");

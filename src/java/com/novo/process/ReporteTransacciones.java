@@ -110,6 +110,15 @@ public class ReporteTransacciones implements BasicConfig {
             dao.closeConection();
             return tarjetas;
         }
+        
+        if(rif != null)
+        {
+            tarjetas  = dao.getTarjetasDAO(null, true, prefix, rif);
+            dao.closeConection();
+            return tarjetas;
+        }
+        
+        
 //        if((documento==null && nroTarjeta==null) || (documento.equals("") && nroTarjeta.equals(""))){
 //            tarjetas = dao.getTarjetasDAO(null,true,prefix, rif);
 //            dao.closeConection();

@@ -162,12 +162,14 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                 this.message = ("Carga de Archivo Exitosa. " + this.file.getName());
                 if (business.checkTarjetas(ajustes).compareToIgnoreCase("error") == 0) {
                     this.message = "Error, Tarjeta Inexistente.";
+                    this.tipoBloqueo = business.getTipoBloqueo();
                     return "success";
                 }
 
                 bloqueo.setBloqueo(bloquex);
                 bloqueo.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
                 this.tipoBloqueo = bloqueo.getBloqueo();
+                this.tipoBloqueo = business.getTipoBloqueo();
 
                 ActionContext.getContext().getSession().put("tarjetasAct", this.tarjetasAct);
             }

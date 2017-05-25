@@ -151,13 +151,34 @@
             <interceptor-ref name="defaultStack" />
         </action>
         
-         <action name="*bloqueoDesbloqueo" method="{1}" class="com.novo.actions.bloqueoDesbloqueoAction" >
+        <!-- <action name="*bloqueoDesbloqueo" method="{1}" class="com.novo.actions.bloqueoDesbloqueoAction" >
             <interceptor-ref name="FuncionAccesoInterceptor" >
-                 <!--param name="idPerfil">MAJUST</param-->
+                param name="idPerfil">MAJUST</param
                 <param name="idModulo">MOBDT</param>
                 <param name="idFuncion">CABDT</param>
             </interceptor-ref>
             <result name="success">/WEB-INF/web/operaciones/bloqueoDesbloqueo.jsp</result>
+            <interceptor-ref name="defaultStack" />
+        </action> -->
+        
+        
+        <action name="*desbloqueo" method="{1}" class="com.novo.actions.bloqueoDesbloqueoAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOBDT</param>
+                <param name="idFuncion">CADT</param>
+            </interceptor-ref>
+            <result name="success">/WEB-INF/web/operaciones/desbloqueo.jsp</result>
+            <interceptor-ref name="defaultStack" />
+        </action>        
+        
+        <action name="*bloqueo" method="{1}" class="com.novo.actions.bloqueoDesbloqueoAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor" >
+                <!--param name="idPerfil">MAJUST</param-->
+                <param name="idModulo">MOBDT</param>
+                <param name="idFuncion">CABT</param>
+            </interceptor-ref>
+            <result name="success">/WEB-INF/web/operaciones/bloqueo.jsp</result>
             <interceptor-ref name="defaultStack" />
         </action>
         

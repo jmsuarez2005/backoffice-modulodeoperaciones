@@ -99,7 +99,7 @@
                                     <td><button  id ="boton1" >Añadir Campos</button></td>
                                 </thead>
                                 <tbody>
-                                    <tr id="listaCampos0" ><td ><s:select  name="selectedCampo" headerValue="-Seleccionar Campo-" headerKey="" list = "campos" listKey = "idCampo"  listValue="campo" /></td><td colspan="2"><s:textfield  name="selectedCampoValue" /></td></tr>
+                                    <tr id="listaCampos0" ><td ><s:select  name="selectedCampo" headerValue="-Seleccionar Campo-" headerKey="" list = "campos" listKey = "idCampo"  listValue="campo" /></td><td colspan="2"><s:textfield  name="selectedCampoValue" value = ""/></td></tr>
                                     <tr id="listaCampos1" style="display:none;"><td ><s:select  name="selectedCampo" headerValue="-Seleccionar Campo-" headerKey="" list = "campos" listKey = "idCampo"  listValue="campo" /></td><td colspan="2"><s:textfield  name="selectedCampoValue" /></td></tr>
                                     <tr id="listaCampos2" style="display:none;"><td ><s:select  name="selectedCampo" headerValue="-Seleccionar Campo-" headerKey="" list = "campos" listKey = "idCampo"  listValue="campo" /></td><td colspan="2"><s:textfield  name="selectedCampoValue" /></td></tr>
                                     <tr id="listaCampos3" style="display:none;"><td ><s:select  name="selectedCampo" headerValue="-Seleccionar Campo-" headerKey="" list = "campos" listKey = "idCampo"  listValue="campo" /></td><td colspan="2"><s:textfield  name="selectedCampoValue" /></td></tr>

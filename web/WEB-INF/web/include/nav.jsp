@@ -25,7 +25,9 @@
                             <li><s:a action="listarAjusteTransacciones" namespace="/operaciones">Consultar Ajustes</s:a></li>
                             <li><s:a action="Traslados" namespace="/operaciones">Traslados</s:a></li>
                              <li><s:a action="Sobregiros" namespace="/operaciones">Sobregiros</s:a></li>
-                             <li><s:a action="bloqueoDesbloqueo" namespace="/operaciones">Bloqueo/Desbloqueo</s:a></li>
+                             <!-- <li><s:a action="bloqueoDesbloqueo" namespace="/operaciones">Bloqueo/Desbloqueo</s:a></li> -->
+                             <li><s:a action="bloqueo" namespace="/operaciones">Bloqueo</s:a></li>
+                             <li><s:a action="desbloqueo" namespace="/operaciones">Desbloqueo</s:a></li>
                              <li><s:a action="renovacion" namespace="/operaciones">Renovación</s:a></li>
                              <li><s:a action="consultarrenovacion" namespace="/operaciones">Consultar Renovación</s:a></li>
                              <li><s:a action="ConsultaSaldo" namespace="/operaciones">Consultar Saldo</s:a></li>

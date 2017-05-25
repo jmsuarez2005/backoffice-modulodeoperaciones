@@ -157,7 +157,7 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
 
             if (handler.getRespCode().equals("00")) {
 
-                String Nuevosobregiro = "insert into novo_sobregiros (NRO_TARJETA, MONTO_AJUSTE,USUARIO_INGRESO,TIPO_AJUSTE) VALUES ('" + Tarjeta + "'," + Monto + ",'" + idUsuario + "'," + selectedAjuste + ")";
+                String Nuevosobregiro = "insert into novo_sobregiros (ID, NRO_TARJETA, MONTO_AJUSTE,USUARIO_INGRESO,TIPO_AJUSTE) VALUES (NOVO_SOBREGIROS_SEQ.nextval, '" + Tarjeta + "'," + Monto + ",'" + idUsuario + "'," + selectedAjuste + ")";
                 String ActualizaPlastico = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE= 'PB' WHERE NRO_CUENTA=0000" + Tarjeta;
                 String ActualizaConsolidado = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE= 'PB' WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
 
@@ -185,7 +185,7 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
             } else {
                 log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
 
-                String Sobregiro = "insert into novo_sobregiros (NRO_TARJETA, MONTO_AJUSTE,USUARIO_INGRESO,TIPO_AJUSTE,MSG) VALUES ('" + Tarjeta + "'," + Monto + ",'" + idUsuario + "'," + selectedAjuste + ", 'La tarjeta no pudo ser bloqueada" + handler.getRespCode() + "')";
+                String Sobregiro = "insert into novo_sobregiros (ID, NRO_TARJETA, MONTO_AJUSTE,USUARIO_INGRESO,TIPO_AJUSTE,MSG) VALUES (NOVO_SOBREGIROS_SEQ.nextval, '" + Tarjeta + "'," + Monto + ",'" + idUsuario + "'," + selectedAjuste + ", 'La tarjeta no pudo ser bloqueada" + handler.getRespCode() + "')";
                 if (dbo.executeQuery(Sobregiro) == 0) {
                     dbo.dbClose();
                     return "ok";

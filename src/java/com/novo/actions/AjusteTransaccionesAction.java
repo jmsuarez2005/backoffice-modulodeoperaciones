@@ -278,11 +278,15 @@ public class AjusteTransaccionesAction extends ActionSupport
      
     }
     
-    if((this.selectedProducto != null) && (!this.selectedProducto.equals("")))
+    if((this.selectedProducto != null) && (!this.selectedProducto.equals("")) || 
+            (this.selectedEmpresa != null) && (!this.selectedEmpresa.equals("")) )
     {
         log.info("Producto"+ selectedProducto);
-        this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, this.nroTarjeta, this.selectedProducto, null);
+        log.info("Empresa"+ selectedEmpresa);
+        this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, this.nroTarjeta, this.selectedProducto, this.selectedEmpresa);
     }
+        
+    
     
     if ((this.opcion != null) && (this.opcion.equals("buscarUsuario2"))) 
     {

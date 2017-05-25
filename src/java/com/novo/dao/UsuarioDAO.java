@@ -95,11 +95,21 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery,RCConfig{
                     Perfil aux = new Perfil();
                     aux.setIdPerfil(dbi.getFieldString("idperfil"));
                     aux.setDescripcion(dbi.getFieldString("acdesc"));
-                    aux.setFunciones(this.obtenerFuncionesPerfil(aux.getIdPerfil()));
+                    //aux.setFunciones(this.obtenerFuncionesPerfil(aux.getIdPerfil()));
                     perfiles.add(aux);
                 }
             }
             dbi.dbClose();
+            
+            log.info("--- FUNCIONES ---");
+            int f = 0;
+            while (perfiles.size() > f) {
+                    perfiles.get(f).setFunciones(this.obtenerFuncionesPerfil(perfiles.get(f).getIdPerfil()));
+                    f++;
+                    log.info("-----------");
+            }
+            
+            
         }catch (Exception e){
             log.info("obtenerPerfilesUsuario: Ocurrió un error al intentar buscar los perfiles de usuario.");
             log.info(e.getMessage()+" localizado en: "+e.getLocalizedMessage());
