@@ -540,6 +540,13 @@ public class AjusteTransaccionesAction extends ActionSupport
       int i = 0;
       do {
         Row row = sheet.getRow(i);
+        
+         if (row == null) {
+                break;
+        } else if (row.getCell(0) == null) {
+            break;
+        }
+        
         if (row.getCell(0).getCellType() == 3) {
           break;
         }
