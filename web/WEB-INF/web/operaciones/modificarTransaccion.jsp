@@ -17,16 +17,22 @@
     </head>
     <body>        
         <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
                 <br/>
                 <h1>Ajuste de Transacciones</h1>
                 <br/>
-                <s:if test="%{!message.equals(\"\")}">
+                <s:if test="%{tipoMessage.equals(\"error\")}">
+                    <div class="alert alert-error">
+                        <s:property value = "%{message}" /> 
+                    </div>
+                </s:if>
+                <s:elseif  test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
                         <s:property value = "%{message}" />
                     </div>
-                    </s:if>
+                </s:elseif>
                 <s:form theme="simple" namespace="/operaciones" action="AjusteTransacciones">                   
                     <s:if test="%{getTransacciones().size()>0}">
                         <div class="panel" style="width: 1000px;margin: 0 auto;">
@@ -59,7 +65,7 @@
                                                 <td style="width:18%;text-align:center;" colspan="1"><s:property value="descripcion"/></td>                                            
                                                 <td style="width:16%;text-align:center;" colspan="1"><s:select  id="listaTipoAjustes" name="selectedAjuste" headerValue="Tipo de Ajuste" list = "tipoAjustes" listKey = "idCodigoAjuste"  listValue="descripcion" /></td>  
                                                 <td style="width:5%;text-align:center;" colspan="1">                                                                                                        
-                                                <s:submit value="Registrar Ajuste" cssClass="btn btn-primary" action="registrarAjusteTransacciones" /> 
+                                                <s:submit value="Registrar Ajuste" cssClass="btn btn-primary" action="registrarAjusteTransacciones" onclick="openDialogLoading()"/> 
                                                 </td>
                                             </tr>
                                         </s:form>

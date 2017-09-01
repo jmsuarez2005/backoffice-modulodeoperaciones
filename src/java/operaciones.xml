@@ -34,6 +34,27 @@
             <result name="success">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>
         </action-->
         
+        <interceptors>
+          <interceptor name="SessionInterceptor" class="com.novo.interceptors.SessionInterceptor" />
+                      
+          <interceptor-stack name="sessionExpira">
+     		<interceptor-ref name="SessionInterceptor"/>
+		<interceptor-ref name="defaultStack" />
+          </interceptor-stack>
+          
+        </interceptors>
+        
+        <!-- Se aplicará esta pila (stack) de interceptores a todos los actions (controaldores) de la app -->
+       
+        
+        <default-interceptor-ref name="sessionExpira" />
+        
+        <global-results>
+            <!-- result en caso de sesión inválida, se redireccionará a la página de login -->
+            <result name="accesodenegado">/WEB-INF/web/info/accesoDenegado.jsp</result>
+        </global-results>
+        
+        
         <action name="buscarUsuarioAjusteTransacciones" method="buscarUsuario" class="com.novo.actions.AjusteTransaccionesAction" >
             <interceptor-ref name="FuncionAccesoInterceptor" >
                 <!--param name="idPerfil">MAJUST</param-->
@@ -45,6 +66,7 @@
             <result name="success">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>                              
            <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
            <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         </action>
         
         
@@ -58,6 +80,7 @@
             <interceptor-ref name="defaultStack" />                                   
            <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
            <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         </action>
         
         <action name="listarAjusteTransacciones" method="listar" class="com.novo.actions.AjusteTransaccionesAction" >
@@ -69,6 +92,7 @@
             </interceptor-ref>
             <interceptor-ref name="defaultStack" />                                   
            <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
            <!--result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result-->
         </action>
         
@@ -82,6 +106,7 @@
             <interceptor-ref name="defaultStack" />                                   
             <result name="success">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>
             <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         </action>
         
         <action name="actualizarAjustesAjusteTransacciones" method="actualizarAjustes" class="com.novo.actions.AjusteTransaccionesAction" >
@@ -92,6 +117,7 @@
             </interceptor-ref>
             <interceptor-ref name="defaultStack" />                                   
             <result name="listar">/WEB-INF/web/operaciones/ajusteTransacciones.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             <!--result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result-->
         </action>
         
@@ -105,6 +131,16 @@
             <result name="transacciones">/WEB-INF/web/operaciones/modificarTransaccion.jsp</result>
             <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
             <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
+            
+             <result name="excel" type="stream">
+                <param name="contentDisposition">attachment;filename="${reportFile}"</param>
+                <param name="contentType">application/vnd.ms-excel</param>
+                <param name="inputName">inputStream</param>
+                <param name="bufferSize">1024</param>
+            </result>
+            
+            
             <interceptor-ref name="defaultStack" />
         </action>
         
@@ -117,16 +153,32 @@
             </interceptor-ref>
             <interceptor-ref name="defaultStack" />                                    
             <result name="success">/WEB-INF/web/operaciones/sobregiros.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             <!-- <result name="transacciones">/WEB-INF/web/operaciones/modificarTransaccion.jsp</result>
             <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
             <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>-->
         </action>
         
         <action name="*Actualizaciones" method="{1}" class="com.novo.actions.ActualizacionesAction" >                                   
+            <interceptor-ref name="FuncionAccesoInterceptor">     
+                <param name="idModulo">MOACT</param>
+            </interceptor-ref>
+            
             <result name="success">/WEB-INF/web/operaciones/actualizaciones.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
+            
             <!-- <result name="transacciones">/WEB-INF/web/operaciones/modificarTransaccion.jsp</result>
             <result name="ajustetarjeta">/WEB-INF/web/operaciones/ajusteTarjeta.jsp</result>
             <result name="listar">/WEB-INF/web/operaciones/listarAjustes.jsp</result>-->
+        <interceptor-ref name="defaultStack" />
+        </action>
+        
+        <action name="*Afiliacion" method="{1}" class="com.novo.actions.AfiliacionAction" >
+            <interceptor-ref name="FuncionAccesoInterceptor">    
+                <param name="idModulo">MOAFI</param>
+            </interceptor-ref>
+            <result name="success">/WEB-INF/web/operaciones/afiliacion.jsp</result>     
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         <interceptor-ref name="defaultStack" />
         </action>
         
@@ -138,6 +190,7 @@
             </interceptor-ref>
             <interceptor-ref name="defaultStack" />
             <result name="success">/WEB-INF/web/operaciones/traslados.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         </action>
         
        
@@ -148,6 +201,7 @@
                 <param name="idModulo">MOPTRA</param>
             </interceptor-ref>
             <result name="success">/WEB-INF/web/operaciones/traslados.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             <interceptor-ref name="defaultStack" />
         </action>
         
@@ -169,6 +223,7 @@
                 <param name="idFuncion">CADT</param>
             </interceptor-ref>
             <result name="success">/WEB-INF/web/operaciones/desbloqueo.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             <interceptor-ref name="defaultStack" />
         </action>        
         
@@ -179,6 +234,7 @@
                 <param name="idFuncion">CABT</param>
             </interceptor-ref>
             <result name="success">/WEB-INF/web/operaciones/bloqueo.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             <interceptor-ref name="defaultStack" />
         </action>
         
@@ -191,6 +247,7 @@
             <!--<result name="success">/WEB-INF/web/operaciones/renovacion.jsp</result>-->
            <result name="success">/WEB-INF/web/operaciones/renovacion.jsp</result>
            <result name="consultar">/WEB-INF/web/operaciones/consultaRen.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             
             <interceptor-ref name="defaultStack" />
         </action>
@@ -206,6 +263,7 @@
             <interceptor-ref name="sessionExpirayStack" />
                 
             <result name="success">/WEB-INF/web/operaciones/ConsultaSaldo.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             <result name="excel" type="stream">
                 <param name="contentDisposition">attachment;filename="${reportFile}"</param>
                 <param name="contentType">application/vnd.ms-excel</param>

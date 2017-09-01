@@ -5,6 +5,7 @@
 package com.novo.actions;
 
 import com.novo.constants.BasicConfig;
+import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.SobregirosDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.CamposActualizacion;
@@ -12,6 +13,7 @@ import com.novo.model.TAjuste;
 import com.novo.model.Tarjeta;
 import com.novo.model.UsuarioSesion;
 import com.novo.process.ReporteTransacciones;
+import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
@@ -48,16 +50,36 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     private String contentType;
     private String filename;
     private String pais;
+    private String tipoMessage = ""; //Error, manejo para el jsp
 
     public SobregirosAction() {
         tipoAjustes = new ArrayList<TAjuste>();
         tarjetas = new ArrayList<Tarjeta>();
         tarjetasAct = new ArrayList<Tarjeta>();
-
+        usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
     }
 
     @Override
     public String execute() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
         ReporteTransacciones business = new ReporteTransacciones();
         tipoAjustes = business.getTipoAjustes();
         return SUCCESS;
@@ -80,6 +102,25 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     }
 
     public String buscarUsuario() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
         ReporteTransacciones business = new ReporteTransacciones();
         if (nroTarjeta != null && !nroTarjeta.equals("")) {
             log.info("tarjeta = " + nroTarjeta);
@@ -92,6 +133,25 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     }
 
     public String Upload() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
         ReporteTransacciones business = new ReporteTransacciones();
 
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION);
@@ -104,6 +164,13 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
         boolean procesoOk = true;
         SobregirosDAO sobregiros = new SobregirosDAO(appName, databases, pais);
         try {
+
+            if (this.file == null) {
+                this.message = "Error al cargar el archivo";
+                tipoMessage = "error";
+                tipoAjustes = business.getTipoAjustes();
+                return SUCCESS;
+            }
             log.info(file.getAbsolutePath() + " " + file.getCanonicalPath());
             File file2;
             file2 = new File(file.getPath() + filename);
@@ -123,8 +190,8 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
                     break;
                 } else if (row.getCell(0) == null) {
                     break;
-                } 
-                
+                }
+
                 if (row.getCell(0).getCellType() == 3) {
                     break;
                 }
@@ -147,6 +214,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
                 tar.setNroTarjeta(tarjetaString);
                 if (!tarjetaString.matches("\\d{16}")) {
                     message = "Error con el formato de la tarjeta";
+                    tipoMessage = "error";
                     procesoOk = false;
                     break;
                 }
@@ -162,6 +230,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
 
             if (i > 500) {
                 message = "Numero de registros en el archivo excedido";
+                tipoMessage = "error";
                 tipoAjustes = business.getTipoAjustes();
                 return SUCCESS;
             }
@@ -169,12 +238,19 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
 
                 message = "Carga de Archivo Exitosa. " + file.getName();
 
-                if (business.checkTarjetas(ajustes).compareToIgnoreCase("error") == 0) {
-
-                    message = "Error, Tarjeta Inexistente.";
+                String respuesta = business.checkTarjetas(ajustes);
+                if (respuesta.contains("errorT")) {
+                    message = "Error, Tarjeta(s) Inexistente(s):" + respuesta.substring(6, respuesta.length());
+                    tipoMessage = "error";
+                    tipoAjustes = business.getTipoAjustes();
+                    return SUCCESS;
+                } else if (respuesta.contains("error")) {
+                    message = "[!] Error de sistema";
+                    tipoMessage = "error";
                     tipoAjustes = business.getTipoAjustes();
                     return SUCCESS;
                 }
+
                 sobregiros.setAjustes(ajustes);
                 sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
                 ajustex = ajustes;
@@ -184,7 +260,8 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
             }
         } catch (Exception e) {
             log.error("error ", e);
-            message = "error";
+            tipoMessage = "error";
+            message = "[!] Error de sistema";
         }
         return SUCCESS;
     }
@@ -261,4 +338,11 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
         this.tipoAjustes = tipoAjustes;
     }
 
+    public String getTipoMessage() {
+        return tipoMessage;
+    }
+
+    public void setTipoMessage(String tipoMessage) {
+        this.tipoMessage = tipoMessage;
+    }
 }

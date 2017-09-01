@@ -5,10 +5,13 @@
 package com.novo.actions;
 
 import com.novo.constants.BasicConfig;
+import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.UsuarioSesion;
 import com.novo.process.UsuarioProc;
+import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,19 +20,59 @@ import com.opensymphony.xwork2.ActionSupport;
 public class CambioClaveAction extends ActionSupport implements BasicConfig{
     private String message, successMessage, errorMessage;
     private String claveActual,newpw,newpwcf;
+    private UsuarioSesion usuarioSesion;
+    private static Logger log = Logger.getLogger(CambioClaveAction.class);
     
     public CambioClaveAction() {
         this.message = "";
         this.successMessage = "";
         this.errorMessage = "";
+        usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
     }
     
     @Override
     public String execute() throws Exception {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
         return SUCCESS;
     }
     
     public String cambiar() throws Exception {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
         
         UsuarioSesion usuarioSesion = (UsuarioSesion)ActionContext.getContext().getSession().get(USUARIO_SESION);
         UsuarioProc business = new UsuarioProc();

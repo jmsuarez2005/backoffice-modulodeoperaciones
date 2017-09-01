@@ -75,6 +75,7 @@
             <interceptor-ref name="sessionExpirayStack" /> 
                  
             <result name="success">/WEB-INF/web/inicio/perfil.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         </action>
         
         <!-- Action para cambio de Clave -->
@@ -87,6 +88,7 @@
              </result>
              <result name="success">/WEB-INF/web/inicio/cambioClave.jsp</result>
              <result name="input">/WEB-INF/web/inicio/cambioClave.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         </action>
     </package>
     

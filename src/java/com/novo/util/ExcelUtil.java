@@ -29,6 +29,12 @@ public class ExcelUtil {
         setEstiloCelda(myWorkBook, mySheet, cell);
     }
     
+    public static void crearCeldaAjuste(HSSFRow row,int index,HSSFWorkbook myWorkBook,HSSFSheet mySheet,String content){
+        HSSFCell cell = row.createCell(index);
+        cell.setCellValue(new HSSFRichTextString(content));
+        setEstiloCeldaAjuste(myWorkBook, mySheet, cell);
+    }
+    
     public static void crearCeldaBold(HSSFRow row,int index,HSSFWorkbook myWorkBook,HSSFSheet mySheet,String content){
         HSSFCell cell = row.createCell(index);
         cell.setCellValue(new HSSFRichTextString(content));
@@ -99,6 +105,30 @@ public class ExcelUtil {
         cellStyle.setFont(hSSFFont);
         
         cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        
+        cellStyle.setWrapText(true);
+        
+        cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        
+        myCell.setCellStyle(cellStyle);
+    }
+     
+     public static void setEstiloCeldaAjuste(HSSFWorkbook myWorkBook,HSSFSheet mySheet,HSSFCell myCell){
+        HSSFCellStyle cellStyle = myWorkBook.createCellStyle();
+        HSSFFont hSSFFont = myWorkBook.createFont();
+        
+        hSSFFont.setFontName(HSSFFont.FONT_ARIAL);
+        hSSFFont.setColor(HSSFColor.BLACK.index);
+
+        cellStyle.setFont(hSSFFont);
+        
+        //cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
         cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);

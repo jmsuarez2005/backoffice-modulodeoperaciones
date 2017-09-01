@@ -5,10 +5,13 @@
 package com.novo.actions;
 
 import com.novo.constants.BasicConfig;
+import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.ReporteEmisionRecarga;
 import com.novo.model.UsuarioSesion;
 import com.novo.process.ReporteActividadDiariaProc;
 import com.novo.util.DateUtil;
+import com.novo.util.SessionUtil;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import java.io.ByteArrayInputStream;
@@ -19,37 +22,59 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
 
 /**
  *
  * @author jorojas
  */
-public class ReporteActividadDiariaAction extends ActionSupport implements BasicConfig,SessionAware {
-    
+public class ReporteActividadDiariaAction extends ActionSupport implements BasicConfig, SessionAware {
+
     private Map<String, Object> session;
+    private static Logger log = Logger.getLogger(ReporteActividadDiariaAction.class);
     private String message; //Para imprimir alertas, errores, etc
     private Date fecha; //fecha del reporte
-    private Map<String,ReporteEmisionRecarga> reporteCo;
-    private Map<String,ReporteEmisionRecarga> reportePe;
-    private Map<String,ReporteEmisionRecarga> reporteVe;
+    private Map<String, ReporteEmisionRecarga> reporteCo;
+    private Map<String, ReporteEmisionRecarga> reportePe;
+    private Map<String, ReporteEmisionRecarga> reporteVe;
     private ReporteEmisionRecarga totales;
-    private String cambioBsDolar,cambioSolesDolar,cambioPesosDolar;
+    private String cambioBsDolar, cambioSolesDolar, cambioPesosDolar;
     private String ingresoComedorPe;
-    
+
     private InputStream inputStream;
     private String reportFile;
-    
-    
+    private String tipoMessage = ""; //Error, manejo para el jsp
+
     public ReporteActividadDiariaAction() {
         this.totales = new ReporteEmisionRecarga();
         this.ingresoComedorPe = "0.00";
-        this.fecha=com.novo.util.DateUtil.getYesterday();
+        this.fecha = com.novo.util.DateUtil.getYesterday();
     }
-    
+
     @Override
-    public String execute() throws Exception {
-        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha,(UsuarioSesion)this.session.get("usuarioSesion"));
+    public String execute() throws Exception {        
+        
+        //Valido sesion
+        UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        if (usuario == null) {
+            return "out";
+        }
+        SessionUtil sessionUtil = new SessionUtil();
+        String sessionDate = usuario.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuario)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
         this.reporteCo = business.obtenerEmisionRecargaColombia();
         this.reportePe = business.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
@@ -58,52 +83,69 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         this.cambioBsDolar = business.getCambioBsDolar().toString();
         this.cambioSolesDolar = business.getCambioSolesDolar().toString();
         this.cambioPesosDolar = business.getCambioPesosDolar().toString();
-        
-        
-        
-        
+
         return SUCCESS;
-        
+
     }
-    
+
     public String generarExcel() throws Exception {
-        this.message = "Llamada al método de Generar Excel. "+this.fecha.toString();
-        this.execute();
-        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha,(UsuarioSesion)this.session.get("usuarioSesion"));
         
+        //Valido sesion
+        UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        if (usuario == null) {
+            return "out";
+        }
+        SessionUtil sessionUtil = new SessionUtil();
+        String sessionDate = usuario.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuario)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
+        this.message = "Llamada al método de Generar Excel. " + this.fecha.toString();
+        this.execute();
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+
         business.setReporteCo(this.reporteCo);
         business.setReportePe(this.reportePe);
         business.setReporteVe(this.reporteVe);
         business.setTotales(this.totales);
-        
-        
-        this.reportFile="reporte_actividad_diaria_"+DateUtil.format("YYYYMMdd", fecha) +".xls";
+
+        this.reportFile = "reporte_actividad_diaria_" + DateUtil.format("YYYYMMdd", fecha) + ".xls";
         try {
             ByteArrayOutputStream boas = new ByteArrayOutputStream();
             business.crearWorkBookExcel().write(boas);
             setInputStream(new ByteArrayInputStream(boas.toByteArray()));
-         } catch (IOException e) {
-          e.printStackTrace();
-         }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return EXCEL;
     }
-    
+
     public String enviarCorreo() throws Exception {
 
         this.execute();
-        
-        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha,(UsuarioSesion)this.session.get("usuarioSesion"));
+
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
         business.setReporteCo(this.reporteCo);
         business.setReportePe(this.reportePe);
         business.setReporteVe(this.reporteVe);
         business.setTotales(this.totales);
-        
-        try{
+
+        try {
             business.enviarCorreo();
-        }catch(Exception ex){
-            this.message="No se pudo enviar: "+ex.toString();
+        } catch (Exception ex) {
+            this.message = "No se pudo enviar: " + ex.toString();
+            tipoMessage = "error";
         }
-        
+
         return SUCCESS;
     }
 
@@ -114,7 +156,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
     public void setMessage(String message) {
         this.message = message;
     }
-  
+
     public Date getFecha() {
         return fecha;
     }
@@ -123,7 +165,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
-    
+
     public Map<String, ReporteEmisionRecarga> getReporteCo() {
         return reporteCo;
     }
@@ -208,7 +250,13 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
     public void setIngresoComedorPe(String ingresoComedorPe) {
         this.ingresoComedorPe = ingresoComedorPe;
     }
-    
-    
-    
+
+    public String getTipoMessage() {
+        return tipoMessage;
+    }
+
+    public void setTipoMessage(String tipoMessage) {
+        this.tipoMessage = tipoMessage;
+    }
+
 }

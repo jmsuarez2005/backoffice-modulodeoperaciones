@@ -16,16 +16,22 @@
     </head>
     <body>
         <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
                 <br/>
                 <h1>Actualizaciones</h1>
                 <br/>
-                <s:if test="%{!message.equals(\"\")}">
+                <s:if test="%{tipoMessage.equals(\"error\")}">
+                    <div class="alert alert-error">
+                        <s:property value = "%{message}" /> 
+                    </div>
+                </s:if>
+                <s:elseif  test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
                         <s:property value = "%{message}" />
                     </div>
-                </s:if>
+                </s:elseif >
                 <s:form theme="simple" namespace="/operaciones" action="Actualizaciones">
                     <div class="panel" style="width: 900px;margin: 0 auto;">
                         <table class="table" style="width: 100%;">
@@ -39,7 +45,7 @@
                                     <td><s:textfield cssClass="search-query" name="nroTarjeta" /></td>       
                                 </tr>
                                 <tr>
-                                    <td colspan="4" align="center"  style="text-align:center;"><s:submit cssClass="btn btn-primary" value="Buscar" action="buscarUsuarioActualizaciones" /></td>
+                                    <td colspan="4" align="center"  style="text-align:center;"><s:submit cssClass="btn btn-primary" value="Buscar" action="buscarUsuarioActualizaciones" onclick="openDialogLoading()"/></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -87,7 +93,7 @@
 
                                 </tr>
                                 <tr>                                    
-                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "UploadActualizaciones"/></td>                                   
+                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "UploadActualizaciones" onclick="openDialogLoading()"/></td>                                   
                                 </tr>
 
                             </tbody>      

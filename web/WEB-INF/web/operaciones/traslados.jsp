@@ -17,16 +17,22 @@
     </head>
     <body id="body">
         <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>   
         <div class="container">
             <div class="content" id="content">
                 <br/>
                 <h1>Traslado de saldos</h1>
                 <br/> 
-                <s:if test="%{!message.equals(\"\")}">
+                <s:if test="%{tipoMessage.equals(\"error\")}">
+                    <div class="alert alert-error">
+                        <s:property value = "%{message}" /> 
+                    </div>
+                </s:if>
+                <s:elseif  test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
                         <s:property value = "%{message}" />
                     </div>
-                </s:if>
+                </s:elseif>
 
                 <s:form theme="simple" namespace="/operaciones" action="Traslados">       
                     <div class="panel" style="width: 1000px;margin: 0 auto;">
@@ -42,7 +48,7 @@
                                     <td  style=""><s:select id="listaProductos" name ="selectedProducto" list = "listaProductos" listKey = "prefix" listValue = "descripcion" cssClass="search-query" headerValue ="Seleccione Producto" headerKey=""/></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="4" style="text-align:center;"><s:submit cssClass="btn btn-primary" value="Buscar" action="buscarUsuarioTraslados" /></td>
+                                    <td colspan="4" style="text-align:center;"><s:submit cssClass="btn btn-primary" value="Buscar" action="buscarUsuarioTraslados" onclick="openDialogLoading()"/></td>
                                 </tr>
                             </tbody>   
                         </table>

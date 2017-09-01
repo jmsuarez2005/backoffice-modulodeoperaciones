@@ -16,16 +16,22 @@
     </head>
     <body>        
         <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
                 <br/>
                 <h1>Ajustes Masivos</h1>
                 <br/>
-                <s:if test="%{!message.equals(\"\")}">
+                <s:if test="%{tipoMessage.equals(\"error\")}">
+                    <div class="alert alert-error">
+                        <s:property value = "%{message}" /> 
+                    </div>
+                </s:if>
+                <s:elseif  test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
                         <s:property value = "%{message}" />
                     </div>
-                    </s:if>
+                </s:elseif>
                 <s:form theme="simple" namespace="/operaciones" action="AjusteTransacciones">
                     
                   
@@ -44,7 +50,7 @@
                                     <s:hidden value="buscarUsuario2" name ="opcion" />
                                 </tr>
                                 <tr>
-                                        <td colspan="4" align="center"  style="text-align:center;"><s:submit cssClass="btn btn-primary" value="Buscar" action="buscarUsuarioAjusteTransacciones" /></td>
+                                        <td colspan="4" align="center"  style="text-align:center;"><s:submit cssClass="btn btn-primary" value="Buscar" action="buscarUsuarioAjusteTransacciones" onclick="openDialogLoading()" /></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -80,7 +86,7 @@
                                             <td><s:textfield cssClass="input-mini search-query" name="montoAjuste" id="monto"/></td>
                                             <td><s:select id="listaTipoAjustes" name="selectedAjuste" headerValue="Tipo de Ajuste" list = "tipoAjustes" listKey = "idCodigoAjuste"  listValue="descripcion" /></td>
                                             <td><s:textfield cssClass="search-query" name="observacion" id="observacion"/></td>
-                                            <td><s:submit cssClass="btn btn-primary" value="Realizar Ajuste" action="registrarAjusteAjusteTransacciones" /></td>
+                                            <td><s:submit cssClass="btn btn-primary" value="Realizar Ajuste" action="registrarAjusteAjusteTransacciones" onclick="openDialogLoading()"/></td>
                                         </tr>
                                         </s:form>
                                     </s:iterator>
@@ -105,7 +111,7 @@
                                 <tr>
                                      <td><label>Observacion :</label></td>
                                      <td><s:textfield cssClass="search-query" name="observacion" id="observacion"/></td>
-                                     <td colspan="2" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Enviar Archivo" position="center"/></td>
+                                     <td colspan="2" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Enviar Archivo" position="center" onclick="openDialogLoading()"/></td>
                                 </tr>
                             </tbody>      
                         </table>                       

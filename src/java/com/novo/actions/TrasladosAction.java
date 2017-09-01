@@ -5,10 +5,12 @@
 package com.novo.actions;
 
 import com.novo.constants.BasicConfig;
+import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.Producto;
 import com.novo.model.Tarjeta;
 import com.novo.model.UsuarioSesion;
 import com.novo.process.ReporteTransacciones;
+import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.ArrayList;
@@ -20,46 +22,83 @@ import org.apache.log4j.Logger;
  * @author ggutierrez
  */
 public class TrasladosAction extends ActionSupport implements BasicConfig {
-    
+
     private static Logger log = Logger.getLogger(TrasladosAction.class);
     private String message = "";
-    
+
     private String documentoIdentidad;
-    private String selectedProducto="";
-    
+    private String selectedProducto = "";
+
     private List<Producto> listaProductos;
     private List<Tarjeta> tarjetas;
     private Tarjeta tarjetaOrigen;
     private Tarjeta tarjetaDestino;
-    private String selectedTarjetaOrigen="";
-    private String selectedTarjetaDestino="";
+    private String selectedTarjetaOrigen = "";
+    private String selectedTarjetaDestino = "";
     private String selectedTarjeta;
     private UsuarioSesion usuarioSesion;
+    private String tipoMessage = ""; //Error, manejo para el jsp
     String pais;
-    
+
     public TrasladosAction() {
-        tarjetas= new ArrayList<Tarjeta>();
+        tarjetas = new ArrayList<Tarjeta>();
         listaProductos = new ArrayList<Producto>();
-        usuarioSesion = (UsuarioSesion)ActionContext.getContext().getSession().get("usuarioSesion");
-        pais = ((String)ActionContext.getContext().getSession().get("pais"));
+        usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        pais = ((String) ActionContext.getContext().getSession().get("pais"));
     }
-    
-    
-    
+
     @Override
-    public String execute(){
+    public String execute() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
         ReporteTransacciones business = new ReporteTransacciones();
         listaProductos = business.getProductos();
         return SUCCESS;
     }
-    
+
     public String buscarUsuario() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
         ReporteTransacciones business = new ReporteTransacciones();
         listaProductos = business.getProductos();
         if (selectedProducto != null && !selectedProducto.equals("")) {
             tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");
-        }else{
-            message="Debe seleccionar un producto";
+        } else {
+            message = "Debe seleccionar un producto";
         }
         return SUCCESS;
     }
@@ -102,7 +141,7 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
 
     public void setTarjetas(List<Tarjeta> tarjetas) {
         this.tarjetas = tarjetas;
-    }    
+    }
 
     public Tarjeta getTarjetaOrigen() {
         return tarjetaOrigen;
@@ -119,54 +158,31 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
     public void setTarjetaDestino(Tarjeta tarjetaDestino) {
         this.tarjetaDestino = tarjetaDestino;
     }
-    public String ereaseTarjetaTras(){
+
+    public String ereaseTarjetaTras() {
         ReporteTransacciones business = new ReporteTransacciones();
         log.info("borrarTarjetas() ");
         listaProductos = business.getProductos();
-        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");  
+        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");
         tarjetaDestino = null;
         tarjetaOrigen = null;
         return SUCCESS;
     }
-    
-    public String fillTarjetaOrigen(){
-        log.info("fillTarjetaOrigen() ["+selectedTarjeta+"]");
+
+    public String fillTarjetaOrigen() {
+        log.info("fillTarjetaOrigen() [" + selectedTarjeta + "]");
         Tarjeta tarjeta = new Tarjeta();
         tarjeta.setMascara("prueba");
         ReporteTransacciones business = new ReporteTransacciones();
-        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");  
-        
+        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");
+
         listaProductos = business.getProductos();
-        for(Tarjeta tarjetaAux: tarjetas){
-            if(tarjetaAux.getNroTarjeta().equals(selectedTarjeta)){
-                tarjetaOrigen=tarjetaAux;
+        for (Tarjeta tarjetaAux : tarjetas) {
+            if (tarjetaAux.getNroTarjeta().equals(selectedTarjeta)) {
+                tarjetaOrigen = tarjetaAux;
             }
-            if(selectedTarjetaDestino.equals(tarjetaAux.getNroTarjeta())){
-                tarjetaDestino=tarjetaAux;
-            }
-        }
-        if (tarjetaDestino != null) {
-            tarjetaDestino = business.consultarSaldo(tarjetaDestino);            
-        }
-        if (tarjetaOrigen != null) {
-            tarjetaOrigen = business.consultarSaldo(tarjetaOrigen);
-        }
-        return SUCCESS;
-    }
-    public String fillTarjetaDestino(){
-        log.info("fillTarjetaDestino() ["+selectedTarjeta+"]");
-        Tarjeta tarjeta = new Tarjeta();
-        tarjeta.setMascara("prueba");
-        ReporteTransacciones business = new ReporteTransacciones();
-        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");  
-        
-        listaProductos = business.getProductos();
-        for(Tarjeta tarjetaAux: tarjetas){
-            if(tarjetaAux.getNroTarjeta().equals(selectedTarjeta)){
-                tarjetaDestino=tarjetaAux;
-            }
-            if(selectedTarjetaOrigen.equals(tarjetaAux.getNroTarjeta())){
-                tarjetaOrigen=tarjetaAux;
+            if (selectedTarjetaDestino.equals(tarjetaAux.getNroTarjeta())) {
+                tarjetaDestino = tarjetaAux;
             }
         }
         if (tarjetaDestino != null) {
@@ -177,21 +193,66 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
         }
         return SUCCESS;
     }
-    
+
+    public String fillTarjetaDestino() {
+        log.info("fillTarjetaDestino() [" + selectedTarjeta + "]");
+        Tarjeta tarjeta = new Tarjeta();
+        tarjeta.setMascara("prueba");
+        ReporteTransacciones business = new ReporteTransacciones();
+        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");
+
+        listaProductos = business.getProductos();
+        for (Tarjeta tarjetaAux : tarjetas) {
+            if (tarjetaAux.getNroTarjeta().equals(selectedTarjeta)) {
+                tarjetaDestino = tarjetaAux;
+            }
+            if (selectedTarjetaOrigen.equals(tarjetaAux.getNroTarjeta())) {
+                tarjetaOrigen = tarjetaAux;
+            }
+        }
+        if (tarjetaDestino != null) {
+            tarjetaDestino = business.consultarSaldo(tarjetaDestino);
+        }
+        if (tarjetaOrigen != null) {
+            tarjetaOrigen = business.consultarSaldo(tarjetaOrigen);
+        }
+        return SUCCESS;
+    }
+
     /**
      * Realiza un Traslado
-     * @return 
+     *
+     * @return
      */
-    public String procesar(){
-        ReporteTransacciones business = new ReporteTransacciones();
-        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");  
-        listaProductos = business.getProductos();
-        for(Tarjeta tarjetaAux: tarjetas){
-            if(selectedTarjetaDestino.equals(tarjetaAux.getNroTarjeta())){
-                tarjetaDestino=tarjetaAux;
+    public String procesar() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
             }
-            if(selectedTarjetaOrigen.equals(tarjetaAux.getNroTarjeta())){
-                tarjetaOrigen=tarjetaAux;
+
+            return "out";
+        }
+        //Fin valida sesion
+        
+        ReporteTransacciones business = new ReporteTransacciones();
+        tarjetas = business.getTarjetasUsuario(documentoIdentidad, null, selectedProducto.trim(), "");
+        listaProductos = business.getProductos();
+        for (Tarjeta tarjetaAux : tarjetas) {
+            if (selectedTarjetaDestino.equals(tarjetaAux.getNroTarjeta())) {
+                tarjetaDestino = tarjetaAux;
+            }
+            if (selectedTarjetaOrigen.equals(tarjetaAux.getNroTarjeta())) {
+                tarjetaOrigen = tarjetaAux;
             }
         }
         if (tarjetaDestino != null) {
@@ -202,15 +263,17 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
         }
         tarjetaDestino.setMonto(tarjetaOrigen.getSaldoDisponible());
         tarjetaOrigen.setMonto(tarjetaOrigen.getSaldoDisponible());
-        if(business.traslado(tarjetaOrigen, tarjetaDestino, usuarioSesion.getIdUsuario())==0){
-            message= "Traslado realizado con exito";
-        }else{
+        if (business.traslado(tarjetaOrigen, tarjetaDestino, usuarioSesion.getIdUsuario()) == 0) {
+            message = "Traslado realizado con exito";
+        } else {
             message = "Traslado no realizado";
+            tipoMessage = "error";
         }
-        tarjetaDestino=null;
-        tarjetaOrigen=null;
+        tarjetaDestino = null;
+        tarjetaOrigen = null;
         return SUCCESS;
     }
+
     public String getSelectedTarjeta() {
         return selectedTarjeta;
     }
@@ -234,5 +297,13 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
     public void setSelectedTarjetaDestino(String selectedTarjetaDestino) {
         this.selectedTarjetaDestino = selectedTarjetaDestino;
     }
-    
+
+    public String getTipoMessage() {
+        return tipoMessage;
+    }
+
+    public void setTipoMessage(String tipoMessage) {
+        this.tipoMessage = tipoMessage;
+    }
+
 }

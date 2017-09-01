@@ -14,16 +14,22 @@
     </head>
     <body>
         <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
                 <br/>
                 <h1>Consulta Saldo</h1>
                 <br/>
-                <s:if test="%{!message.equals(\"\")}">
+                <s:if test="%{tipoMessage.equals(\"error\")}">
+                    <div class="alert alert-error">
+                        <s:property value = "%{message}" /> 
+                    </div>
+                </s:if>
+                <s:elseif  test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
                         <s:property value = "%{message}" />
                     </div>
-                </s:if>
+                </s:elseif>
                 
                 <s:if test="%{getTarjetas().size()>0}">
                     <div class="panel" style="width: 900px;margin: 0 auto;">
@@ -68,7 +74,7 @@
                                 </tr>
                                 
                                 <tr>                                    
-                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "UploadConsultaSaldo"/></td>                                   
+                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "UploadConsultaSaldo" onclick="openDialogLoading()"/></td>                                   
                                     
                                 </tr>
 

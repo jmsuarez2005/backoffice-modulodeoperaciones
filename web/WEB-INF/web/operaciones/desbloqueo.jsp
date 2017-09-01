@@ -17,16 +17,22 @@
     </head>
     <body>
         <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
                 <br/>
                 <h1>Desbloqueo</h1>
                 <br/>
-                <s:if test="%{!message.equals(\"\")}">
+                <s:if test="%{tipoMessage.equals(\"error\")}">
+                    <div class="alert alert-error">
+                        <s:property value = "%{message}" /> 
+                    </div>
+                </s:if>
+                <s:elseif  test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
                         <s:property value = "%{message}" />
                     </div>
-                </s:if>
+                </s:elseif>
                 
                 <s:if test="%{getTarjetas().size()>0}">
                     <div class="panel" style="width: 900px;margin: 0 auto;">
@@ -73,7 +79,7 @@
                                 </tr>
                                 
                                 <tr>                                    
-                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "Uploaddesbloqueo"/></td>                                   
+                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "Uploaddesbloqueo" onclick="openDialogLoading()"/></td>                                   
                                     
                                 </tr>
 

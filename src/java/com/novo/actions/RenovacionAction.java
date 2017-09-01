@@ -6,6 +6,7 @@
 package com.novo.actions;
 
 import com.novo.constants.BasicConfig;
+import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.RenovacionDAO;
 import com.novo.model.Empresa;
 import com.novo.model.Producto;
@@ -16,6 +17,7 @@ import com.novo.model.ValoresRen;
 import com.novo.objects.util.Utils;
 import com.novo.process.RenovacionProc;
 import com.novo.process.ReporteTransacciones;
+import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
@@ -51,21 +53,45 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     private String documentoIdentidad;
     private String fechaIni;
     private String fechaFin;
+    private String tipoMessage = ""; //Error, manejo para el jsp
 
     public String carga() throws IOException {
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
         this.pais = ((String) ActionContext.getContext().getSession().get("pais"));
-        
-        
+
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuario == null) {
+            return "out";
+        }
+        String sessionDate = usuario.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuario)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+
+        if (this.file == null) {
+            this.message = "Error al cargar el archivo";
+            tipoMessage = "error";
+            return SUCCESS;
+        }
+
         RenovacionDAO ren = new RenovacionDAO("operaciones", databases, this.pais);
-        
+
         ValoresRen renoAction = new ValoresRen();
-        
+
         renoAction = ren.ValoresCarga();
-        
+
         String rutaOrigen = renoAction.getRutaOrigen();
         String rutaDestino = renoAction.getRutaDestino();
-        String nombreRenovacion = renoAction.getNombreRenovacion();        
+        String nombreRenovacion = renoAction.getNombreRenovacion();
         String host = renoAction.getHost();
         String usuarioR = renoAction.getUsuario();
 
@@ -84,6 +110,25 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     }
 
     public String consultar() {
+        //Valido sesion
+        UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        SessionUtil sessionUtil = new SessionUtil();
+        if (usuario == null) {
+            return "out";
+        }
+        String sessionDate = usuario.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuario)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+
         this.listaProductos = new ArrayList();
         this.listaEmpresas = new ArrayList();
 
@@ -104,6 +149,25 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     public String buscar() {
         this.pais = ((String) ActionContext.getContext().getSession().get("pais"));
 
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        if (usuario == null) {
+            return "out";
+        }
+        String sessionDate = usuario.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuario)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+
         RenovacionDAO ren = new RenovacionDAO("operaciones", databases, this.pais);
         this.renovar = ren.QueryRenovacion(this.selectedEmpresa, this.selectedProducto, this.documentoIdentidad, this.fechaIni, this.fechaFin);
         listar();
@@ -112,6 +176,25 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     }
 
     public String execute() {
+
+        SessionUtil sessionUtil = new SessionUtil();
+        UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        if (usuario == null) {
+            return "out";
+        }
+        String sessionDate = usuario.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuario)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+
         return "success";
     }
 
@@ -209,6 +292,14 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
 
     public void setFechaFin(String fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public String getTipoMessage() {
+        return tipoMessage;
+    }
+
+    public void setTipoMessage(String tipoMessage) {
+        this.tipoMessage = tipoMessage;
     }
 
 }

@@ -14,6 +14,7 @@ public class Tarjeta {
     private String idExtPer;
     private String cardProgram;
     private String nombreCliente;
+    private String apellidoCliente;
     private String mascara;
     private String rif;
     private String idExtEmp;
@@ -21,7 +22,7 @@ public class Tarjeta {
     private String saldoDisponible;
     private String fechaExpiracion;
     private String monto;
-    
+
     public Tarjeta() {
     }
 
@@ -112,6 +113,13 @@ public class Tarjeta {
     public void setMonto(String monto) {
         this.monto = monto;
     }
-    
-    
+
+    public String getApellidoCliente() {
+        return apellidoCliente;
+    }
+
+    public void setApellidoCliente(String apellidoCliente) {
+        this.apellidoCliente = apellidoCliente;
+    }
+
 }

@@ -18,4 +18,5 @@ public interface RCConfig {
     int rcUsuarioInactivo = -3;
     int rcCambiarClave = -4;
     int rcExiste = -5;
+    int rcFechaLogin = -6;
 }

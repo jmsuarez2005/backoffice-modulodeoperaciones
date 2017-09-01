@@ -15,6 +15,7 @@
     <body>
         
             <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>
             <div class="container">
                 <div class="content" id="content">
                     <br/><br/><br/><br/><br/><br/><br/><br/>
@@ -33,7 +34,7 @@
                                     <br/><s:password name="newpw" size="45" /><br/><br/><br/>
                                     <b class="text-1">Confirmación de clave nueva: </b>
                                     <br/><s:password name="newpwcf" size="45" /><br/><br/><br/>
-                                    <center><s:submit value="Cambiar Clave" action="cambiarClave" onclick="return validarCambioClave(this.form,event)" /> <s:reset value="Reset" /></center>
+                                    <center><s:submit value="Cambiar Clave" action="cambiarClave" onclick="return validarCambioClave(this.form,event);openDialogLoading()" /> <s:reset value="Reset" /></center>
                                 </div>
                                 <div style="float:left;width:50%;">
                                     <div style="padding-left: 30px;border-left: 1px #dddddd solid;">

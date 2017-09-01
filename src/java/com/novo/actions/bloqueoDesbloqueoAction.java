@@ -6,6 +6,7 @@
 package com.novo.actions;
 
 import com.novo.constants.BasicConfig;
+import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.BloqueoDesbloqueoDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.TAjuste;
@@ -13,6 +14,7 @@ import com.novo.model.TBloqueo;
 import com.novo.model.Tarjeta;
 import com.novo.model.UsuarioSesion;
 import com.novo.process.ReporteTransacciones;
+import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
@@ -43,7 +45,6 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     private String selectedAjuste = "";
     private String selectedCampoValue = "";
     private String selectedBloqueo;
-    private UsuarioSesion usuarioSesion;
     private List<TAjuste> tipoAjustes;
     private List<Ajuste> ajustex;
     private List<TBloqueo> tipoBloqueo;
@@ -51,16 +52,37 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     private File file;
     private String contentType;
     private String filename;
+    private String tipoMessage = ""; //Error, manejo para el jsp
 
     public bloqueoDesbloqueoAction() {
-        this.tipoAjustes = new ArrayList();
+        //this.tipoAjustes = new ArrayList();
         this.tarjetas = new ArrayList();
         this.tarjetasAct = new ArrayList();
     }
 
     public String execute() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
         ReporteTransacciones business = new ReporteTransacciones();
-        this.tipoAjustes = business.getTipoAjustes();
+        //this.tipoAjustes = business.getTipoAjustes();
         this.tipoBloqueo = business.getTipoBloqueo();
         return "success";
     }
@@ -82,6 +104,27 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     }
 
     public String buscarUsuario() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
+        
         ReporteTransacciones business = new ReporteTransacciones();
         if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals(""))) {
             log.info("tarjeta = " + this.nroTarjeta);
@@ -94,6 +137,27 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     }
 
     public String Upload() {
+        
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+        
+        
         ReporteTransacciones business = new ReporteTransacciones();
 
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -102,12 +166,18 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
 
         Tarjeta tar = new Tarjeta();
         List bloquex = new ArrayList();
-        List ajustes = new ArrayList();
+        List<Ajuste> ajustes = new ArrayList<Ajuste>();
         TBloqueo ajuste = new TBloqueo();
         Ajuste ajusteB = new Ajuste();
         boolean procesoOk = true;
         BloqueoDesbloqueoDAO bloqueo = new BloqueoDesbloqueoDAO("operaciones", databases, this.pais);
         try {
+            if (this.file == null) {
+                this.message = "Error al cargar el archivo";
+                tipoMessage = "error";
+                this.tipoBloqueo = business.getTipoBloqueo();
+                return "success";
+            }
             log.info(this.file.getAbsolutePath() + " " + this.file.getCanonicalPath());
 
             File file2 = new File(this.file.getPath() + this.filename);
@@ -140,12 +210,14 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                 tar.setNroTarjeta(tarjetaString);
                 if (!tarjetaString.matches("\\d{16}")) {
                     this.message = "Error con el formato de la tarjeta";
+                    tipoMessage = "error";
                     procesoOk = false;
                     break;
                 }
                 bloquex.add(ajuste);
                 ajustes.add(ajusteB);
                 this.tarjetasAct.add(tar);
+                ajusteB = new Ajuste();
                 ajuste = new TBloqueo();
                 tar = new Tarjeta();
                 log.info("tarjeta [" + tarjetaString + "] ");
@@ -156,12 +228,20 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
 
             if (i > 500) {
                 this.message = "Numero de registros en el archivo excedido";
+                tipoMessage = "error";
                 return "success";
             }
             if (procesoOk) {
                 this.message = ("Carga de Archivo Exitosa. " + this.file.getName());
-                if (business.checkTarjetas(ajustes).compareToIgnoreCase("error") == 0) {
-                    this.message = "Error, Tarjeta Inexistente.";
+                String respuesta = business.checkTarjetas(ajustes);
+                if (respuesta.contains("errorT")) {
+                    message = "Error, Tarjeta(s) Inexistente(s):" + respuesta.substring(6, respuesta.length());
+                    tipoMessage = "error";
+                    this.tipoBloqueo = business.getTipoBloqueo();
+                    return "success";
+                } else if (respuesta.contains("error")) {
+                    message = "[!] Error de sistema";
+                    tipoMessage = "error";
                     this.tipoBloqueo = business.getTipoBloqueo();
                     return "success";
                 }
@@ -175,7 +255,8 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
             }
         } catch (Exception e) {
             log.error("error ", e);
-            this.message = "error";
+            tipoMessage = "error";
+            this.message = "[!] Error de sistema";
         }
         return "success";
     }
@@ -268,4 +349,11 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
         this.tipoBloqueo = tipoBloqueo;
     }
 
+    public String getTipoMessage() {
+        return tipoMessage;
+    }
+
+    public void setTipoMessage(String tipoMessage) {
+        this.tipoMessage = tipoMessage;
+    }
 }

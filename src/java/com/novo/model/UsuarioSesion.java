@@ -11,11 +11,11 @@ import java.util.Date;
  *
  * @author jorojas
  */
-public class UsuarioSesion{
-    
+public class UsuarioSesion {
+
     private String idUsuario;
     private String acNombre;
-    private String password;   
+    private String password;
     private String acEstatus;
     private String acTipo;
     private String acUbicacion;
@@ -23,12 +23,13 @@ public class UsuarioSesion{
     private String modificadoPor;
     private String idPersona;
     private Date modificado;
+    private String sessionDate;
     private ArrayList<Perfil> perfiles;
 
     public UsuarioSesion() {
         this.idUsuario = "";
         this.acNombre = "";
-        this.password = "";   
+        this.password = "";
         this.acEstatus = "";
         this.acTipo = "";
         this.acUbicacion = "";
@@ -43,18 +44,18 @@ public class UsuarioSesion{
         this.idUsuario = user;
         this.password = password;
     }
-    
-    public String print(){
-        return    " idUsuario: "+this.idUsuario
-                + " acNombre: "+this.acNombre
-                + " password: "+this.password
-                + " acEstatus: "+this.acEstatus
-                + " acTipo: "+this.acTipo
-                + " acUbicacion: "+this.acUbicacion
-                + " acEmail: "+this.acEmail
-                + " modificadoPor: "+this.modificadoPor
-                + " idPersona: "+this.idPersona
-                + " modificado: "+this.modificado.toString();
+
+    public String print() {
+        return " idUsuario: " + this.idUsuario
+                + " acNombre: " + this.acNombre
+                + " password: " + this.password
+                + " acEstatus: " + this.acEstatus
+                + " acTipo: " + this.acTipo
+                + " acUbicacion: " + this.acUbicacion
+                + " acEmail: " + this.acEmail
+                + " modificadoPor: " + this.modificadoPor
+                + " idPersona: " + this.idPersona
+                + " modificado: " + this.modificado.toString();
     }
 
     public String getIdUsuario() {
@@ -144,6 +145,13 @@ public class UsuarioSesion{
     public void setPerfiles(ArrayList<Perfil> perfiles) {
         this.perfiles = perfiles;
     }
-    
-    
+
+    public String getSessionDate() {
+        return sessionDate;
+    }
+
+    public void setSessionDate(String sessionDate) {
+        this.sessionDate = sessionDate;
+    }
+
 }

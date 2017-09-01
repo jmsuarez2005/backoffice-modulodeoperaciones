@@ -12,6 +12,7 @@
             <result name="success">/WEB-INF/web/reportes/reporteActividadDiaria.jsp</result>
             <result name="input">/WEB-INF/web/reportes/reporteActividadDiaria.jsp</result>
             <result name="error">/WEB-INF/web/reportes/reporteActividadDiaria.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
             
             <result name="excel" type="stream">
                 <param name="contentDisposition">attachment;filename="${reportFile}"</param>
@@ -23,6 +24,7 @@
         
         <action name="*CambiosMoneda" method="{1}" class="com.novo.actions.CambiosMonedaAction">
             <result name="success">/WEB-INF/web/reportes/cambiosMoneda.jsp</result>
+            <result name="out">/WEB-INF/web/info/sesionExpirada.jsp</result>  
         </action>
     </package>
     

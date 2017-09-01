@@ -17,17 +17,23 @@
     </head>
     <body>
         <%@include file="../include/header.jsp" %>
+        <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
                 <br/>
                 <h1>Bloqueo</h1>
                 <br/>
-                <s:if test="%{!message.equals(\"\")}">
+                <s:if test="%{tipoMessage.equals(\"error\")}">
+                    <div class="alert alert-error">
+                        <s:property value = "%{message}" /> 
+                    </div>
+                </s:if>
+                <s:elseif  test="%{!message.equals(\"\")}">
                     <div class="alert alert-info">
                         <s:property value = "%{message}" />
                     </div>
-                </s:if>
-                
+                </s:elseif>
+
                 <s:if test="%{getTarjetas().size()>0}">
                     <div class="panel" style="width: 900px;margin: 0 auto;">
                         <table class="table" style="width: 100%;">
@@ -69,23 +75,23 @@
                                     <td><s:file cssClass="btn btn-info" name="file" label="File"/></td>  
                                     <td><select name="selectedBloqueo">
                                             <s:iterator value="tipoBloqueo" var="myObj1">
-                                                    
-                                                        <option value="<s:property value ="codigo"/>"> <s:property value ="tipo_bloque"/></option>
-                                                        
-                                                        
-                                                           </s:iterator></select>
-                                       </td>
+
+                                                <option value="<s:property value ="codigo"/>"> <s:property value ="tipo_bloque"/></option>
+
+
+                                            </s:iterator></select>
+                                    </td>
                                 </tr>
-                                
+
                                 <tr>                                    
-                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "Uploadbloqueo"/></td>                                   
-                                    
+                                    <td colspan="3" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Cargar Archivo" position="center" action= "Uploadbloqueo" onclick="openDialogLoading()"/></td>                                   
+
                                 </tr>
 
                             </tbody>      
                         </table>                        
                     </s:form>
-                     <div class="panel" style="width: 900px;margin: 0 auto;">
+                    <div class="panel" style="width: 900px;margin: 0 auto;">
                         <table class="table" style="width: 100%;">
                             <thead>
                                 <tr><th colspan="7" style="text-align:center;">Tarjetas</th></tr>
@@ -97,13 +103,13 @@
                             </thead>
                             <tbody>                                      
                                 <s:iterator value="tipoBloqueo" var="myObj">
-                                  
-                                        <tr>
-                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value ="fec_reg"/></td>    
-                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value="nro_tarjeta"/></td>                                            
-                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value="descripcion"/></td>
-                                        </tr>
-                                    
+
+                                    <tr>
+                                        <td style="width:25%;text-align:center;" colspan="1"><s:property value ="fec_reg"/></td>    
+                                        <td style="width:25%;text-align:center;" colspan="1"><s:property value="nro_tarjeta"/></td>                                            
+                                        <td style="width:25%;text-align:center;" colspan="1"><s:property value="descripcion"/></td>
+                                    </tr>
+
                                 </s:iterator>
                             </tbody>
                         </table>
@@ -113,15 +119,15 @@
         </div>  
         <%@include file="../include/footer.jsp" %>
         <script>
-            var contador = 1;    
-            document.getElementById("boton1").addEventListener("click", function(event){
+            var contador = 1;
+            document.getElementById("boton1").addEventListener("click", function (event) {
                 event.preventDefault()
                 despliegue();
             });
-            function despliegue(){                
-                document.getElementById("listaCampos"+contador++).style.display="table-row";
-                
-            }                        
+            function despliegue() {
+                document.getElementById("listaCampos" + contador++).style.display = "table-row";
+
+            }
         </script>
     </body>
 </html>
