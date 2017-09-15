@@ -628,6 +628,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         Dbinterface dbi = (Dbinterface) this.ds.get("informix");
 
         String id = "";
+        boolean exist = false;
         String tarjetaDni = "";
         String ConsultaCliente = "select LTRIM (NRO_CLIENTE,0) AS NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA WHERE NRO_CUENTA='0000" + tarjeta + "'";
 
@@ -650,139 +651,162 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
 
             if (dbo.executeQuery(comparoDNI) == 0) {
                 if (dbo.nextRecord()) {
-                    log.error("YA EXISTE UN DNI [" + dni + "] A ACTUALIZAR REGISTRADA EN TARJETAHABIENTE");
-                    dbo.dbClose();
-                    return "error3" + dni;
+                    log.debug("YA EXISTE UN DNI [" + dni + "] A ACTUALIZAR REGISTRADA EN TARJETAHABIENTE");
+//                    dbo.dbClose();
+//                    return "error3" + dni;
+                    // si ya existe el proceso nocturno se encarga de borrar/actualizar en esta tabla
+                    exist = true;
                 }
             }
         }
 
-        String ActualizarSQL = "update TARJETAHABIENTE set status = 0, ";
+        if (!exist) {
 
-        if (!nombre.equals("")) {
-            ActualizarSQL = ActualizarSQL + "NOMBRES = '" + nombre + "', ";
-        }
+            String ActualizarSQL = "update TARJETAHABIENTE set status = 0, ";
+																		   
+		 
 
-        if (!apellido.equals("")) {
-            ActualizarSQL = ActualizarSQL + "APELLIDOS = '" + apellido + "', ";
-        }
+            if (!nombre.equals("")) {
+                ActualizarSQL = ActualizarSQL + "NOMBRES = '" + nombre + "', ";
+            }
 
-        if (!dni.equals("") && pais.equalsIgnoreCase("ve")) {
-            ActualizarSQL = ActualizarSQL + "ID_EXT_PER = '" + dni + "', ID_INTERNO = '" + dni + "', ";
-        } else if (!dni.equals("")) {
-            ActualizarSQL = ActualizarSQL + "ID_EXT_PER = '" + dni + "', ";
-        }
+															 
+																									   
+            if (!apellido.equals("")) {
+                ActualizarSQL = ActualizarSQL + "APELLIDOS = '" + apellido + "', ";
+            }
 
-        ActualizarSQL = ActualizarSQL.substring(0, ActualizarSQL.length() - 2) + " where ID_INTERNO = '" + id + "'";
+            if (!dni.equals("") && pais.equalsIgnoreCase("ve")) {
+                ActualizarSQL = ActualizarSQL + "ID_EXT_PER = '" + dni + "', ID_INTERNO = '" + dni + "', ";
+            } else if (!dni.equals("")) {
+                ActualizarSQL = ActualizarSQL + "ID_EXT_PER = '" + dni + "', ";
+            }
 
-        log.info("SQL [" + ActualizarSQL + "]");
+            ActualizarSQL = ActualizarSQL.substring(0, ActualizarSQL.length() - 2) + " where ID_INTERNO = '" + id + "'";
 
-        if (dbo.executeQuery(ActualizarSQL) == 0) {
-            dbo.dbClose();
-            log.info("Oracle - total de registros afectados =" + dbo.rowsCount);
-            if (dbo.rowsCount == 0 && pais.equalsIgnoreCase("ve")) { // 0 = no se encontro registro, se procede a insertar un nuevo registro con los datos del tarjetahabiente
+            log.info("SQL [" + ActualizarSQL + "]");
+						  
+																				
+																																											  
 
-                String ConsultaTH = "select ID_EXT_PER FROM TARJETAHABIENTE WHERE ID_EXT_PER = '" + dni + "'";
-                log.info(ConsultaTH);
-                dbo.dbreset();
+            if (dbo.executeQuery(ActualizarSQL) == 0) {
+                dbo.dbClose();
+                log.info("Oracle - total de registros afectados =" + dbo.rowsCount);
+                if (dbo.rowsCount == 0 && pais.equalsIgnoreCase("ve")) { // 0 = no se encontro registro, se procede a insertar un nuevo registro con los datos del tarjetahabiente
 
-                if (dbo.executeQuery(ConsultaTH) == 0) {
-                    if (dbo.nextRecord()) {
-                        log.error("YA EXISTE UN TARJETAHABIENTE CON LA CEDULA [" + dni + "]");
-                        dbo.dbClose();
-                        return "error2" + dni;
+                    String ConsultaTH = "select ID_EXT_PER FROM TARJETAHABIENTE WHERE ID_EXT_PER = '" + dni + "'";
+                    log.info(ConsultaTH);
+                    dbo.dbreset();
+
+                    if (dbo.executeQuery(ConsultaTH) == 0) {
+                        if (dbo.nextRecord()) {
+                            log.error("YA EXISTE UN TARJETAHABIENTE CON LA CEDULA [" + dni + "]");
+                            dbo.dbClose();
+                            return "error2" + dni;
+                        }
                     }
-                }
+				 
 
-                String InsertarSQL = "insert into TARJETAHABIENTE values (";
+                    String InsertarSQL = "insert into TARJETAHABIENTE values (";
 
-                if (!dni.equals("") && pais.equalsIgnoreCase("ve")) {
-                    InsertarSQL = InsertarSQL + "'" + dni + "','" + dni + "', 0,";
-                }
+                    if (!dni.equals("") && pais.equalsIgnoreCase("ve")) {
+                        InsertarSQL = InsertarSQL + "'" + dni + "','" + dni + "', 0,";
+                    }
 
-                if (!nombre.equals("")) {
-                    InsertarSQL = InsertarSQL + "'" + nombre + "',";
-                } else {
-                    InsertarSQL = InsertarSQL + "null,";
-                }
+                    if (!nombre.equals("")) {
+                        InsertarSQL = InsertarSQL + "'" + nombre + "',";
+                    } else {
+                        InsertarSQL = InsertarSQL + "null,";
+                    }
 
-                if (!apellido.equals("")) {
-                    InsertarSQL = InsertarSQL + "'" + apellido + "',";
-                } else {
-                    InsertarSQL = InsertarSQL + "null,";
-                }
+                    if (!apellido.equals("")) {
+                        InsertarSQL = InsertarSQL + "'" + apellido + "',";
+                    } else {
+                        InsertarSQL = InsertarSQL + "null,";
+                    }
 
-                InsertarSQL = InsertarSQL + "null,null,null,null,null,null,null,null,null,null,sysdate,null,null)";
-                log.info("SQL [" + InsertarSQL + "]");
+                    InsertarSQL = InsertarSQL + "null,null,null,null,null,null,null,null,null,null,sysdate,null,null)";
+                    log.info("SQL [" + InsertarSQL + "]");
 
-                dbo.dbreset();
-                if (dbo.executeQuery(InsertarSQL) == 0) {
-                    dbo.dbClose();
-                    log.info("Oracle - total de registros insertados =" + dbo.rowsCount);
-                } else {
-                    dbo.dbClose();
-                    log.error("Oracle - Error insertando nuevo registro");
-                    return "error";
-                }
-            }
-        } else {
-            dbo.dbClose();
-            log.error("Oracle - Error actualizando los campos");
-            return "error";
-        }
-
-        if (dbi.executeQuery(ActualizarSQL) == 0) {
-            dbi.dbClose();
-            log.info("Informix - total de registros afectados =" + dbi.rowsCount);
-            if (dbi.rowsCount == 0 && pais.equalsIgnoreCase("ve")) { // 0 = no se encontro registro, se procede a insertar un nuevo registro con los datos del tarjetahabiente
-
-                String ConsultaTH = "select ID_EXT_PER FROM TARJETAHABIENTE WHERE ID_EXT_PER = '" + dni + "'";
-                log.info(ConsultaTH);
-                dbi.dbreset();
-
-                if (dbi.executeQuery(ConsultaTH) == 0) {
-                    if (dbi.nextRecord()) {
-                        log.error("YA EXISTE UN TARJETAHABIENTE CON LA CEDULA [" + dni + "]");
-                        dbi.dbClose();
+                    dbo.dbreset();
+                    if (dbo.executeQuery(InsertarSQL) == 0) {
+                        dbo.dbClose();
+                        log.info("Oracle - total de registros insertados =" + dbo.rowsCount);
+                    } else {
+                        dbo.dbClose();
+                        log.error("Oracle - Error insertando nuevo registro");
                         return "error";
                     }
                 }
-
-                String InsertarSQL = "insert into TARJETAHABIENTE values (";
-
-                if (!dni.equals("") && pais.equalsIgnoreCase("ve")) {
-                    InsertarSQL = InsertarSQL + "'" + dni + "','" + dni + "', 0,";
-                }
-
-                if (!nombre.equals("")) {
-                    InsertarSQL = InsertarSQL + "'" + nombre + "',";
-                } else {
-                    InsertarSQL = InsertarSQL + "null,";
-                }
-
-                if (!apellido.equals("")) {
-                    InsertarSQL = InsertarSQL + "'" + apellido + "',";
-                } else {
-                    InsertarSQL = InsertarSQL + "null,";
-                }
-
-                InsertarSQL = InsertarSQL + "null,null,null,null,null,null,null,null,null,null,current,null)";
-                log.info("INFORMIX - SQL [" + InsertarSQL + "]");
-
-                dbi.dbreset();
-                if (dbi.executeQuery(InsertarSQL) == 0) {
-                    dbi.dbClose();
-                    log.info("Informix - total de registros insertados =" + dbi.rowsCount);
-                } else {
-                    dbi.dbClose();
-                    log.error("Informix - Error insertando nuevo registro");
-                    return "error";
-                }
+            } else {
+                dbo.dbClose();
+                log.error("Oracle - Error actualizando los campos");
+                return "error";
             }
-        } else {
-            dbi.dbClose();
-            log.error("Informix - Error actualizando los campos");
-            return "error";
+				
+						  
+																
+						   
+		 
+
+            if (dbi.executeQuery(ActualizarSQL) == 0) {
+                dbi.dbClose();
+                log.info("Informix - total de registros afectados =" + dbi.rowsCount);
+                if (dbi.rowsCount == 0 && pais.equalsIgnoreCase("ve")) { // 0 = no se encontro registro, se procede a insertar un nuevo registro con los datos del tarjetahabiente
+
+                    String ConsultaTH = "select ID_EXT_PER FROM TARJETAHABIENTE WHERE ID_EXT_PER = '" + dni + "'";
+                    log.info(ConsultaTH);
+                    dbi.dbreset();
+
+                    if (dbi.executeQuery(ConsultaTH) == 0) {
+                        if (dbi.nextRecord()) {
+                            log.error("YA EXISTE UN TARJETAHABIENTE CON LA CEDULA [" + dni + "]");
+                            dbi.dbClose();
+                            return "error";
+                        }
+                    }
+				 
+
+                    String InsertarSQL = "insert into TARJETAHABIENTE values (";
+
+                    if (!dni.equals("") && pais.equalsIgnoreCase("ve")) {
+                        InsertarSQL = InsertarSQL + "'" + dni + "','" + dni + "', 0,";
+                    }
+
+                    if (!nombre.equals("")) {
+                        InsertarSQL = InsertarSQL + "'" + nombre + "',";
+                    } else {
+                        InsertarSQL = InsertarSQL + "null,";
+                    }
+
+                    if (!apellido.equals("")) {
+                        InsertarSQL = InsertarSQL + "'" + apellido + "',";
+                    } else {
+                        InsertarSQL = InsertarSQL + "null,";
+                    }
+
+                    InsertarSQL = InsertarSQL + "null,null,null,null,null,null,null,null,null,null,current,null)";
+                    log.info("INFORMIX - SQL [" + InsertarSQL + "]");
+
+                    dbi.dbreset();
+                    if (dbi.executeQuery(InsertarSQL) == 0) {
+                        dbi.dbClose();
+                        log.info("Informix - total de registros insertados =" + dbi.rowsCount);
+                    } else {
+                        dbi.dbClose();
+                        log.error("Informix - Error insertando nuevo registro");
+                        return "error";
+                    }
+                }
+            } else {
+                dbi.dbClose();
+                log.error("Informix - Error actualizando los campos");
+                return "error";
+            }
+				
+						  
+																  
+						   
         }
 
         return "success";
@@ -1019,8 +1043,8 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                                 break;
                             }
 //                            if (flag) {
-                                //RESPUESTA CON EL NOMBRE Y APELLIDO DEL TARJETA HABIENTE QUE CONTIENE LA CEDULA EN EL CAMPO DE ACTUALIZAR
-                                //return "-3" + dni + ":" + nombre + " " + apellido;
+                            //RESPUESTA CON EL NOMBRE Y APELLIDO DEL TARJETA HABIENTE QUE CONTIENE LA CEDULA EN EL CAMPO DE ACTUALIZAR
+                            //return "-3" + dni + ":" + nombre + " " + apellido;
 //                            }
                         } else {
                             return "-1";
@@ -1100,7 +1124,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             if (flag) {
                 dni = "";
             }
-            
+
             if (!nombre.equals("") || !apellido.equals("") || !dni.equals("")) {
                 if (updateCampos(tarjeta.getNroTarjeta(), nombre, apellido, dni, pais).equals("error")) {
                     return "-1";

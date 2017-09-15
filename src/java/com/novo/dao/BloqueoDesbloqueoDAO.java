@@ -162,56 +162,58 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
                 systrace = dbo.getFieldString("NEXTVAL");
             }
 
-            if (selectedBloqueo.equals("00")){
+            if (selectedBloqueo.equals("00")) {
                 trn = "SERVICIO DE ACTIVACION";
             } else {
                 trn = "SERVICIO DE BLOQUEO";
             }
-            
+
             //enviando operacion a novotrans
             handler.execBloqueo("0", systrace, Tarjeta, terminal, trn, "", Nro_Organizacion(), selectedBloqueo, exptarjeta);
 
             if (handler.getRespCode().equals("00")) {
-                String sql = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', '" + handler.getRespCode() + "')";
-                if (selectedBloqueo.equals("00")){
+                String sql = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION,CANAL) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', '" + handler.getRespCode() + "', 'OPE')";
+                if (selectedBloqueo.equals("00")) {
                     //actualizando los maestros en caso de activacion
                     uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE=NULL WHERE NRO_CUENTA=0000" + Tarjeta;
                     uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE = NULL, FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
                 } else {
                     //actualizando los maestros en caso de bloqueo
-                    uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE='"+selectedBloqueo+"' WHERE NRO_CUENTA=0000" + Tarjeta;
-                    uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE='"+selectedBloqueo+"', FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
+                    uf = "UPDATE MAESTRO_PLASTICO_TEBCA SET BLOQUE='" + selectedBloqueo + "' WHERE NRO_CUENTA=0000" + Tarjeta;
+                    uf2 = "UPDATE MAESTRO_CONSOLIDADO_TEBCA SET BLOQUE='" + selectedBloqueo + "', FEC_CAMBIO_BLOQUE = SYSDATE WHERE NRO_CUENTA=0000" + Tarjeta.substring(0, 14) + "00";
                 }
-                
-                log.debug("sql #1 ["+uf+"]");
-                log.debug("sql #2 ["+uf2+"]");
-                
+
+                log.debug("sql #0 [" + sql + "]");
+                log.debug("sql #1 [" + uf + "]");
+                log.debug("sql #2 [" + uf2 + "]");
+
                 dbo.dbreset();
 
                 if (dbo.executeQuery(sql) == 0) {
                     if (dbo.executeQuery(uf) == 0) {
                         if (dbo.executeQuery(uf2) == 0) {
                             dbo.dbClose();
-                            log.info("La tarjeta " + Tarjeta + "fue desbloqueada, código respuesta" + handler.getRespCode());
+                            log.info("La tarjeta " + Tarjeta + "fue bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
                             return "ok";
                         }
                         dbo.dbClose();
-                        log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
+                        log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
                         return "error";
                     }
 
                     dbo.dbClose();
-                    log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
+                    log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
                     return "error";
                 }
 
                 dbo.dbClose();
-                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
+                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
                 return "error";
-                
+
             }
 
-            String sql4 = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', 'La tarjeta no pudo ser bloqueada" + handler.getRespCode() + "')";
+            String sql4 = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION,CANAL) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', 'La tarjeta no pudo ser bloqueada" + handler.getRespCode() + "', 'OPE')";
+            log.debug("sql #0 [" + uf2 + "]");
             if (dbo.executeQuery(sql4) == 0) {
                 dbo.dbClose();
                 return "ok";
