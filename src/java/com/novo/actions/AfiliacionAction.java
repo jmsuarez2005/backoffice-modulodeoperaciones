@@ -16,6 +16,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -158,7 +159,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
 
                 do {
                     Row row = sheet.getRow(i);
-                //System.out.println("CELDA:" + row.getCell(0).getCellType());
+                    //System.out.println("CELDA:" + row.getCell(0).getCellType());
                     //System.out.println("holaaaaaaaaaaa" + row.getCell(0));
 
                     //La hoja excel debe contener mas de una tarjeta para el proceso masivo
@@ -173,17 +174,21 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                     if (row == null) {
                         break;
                     } else if ((row.getCell(0) == null || row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK) && row.getCell(1) != null) {
-                        if (row.getCell(1).getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                            dniDouble = row.getCell(1).getNumericCellValue();
-                            dni = String.valueOf(dniDouble);
+                        if (!row.getCell(1).getStringCellValue().isEmpty()) {
+                            if (row.getCell(1).getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                dniDouble = row.getCell(1).getNumericCellValue();
+                                dni = String.valueOf(dniDouble);
+                            } else {
+                                dni = row.getCell(1).getStringCellValue();
+                            }
+                            message = "Error, el archivo debe contener el numero de tarjeta del DNI [" + dni + "]";
+                            procesoOk = false;
+                            tipoMessage = "error";
+                            tarjetasAct.clear();
+                            break;
                         } else {
-                            dni = row.getCell(1).getStringCellValue();
+                            break; 
                         }
-                        message = "Error, el archivo debe contener el numero de tarjeta del DNI [" + dni + "]";
-                        procesoOk = false;
-                        tipoMessage = "error";
-                        tarjetasAct.clear();
-                        break;
                     } else if (row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK && row.getCell(1).getCellType() == Cell.CELL_TYPE_BLANK) {
                         break;
                     }
@@ -206,7 +211,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                     } else {
                         if (row.getCell(1).getCellType() == Cell.CELL_TYPE_NUMERIC) {
                             dniDouble = row.getCell(1).getNumericCellValue();
-                            dni = String.valueOf(dniDouble);
+                            dni = String.valueOf(BigDecimal.valueOf(dniDouble));
                         } else {
                             dni = row.getCell(1).getStringCellValue();
                         }
@@ -232,26 +237,32 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
 
                     //Valida que el archivo excel contenga tarjetas de un mismo bin
                     if (i == 0) {
-                        bin = tarjetaString.substring(0, 8);
+                        if (!tarjetaString.equals("")) {
+                            bin = tarjetaString.substring(0, 8);
+                        }
                     } else {
-                        if (!bin.equals(tarjetaString.substring(0, 8))) {
-                            message = "Error, el archivo solo puede contener tarjetas de un mismo bin.";
-                            procesoOk = false;
-                            tipoMessage = "error";
-                            tarjetasAct.clear();
-                            break;
+                        if (!tarjetaString.equals("")) {
+                            if (!bin.equals(tarjetaString.substring(0, 8))) {
+                                message = "Error, el archivo solo puede contener tarjetas de un mismo bin.";
+                                procesoOk = false;
+                                tipoMessage = "error";
+                                tarjetasAct.clear();
+                                break;
+                            }
                         }
                     }
 
                     ajuste.setTarjeta(tarjetaString);
                     tar.setNroTarjeta(tarjetaString);
                     tar.setIdExtPer(dni);
-                    if (!tarjetaString.matches("\\d{16}")) {
-                        message = "Error con el formato de la tarjeta";
-                        tipoMessage = "error";
-                        tarjetasAct.clear();
-                        procesoOk = false;
-                        break;
+                    if (!tarjetaString.equals("")) {
+                        if (!tarjetaString.matches("\\d{16}")) {
+                            message = "Error con el formato de la tarjeta";
+                            tipoMessage = "error";
+                            tarjetasAct.clear();
+                            procesoOk = false;
+                            break;
+                        }
                     }
                     ajustes.add(ajuste);
                     tarjetasAct.add(tar);
@@ -366,7 +377,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
             selectedCampo = "";
             tarjetasAct = new ArrayList<Tarjeta>();
             return SUCCESS;
-        }else if (!resp.equals("0")) {
+        } else if (!resp.equals("0")) {
             message = "Error Cargando lote de Afiliacion en Base de datos";
             tipoMessage = "error";
             selectedCampoValue = "";
