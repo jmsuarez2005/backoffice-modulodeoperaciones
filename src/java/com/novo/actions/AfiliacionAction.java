@@ -187,7 +187,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                             tarjetasAct.clear();
                             break;
                         } else {
-                            break; 
+                            break;
                         }
                     } else if (row.getCell(0).getCellType() == Cell.CELL_TYPE_BLANK && row.getCell(1).getCellType() == Cell.CELL_TYPE_BLANK) {
                         break;
@@ -220,19 +220,25 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                     //NOMBRE
                     if (row.getCell(2) != null) {
                         nombre = row.getCell(2).getStringCellValue();
-                        tar.setNombreCliente(nombre);
+                        if (!nombre.equals("")) {
+                            tar.setNombreCliente(nombre);
+                        }
                     }
 
                     //APELLIDO
                     if (row.getCell(3) != null) {
                         apellido = row.getCell(3).getStringCellValue();
-                        tar.setApellidoCliente(apellido);
+                        if (!apellido.equals("")) {
+                            tar.setApellidoCliente(apellido);
+                        }
                     }
 
                     //CODIGO EMPRESA
                     if (row.getCell(4) != null) {
                         codcia = row.getCell(4).getStringCellValue();
-                        tar.setIdExtEmp(codcia);
+                        if (!codcia.equals("")) {
+                            tar.setIdExtEmp(codcia);
+                        }
                     }
 
                     //Valida que el archivo excel contenga tarjetas de un mismo bin

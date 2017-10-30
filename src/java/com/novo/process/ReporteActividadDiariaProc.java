@@ -133,8 +133,10 @@ public class ReporteActividadDiariaProc implements BasicConfig {
     public Map obtenerEmisionRecargaColombia(){
         EmisionesDAO emisionesJurDAO;
         RecargasDAO recargasJurDAO;
+        RecargasDAO recargasMaestroDAO;
         
         ReporteEmisionRecarga juridica = new ReporteEmisionRecarga();
+        ReporteEmisionRecarga maestro = new ReporteEmisionRecarga();
         ReporteEmisionRecarga totalesCO = new ReporteEmisionRecarga();
         
         //Consultar Persona Juridica en BD
@@ -151,27 +153,39 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         juridica.setRecargasAcumDolares(juridica.getRecargasAcumLocal().divide(cambioPesosDolar,2,RoundingMode.HALF_UP));
         recargasJurDAO.closeConection(); //Cierre de conexion
         
+        //Consultar Abonos Maestro en BD
+        maestro.setProducto("Abonos Maestro");
+        recargasMaestroDAO = new RecargasDAO(appName, databases, co);
+        maestro.setRecargasDiaLocal(recargasMaestroDAO.obtenerMontoRecargasAbonosMaestroDia(fecha,"20"));
+        maestro.setRecargasAcumLocal(recargasMaestroDAO.obtenerMontoRecargasAbonosMaestroMes(fecha,"20"));
+        maestro.setRecargasDiaDolares(maestro.getRecargasDiaLocal().divide(cambioPesosDolar, 2, RoundingMode.HALF_UP));
+        maestro.setRecargasAcumDolares(maestro.getRecargasAcumLocal().divide(cambioPesosDolar, 2, RoundingMode.HALF_UP));
+        recargasMaestroDAO.closeConection(); //Cierre de conexion
         
         //Calcular Totales
         totalesCO.setProducto("Totales");
         totalesCO.setEmisionesFecha(juridica.getEmisionesFecha());
         totalesCO.setEmisionesAcum(juridica.getEmisionesAcum());
-        totalesCO.setRecargasDiaLocal(juridica.getRecargasDiaLocal());
-        totalesCO.setRecargasAcumLocal(juridica.getRecargasAcumLocal());
-        totalesCO.setRecargasDiaDolares(juridica.getRecargasDiaDolares());
-        totalesCO.setRecargasAcumDolares(juridica.getRecargasAcumDolares());   
+        totalesCO.setRecargasDiaLocal(juridica.getRecargasDiaLocal().add(maestro.getRecargasDiaLocal()));
+        totalesCO.setRecargasAcumLocal(juridica.getRecargasAcumLocal().add(maestro.getRecargasAcumLocal()));
+        totalesCO.setRecargasDiaDolares(juridica.getRecargasDiaDolares().add(maestro.getRecargasDiaDolares()));
+        totalesCO.setRecargasAcumDolares(juridica.getRecargasAcumDolares().add(maestro.getRecargasAcumDolares()));   
         
+        totalesCO.setPorcRep(100.00);
         if(totalesCO.getRecargasAcumDolares().doubleValue()!=0){
             juridica.setPorcRep(Double.valueOf(juridica.getRecargasAcumDolares().divide(totalesCO.getRecargasAcumDolares(),2,RoundingMode.HALF_UP).toPlainString())*100);
+            maestro.setPorcRep(Double.valueOf(maestro.getRecargasAcumDolares().divide(totalesCO.getRecargasAcumDolares(),2,RoundingMode.HALF_UP).toPlainString())*100);
         }else{
             juridica.setPorcRep(0.00);
+            maestro.setPorcRep(0.00);
         }
         
         //Calcular %Rep
-        totalesCO.setPorcRep(juridica.getPorcRep());
+        totalesCO.setPorcRep(juridica.getPorcRep() + maestro.getPorcRep());
         
         
         this.reporteCo.put("juridica", juridica);
+        this.reporteCo.put("maestro", maestro);
         this.reporteCo.put("totales", totalesCO);
         
         return this.reporteCo;
@@ -339,7 +353,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         HSSFSheet mySheet = myWorkBook.createSheet();
         mySheet.setGridsPrinted(false);
         String[] nombreProductosPe = {"natural","juridica","juridicaUS","comedores"};
-        String[] nombreProductosCo = {"juridica"};
+        String[] nombreProductosCo = {"juridica","maestro"};
         String[] nombreProductosVe = {"natural","juridica"};
         
         try{
@@ -351,19 +365,19 @@ public class ReporteActividadDiariaProc implements BasicConfig {
             this.llenarExcelPais(myWorkBook,mySheet,9,"Venezuela",this.reporteVe,nombreProductosVe,true);
             this.llenarExcelPais(myWorkBook,mySheet,11,"Perú",this.reportePe,nombreProductosPe,true);
             this.llenarExcelPais(myWorkBook,mySheet,15,"Colombia",this.reporteCo,nombreProductosCo,true);       
-            this.crearFilaTotalesExcel(myWorkBook, mySheet, 16, this.totales);
+            this.crearFilaTotalesExcel(myWorkBook, mySheet, 17, this.totales);
             
-            this.crearEncabezado(myWorkBook, mySheet, 20);
-            this.llenarExcelPais(myWorkBook,mySheet,23,"Venezuela",this.reporteVe,nombreProductosVe,false);
-            this.crearFilaTotalesExcel(myWorkBook, mySheet, 25, this.reporteVe.get("totales"));
+            this.crearEncabezado(myWorkBook, mySheet, 21);
+            this.llenarExcelPais(myWorkBook,mySheet,24,"Venezuela",this.reporteVe,nombreProductosVe,false);
+            this.crearFilaTotalesExcel(myWorkBook, mySheet, 26, this.reporteVe.get("totales"));
                   
-            this.crearEncabezado(myWorkBook, mySheet, 29);
-            this.llenarExcelPais(myWorkBook,mySheet,32,"Perú",this.reportePe,nombreProductosPe,false);
-            this.crearFilaTotalesExcel(myWorkBook, mySheet, 36, this.reportePe.get("totales"));
+            this.crearEncabezado(myWorkBook, mySheet, 30);
+            this.llenarExcelPais(myWorkBook,mySheet,33,"Perú",this.reportePe,nombreProductosPe,false);
+            this.crearFilaTotalesExcel(myWorkBook, mySheet, 37, this.reportePe.get("totales"));
             
-            this.crearEncabezado(myWorkBook, mySheet, 40);
-            this.llenarExcelPais(myWorkBook,mySheet,43,"Colombia",this.reporteCo,nombreProductosCo,false);
-            this.crearFilaTotalesExcel(myWorkBook, mySheet, 44, this.reporteCo.get("totales"));              
+            this.crearEncabezado(myWorkBook, mySheet, 41);
+            this.llenarExcelPais(myWorkBook,mySheet,44,"Colombia",this.reporteCo,nombreProductosCo,false);
+            this.crearFilaTotalesExcel(myWorkBook, mySheet, 46, this.reporteCo.get("totales"));              
             
         } catch(Exception ex){
             log.error(ex);

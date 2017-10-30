@@ -173,28 +173,36 @@
                             <tr>
                                 <td valign="middle">Colombia</td> <!-- Pais -->
                                 <td>
-                                    <s:property value="reporteCo.juridica.producto" />
+                                    <s:property value="reporteCo.juridica.producto" /><br/>
+                                    <s:property value="reporteCo.maestro.producto" />
                                 </td> <!-- Producto -->
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesFecha)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesFecha)" /><br/>
+                                    -
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesAcum)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesAcum)" /><br/>
+                                    -
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaLocal)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaLocal)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasDiaLocal)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaDolares)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaDolares)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasDiaDolares)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumLocal)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumLocal)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasAcumLocal)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumDolares)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumDolares)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasAcumDolares)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.porcRepGlobal)" />%
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.porcRepGlobal)" />%<br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.porcRep)" />%
                                 </td>
                             </tr>
                             <tr>
@@ -404,28 +412,36 @@
                             <tr>
                                 <td>Colombia</td> <!-- Pais -->
                                 <td>
-                                    <s:property value="reporteCo.juridica.producto" />
+                                    <s:property value="reporteCo.juridica.producto" /><br/>
+                                    <s:property value="reporteCo.maestro.producto" />
                                 </td> <!-- Producto -->
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesFecha)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesFecha)" /><br/>
+                                    -
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesAcum)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearEntero(reporteCo.juridica.emisionesAcum)" /><br/>
+                                    -
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaLocal)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaLocal)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasDiaLocal)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaDolares)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasDiaDolares)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasDiaDolares)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumLocal)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumLocal)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasAcumLocal)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumDolares)" />
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.recargasAcumDolares)" /><br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.recargasAcumDolares)" />
                                 </td>
                                 <td>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.porcRep)" />%
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.porcRep)" />%<br/>
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.porcRep)" />%
                                 </td>
                             </tr>
                             <tr>

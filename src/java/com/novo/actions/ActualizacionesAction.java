@@ -170,7 +170,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
 
                 do {
                     Row row = sheet.getRow(i);
-                //System.out.println("CELDA:" + row.getCell(0).getCellType());
+                    //System.out.println("CELDA:" + row.getCell(0).getCellType());
                     //System.out.println("holaaaaaaaaaaa" + row.getCell(0));
 
                     //La hoja excel debe contener mas de una tarjeta para el proceso masivo
@@ -286,6 +286,16 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         log.info("Valor de los campos [" + selectedCampoValue + "]");
         //call method that matches idfields with the values selected by the user.
         campos2 = matchFields(selectedCampo, selectedCampoValue);
+
+        if (campos2.get(0).getValor().equals("errorIdPersona")) {
+            message = "El valor de [id persona] en actualizar es invalido";
+            tipoMessage = "error";
+            selectedCampoValue = "";
+            selectedCampo = "";
+            tarjetasAct = new ArrayList<Tarjeta>();
+            return SUCCESS;
+        }
+
         Collections.sort(campos2);
         if (campos2.size() == 0) {
             message = "El campo/valor no debe estar vacio";
@@ -295,6 +305,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
             tarjetasAct = new ArrayList<Tarjeta>();
             return SUCCESS;
         }
+
         String respuesta = business.makeUpdates(tarjetasAct, campos2, usuarioSesion.getIdUsuario());
         if (respuesta.contains("-3")) {
             message = "Error, la cedula [" + respuesta.substring(2, respuesta.lastIndexOf(":")) + "] en actualizar ya existe en otro registro a nombre de "
@@ -319,6 +330,15 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         message = "El lote de Actualizacion ha sido cargado exitosamente.";
         //call business method that register the updates for the car.
         return SUCCESS;
+    }
+
+    public boolean isNumeric(String cadena) {
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
     }
 
     public void setUpload(File file) {
@@ -412,6 +432,15 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         vecCampo = campo.split(",");
         vecCampoValue = campoValue.split(",");
         for (int i = 0; i < vecCampo.length; i++) {
+            if (vecCampo[i].trim().equals("3")) { // 3 - identificacion persona
+                if (!isNumeric(vecCampoValue[i].trim())) {
+                    matchedFields.clear();
+                    campos.setValor("errorIdPersona");
+                    matchedFields.add(campos);
+                    log.error("El id persona [" + vecCampoValue[i].trim() + "] debe ser numerico");
+                    return matchedFields;
+                }
+            }
             if (!vecCampo[i].trim().equals("")) {
                 campos.setIdCampo(vecCampo[i].trim());
                 if (vecCampoValue[i].trim().equals("")) {

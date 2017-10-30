@@ -266,4 +266,115 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         this.shutdownDatabases();
     }
     
+     /*
+     * MONTO RECARGAS ABONOS MAESTRO DIA(Oracle)
+     */
+    public BigDecimal obtenerMontoRecargasAbonosMaestroDia(Date fecha,String cod_transaccion){
+        BigDecimal monto = new BigDecimal("0.00");
+        monto = monto.setScale(2,BigDecimal.ROUND_HALF_EVEN);
+        
+        String day = "" + fecha.getDate();
+        String month = "" + (fecha.getMonth()+1);
+        String year = "" + (fecha.getYear()+1900);
+        
+        month = DateUtil.rellenarCeros(month, 2);
+        day = DateUtil.rellenarCeros(day, 2);
+        
+        String query = "";
+        
+        if (this.pais.equals(co)){
+            query = recargasAbonosMaestroDiaCoQuery;
+        }else if(this.pais.equals(pe)){
+            //query = recargasPersonaNatPeQuery;
+        }else if(this.pais.equals(ve)){
+            //query = recargasPersonaNatVeQuery;
+        }else if(this.pais.equals(peusd)){
+            
+        }
+        query = query.replace("$FECHA", day + "/" + month + "/" + year);
+        query = query.replace("$CODTRANSACCION", cod_transaccion);
+        
+        
+        log.info("Ejecutando [" + query + "]");
+        try{
+            Dbinterface dbo = ds.get(oracle);
+            dbo.dbreset();
+        
+            if (dbo.executeQuery(query) == 0){
+                if (dbo.nextRecord()){
+                    log.info("EL MONTO ES: [" + dbo.getFieldString("MONTO") + "]");
+                    if (dbo.getFieldString("MONTO") != null && !"".equals(dbo.getFieldString("MONTO"))) {
+                        monto = monto.add(new BigDecimal(dbo.getFieldString("MONTO")).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+                    } else {
+                        monto = monto.add(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_EVEN));
+                    }
+                }
+            }
+        } catch (Exception e){
+            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural dia " + this.pais);
+            log.error("Causa: "+e);
+            e.printStackTrace();
+        }
+        
+        return monto;
+    }
+    
+     
+    /*
+     * MONTO RECARGAS ABONOS MAESTRO ACUMULADA(Oracle)
+     */
+    public BigDecimal obtenerMontoRecargasAbonosMaestroMes(Date fecha,String cod_transaccion){
+        //Códigos 20 - 27
+        BigDecimal monto = new BigDecimal("0.00");
+        monto = monto.setScale(2,BigDecimal.ROUND_HALF_EVEN);
+        
+        String day = "" + fecha.getDate();
+        String month = "" + (fecha.getMonth() + 1);
+        String year = "" + (fecha.getYear() + 1900);
+        
+        month = DateUtil.rellenarCeros(month, 2);
+        day = DateUtil.rellenarCeros(day, 2);
+        
+        String query = "";
+        
+        if (this.pais.equals(co)){
+            query = recargasAbonosMaestroMesCoQuery;
+        }else if(this.pais.equals(pe)){
+            //query = recargasPersonaNatPeQuery;
+        }else if(this.pais.equals(ve)){
+            //query = recargasPersonaNatVeQuery; 
+        }else if(this.pais.equals(peusd)){
+            
+        }
+        
+        query = query.replace("$FECHAINI", "01-" + month + "-" + year + " 00:00:00");
+        query = query.replace("$FECHAFIN", day + "-" + month + "-" + year + " 23:59:59");
+        query = query.replace("$FORMATO", "dd-MM-yyyy HH24:MI:SS");
+        query = query.replace("$CODTRANSACCION", cod_transaccion);
+        
+        
+        log.info("Ejecutando [" + query + "]");
+        try{
+            Dbinterface dbo = ds.get(oracle);
+            dbo.dbreset();
+        
+            if (dbo.executeQuery(query) == 0){
+                if (dbo.nextRecord()){
+                    log.info("EL MONTO ES: [" + dbo.getFieldString("MONTO") + "]");
+                    if (dbo.getFieldString("MONTO") != null && !"".equals(dbo.getFieldString("MONTO"))) {
+                        monto = monto.add(new BigDecimal(dbo.getFieldString("MONTO")).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+                    } else {
+                        monto = monto.add(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_EVEN));
+                    }
+                }
+            }
+        } catch (Exception e){
+            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural mes " + this.pais);
+            log.error("Causa: "+e);
+            e.printStackTrace();
+        }
+        
+        return monto;
+    }
+    
 }
