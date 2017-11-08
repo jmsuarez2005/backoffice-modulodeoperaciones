@@ -478,7 +478,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             sql = sql + " and usuario = '" + usuario + "'";
         }
 
-        sql = sql + " order by nda.FECHA desc";
+        sql = sql + " order by nda.ID_REGISTRO, nda.FECHA";
 
         Dbinterface dbo = ds.get("oracle");
         dbo.dbreset();
