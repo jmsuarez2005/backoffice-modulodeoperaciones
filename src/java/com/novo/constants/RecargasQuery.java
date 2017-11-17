@@ -68,12 +68,14 @@ public interface RecargasQuery {
             + "select sum(a.MON_TRANSACCION/100) MONTO "
             + "from novocol2.DETALLE_TRANSACCIONES_Tebca a "
             + "where to_char(a.FEC_TRANSACCION,'dd/mm/yyyy')='$FECHA' "
-            + " and a.COD_TRANSACCION = '$CODTRANSACCION' ";
+            + "and SUBSTR(a.NRO_CUENTA,1,12) in ('000048759765','000048759768','000048759778') "
+            + "and a.COD_TRANSACCION = '$CODTRANSACCION' ";
     
     String recargasAbonosMaestroMesCoQuery = ""
             + "select sum(a.MON_TRANSACCION/100) MONTO "
             + "from novocol2.DETALLE_TRANSACCIONES_Tebca a "
             + "where a.FEC_TRANSACCION between TO_DATE('$FECHAINI','$FORMATO') and TO_DATE('$FECHAFIN','$FORMATO') "
+            + "and SUBSTR(a.NRO_CUENTA,1,12) in ('000048759765','000048759768','000048759778') "
             + "and a.COD_TRANSACCION = '$CODTRANSACCION' ";
     
                             /** Perú **/            
