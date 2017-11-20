@@ -212,11 +212,11 @@
 
                                         <tr>                                    
 
-                                            <display:column title="Tarjeta"  style="width:15%;text-align:center;"> 
+                                            <display:column title="Tarjeta"  style="width:15%;text-align:center;" sortable="true"> 
                                                 <s:property value="#attr.ajustesTable.mascara"/>
                                             </display:column> 
 
-                                            <display:column title="Monto"  style="width:15%;text-align:center;">  
+                                            <display:column title="Monto"  style="width:15%;text-align:center;" sortable="true">  
                                                 <s:if test="%{!isEditar()}">
                                                     <s:property value="#attr.ajustesTable.monto"/>
                                                 </s:if>
@@ -231,15 +231,15 @@
                                             </display:column>
 
                                             </td>
-                                            <display:column title="Fecha"  style="width:15%;text-align:center;">
+                                            <display:column title="Fecha"  style="width:15%;text-align:center;" sortable="true">
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column>
 
-                                            <display:column title="DNI"  style="width:15%;text-align:center;"> 
+                                            <display:column title="DNI"  style="width:15%;text-align:center;" sortable="true"> 
                                                 <s:property value="#attr.ajustesTable.idExtPer"/>
                                             </display:column>    
 
-                                            <display:column  title="Nombre"  style="width:15%;text-align:center;"> 
+                                            <display:column  title="Nombre"  style="width:15%;text-align:center;" sortable="true"> 
                                                 <s:property value="#attr.ajustesTable.nomCliente"/>
                                             </display:column> 
 
@@ -247,7 +247,7 @@
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column> 
 
-                                            <display:column title="Tipo Ajuste"  style="width:15%;text-align:center;">  
+                                            <display:column title="Tipo Ajuste"  style="width:15%;text-align:center;" sortable="true">  
                                                 <s:if test="%{!isEditar()}">
                                                     <s:property value="#attr.ajustesTable.descripcion"/> 
                                                 </s:if>
@@ -265,11 +265,11 @@
                                         </s:else></td>
                                     </display:column>
 
-                                    <display:column  title="Estatus"  style="width:15%;text-align:center;">  
+                                    <display:column  title="Estatus"  style="width:15%;text-align:center;" sortable="true">  
                                         <s:property value="#attr.ajustesTable.descStatus"/>
                                     </display:column>   
 
-                                    <display:column  title="Observacion"  style="width:15%;text-align:center;"> 
+                                    <display:column  title="Observacion"  style="width:15%;text-align:center;" sortable="true"> 
                                         <s:property value="#attr.ajustesTable.observacion"/>
                                     </display:column>  
 
