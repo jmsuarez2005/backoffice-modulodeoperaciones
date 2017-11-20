@@ -28,7 +28,7 @@
                 $("#statusSelected").val(status);
 
                 var u = document.getElementById("listaUsuariosBusqueda");
-                var usuario = u.options[u.selectedIndex].value;
+                var usuario = u.options[u.selectedIndex].value; 
                 $("#usuarioSelected").val(usuario);
 
                 $("#idFilaEditar").val(fila);
@@ -53,12 +53,13 @@
                 $("#listaTipoAjustes2").on('change', function () {
                     var indice = document.getElementById("listaTipoAjustes2").value;
 
-
+                    /*
                     if (indice === "AUTORIZADO") {
                         alert("Recuerde que no podrá autorizar mas de 500 registros al mismo tiempo");
                         return false;
 
                     }
+                    */
                 });
 
             });
@@ -95,8 +96,8 @@
                             </thead>
                             <tbody>
                                 <tr id="picker1" style=" padding: 0px; margin: 0px">
-                                    <td style="padding: 0px; margin: 0px; text-align: center" colspan="2"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaIni" name="fechaIni" label="Fecha Inicio" displayFormat="dd-MMM-yyyy" value="%{today}"/></tbody></table></td>                                                                
-                                    <td style="padding: 0px; margin: 0px; text-align: center" colspan="2"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaFin" name="fechaFin" label="Fecha Fin" displayFormat="dd-MMM-yyyy" value="%{today}"/></tbody></table></td>
+                                    <td style="padding: 0px; margin: 0px; text-align: center" colspan="2"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaIni" name="fechaIni" label="Fecha Inicio" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>                                                                
+                                    <td style="padding: 0px; margin: 0px; text-align: center" colspan="2"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaFin" name="fechaFin" label="Fecha Fin" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>
                                 </tr>
                                 <tr>
                                     <td  style="width: 18.8%;">Status</td>
@@ -120,6 +121,9 @@
                     <s:textfield cssStyle="display:none" id="selectedUsuarios"  name="selectedUsuario"  displayFormat="dd-MMM-yyyy" />
                     <s:textfield cssStyle="display:none" id="fechaIni2"  name="fechaIni2"  displayFormat="dd-MMM-yyyy" value="%{today}"/>
                     <s:textfield cssStyle="display:none" id="fechaFin2" name="fechaFin2"  displayFormat="dd-MMM-yyyy" value="%{today}"/>
+                    <s:textfield cssStyle="display:none" id="fechaIni"  name="fechaIni"  displayFormat="dd-MMM-yyyy" />
+                    <s:textfield cssStyle="display:none" id="fechaFin" name="fechaFin"  displayFormat="dd-MMM-yyyy" />
+                    <s:textfield cssStyle="display:none" id="selectedStatus" name="selectedStatus"  />
 
                     <s:if test="%{getAjustes().size()>0}">
                         <div class="panel" style="width: 1000px;margin: 0 auto;">
@@ -208,11 +212,11 @@
 
                                         <tr>                                    
 
-                                            <display:column title="Tarjeta"  style="width:15%;text-align:center;"> 
+                                            <display:column title="Tarjeta"  style="width:15%;text-align:center;" sortable="true"> 
                                                 <s:property value="#attr.ajustesTable.mascara"/>
                                             </display:column> 
 
-                                            <display:column title="Monto"  style="width:15%;text-align:center;">  
+                                            <display:column title="Monto"  style="width:15%;text-align:center;" sortable="true">  
                                                 <s:if test="%{!isEditar()}">
                                                     <s:property value="#attr.ajustesTable.monto"/>
                                                 </s:if>
@@ -227,15 +231,15 @@
                                             </display:column>
 
                                             </td>
-                                            <display:column title="Fecha"  style="width:15%;text-align:center;">
+                                            <display:column title="Fecha"  style="width:15%;text-align:center;" sortable="true">
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column>
 
-                                            <display:column title="DNI"  style="width:15%;text-align:center;"> 
+                                            <display:column title="DNI"  style="width:15%;text-align:center;" sortable="true"> 
                                                 <s:property value="#attr.ajustesTable.idExtPer"/>
                                             </display:column>    
 
-                                            <display:column  title="Nombre"  style="width:15%;text-align:center;"> 
+                                            <display:column  title="Nombre"  style="width:15%;text-align:center;" sortable="true"> 
                                                 <s:property value="#attr.ajustesTable.nomCliente"/>
                                             </display:column> 
 
@@ -243,7 +247,7 @@
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column> 
 
-                                            <display:column title="Tipo Ajuste"  style="width:15%;text-align:center;">  
+                                            <display:column title="Tipo Ajuste"  style="width:15%;text-align:center;" sortable="true">  
                                                 <s:if test="%{!isEditar()}">
                                                     <s:property value="#attr.ajustesTable.descripcion"/> 
                                                 </s:if>
@@ -261,11 +265,11 @@
                                         </s:else></td>
                                     </display:column>
 
-                                    <display:column  title="Estatus"  style="width:15%;text-align:center;">  
+                                    <display:column  title="Estatus"  style="width:15%;text-align:center;" sortable="true">  
                                         <s:property value="#attr.ajustesTable.descStatus"/>
                                     </display:column>   
 
-                                    <display:column  title="Observacion"  style="width:15%;text-align:center;"> 
+                                    <display:column  title="Observacion"  style="width:15%;text-align:center;" sortable="true"> 
                                         <s:property value="#attr.ajustesTable.observacion"/>
                                     </display:column>  
 
@@ -284,9 +288,9 @@
                                     <display:setProperty name="paging.banner.placement" value="bottom"/>
 
                                 </display:table>
+                                   
 
-
-                                </tbody>
+                                </tbody>                               
                             </table>
                             <table>
                                 <tr>

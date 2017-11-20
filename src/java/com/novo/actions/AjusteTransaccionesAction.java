@@ -104,6 +104,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.status.add("ANULADO");
         this.status.add("PROCESADO");
         this.status2.add("AUTORIZADO");
+        this.status2.add("AUTORIZAR TODOS");
         this.status2.add("ANULADO");
     }
 
@@ -245,6 +246,28 @@ public class AjusteTransaccionesAction extends ActionSupport
     }
 
     public String actualizarStatusAjustes() {
+        //Valido sesion
+        SessionUtil sessionUtil = new SessionUtil();
+        this.usuarioSesion = ((UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion"));
+        if (usuarioSesion == null) {
+            return "out";
+        }
+        String sessionDate = usuarioSesion.getSessionDate();
+        if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
+            try {
+                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                ActionContext.getContext().getSession().clear();
+            } catch (Exception e) {
+                log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
+            }
+
+            return "out";
+        }
+        //Fin valida sesion
+
+        String[] status = this.selectedStatus.split(", ");
+        log.info("status selected [" + status[0] + "] [" + status[1] + "]---- usuario selected [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ");
+
         if (this.opcion.equals("HEditar")) {
             actualizarEdicion();
             System.out.println("hola entre");
@@ -254,18 +277,30 @@ public class AjusteTransaccionesAction extends ActionSupport
 
             this.listaUsuariosBusqueda = business.getUsuarios();
             String[] idAjustes;
+            String idstatus;
             try {
-                if (this.selectedAjuste == null) {
+                if (this.selectedAjuste == null && !status[1].equals("AUTORIZAR TODOS")) {
                     this.message = "Error al cambiar el status.";
                     tipoMessage = "error";
                     return "listar";
                 }
-
+                if (status[1].equals("AUTORIZAR TODOS")) {
+                    this.ajustes = business.getAjustes(getStatusfromSelected(status[0]), this.selectedUsuario, this.fechaIni, this.fechaFin);
+                    log.info("LISTAAA " + this.ajustes.size());
+                    this.selectedAjuste = "";
+                    for (int i = 0; i < this.ajustes.size(); i++) {
+                        this.selectedAjuste = this.selectedAjuste + this.ajustes.get(i).getIdDetalleAjuste() + ",";
+                    }
+                    this.selectedAjuste = this.selectedAjuste.substring(0, this.selectedAjuste.length() - 1);
+                } 
+                
+                idstatus = getStatusfromSelected(status[1]);
+                log.info("AJUSTES [" + this.selectedAjuste + "]");
                 idAjustes = this.selectedAjuste.split(",");
+
             } catch (Exception e) {
                 return "listar";
             }
-            String idstatus = getStatusfromSelected(this.selectedStatus);
             result = business.updateAjuste(idAjustes, idstatus);
 
             if (result.equals("ok")) {
@@ -275,7 +310,7 @@ public class AjusteTransaccionesAction extends ActionSupport
             }
 
         }
-
+        this.ajustes.clear();
         return "listar";
     }
 
@@ -376,7 +411,7 @@ public class AjusteTransaccionesAction extends ActionSupport
             this.listaUsuariosBusqueda = business.getUsuarios();
             return "listar";
         }
-        
+
         this.listaUsuariosBusqueda = business.getUsuarios();
         this.ajustes = business.getAjustes(getStatusfromSelected(this.selectedStatus), this.selectedUsuario, this.fechaIni, this.fechaFin);
         return "listar";
@@ -761,6 +796,9 @@ public class AjusteTransaccionesAction extends ActionSupport
             return "3";
         }
         if (status.equals("AUTORIZADO")) {
+            return "0";
+        }
+        if (status.equals("AUTORIZAR TODOS")) {
             return "0";
         }
         if (status.equals("ANULADO")) {
