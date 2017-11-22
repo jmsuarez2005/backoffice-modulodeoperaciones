@@ -243,7 +243,7 @@
                                                 <s:property value="#attr.ajustesTable.nomCliente"/>
                                             </display:column> 
 
-                                            <display:column property="usuario" title="Usuario"  style="width:15%;text-align:center;"> 
+                                            <display:column property="usuario" title="Usuario"  style="width:15%;text-align:center;" sortable="true"> 
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column> 
 

@@ -393,7 +393,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
     public List<TAjuste> getTipoAjustesDAO() {
         List<TAjuste> tipoAjustes = new ArrayList<TAjuste>();
         TAjuste tipoAjuste = new TAjuste();
-        String sql = "select * from NOVO_CODIGO_AJUSTES";
+        String sql = "select * from NOVO_CODIGO_AJUSTES order by DESCRIPCION";
         Dbinterface dbo = ds.get("oracle");
         dbo.dbreset();
         log.info("Sql [" + sql + "]");

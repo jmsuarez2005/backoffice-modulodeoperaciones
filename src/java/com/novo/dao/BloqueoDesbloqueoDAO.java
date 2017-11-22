@@ -70,7 +70,7 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
     public List<TBloqueo> getTipoBloqueoDAO() {
         List tipoBloqueo = new ArrayList();
         TBloqueo tipobloqueo = new TBloqueo();
-        String sql = "select * from NOVO_TIPO_BLOQUE";
+        String sql = "select * from NOVO_TIPO_BLOQUE order by TIPO_BLOQUE";
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbo.dbreset();
         log.info("Sql [" + sql + "]");
