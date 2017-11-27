@@ -215,7 +215,15 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                         } else {
                             dni = row.getCell(1).getStringCellValue();
                         }
+                        if (dni.contains(".")) {
+                            dni = dni.split("\\.", 2)[0];
+                        }
+                        if (dni.contains(",")) {
+                            dni = dni.split("\\,", 2)[0];
+                        }
+
                     }
+                    log.info("DNI: " + dni);
 
                     //NOMBRE
                     if (row.getCell(2) != null) {

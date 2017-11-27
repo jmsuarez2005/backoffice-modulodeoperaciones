@@ -28,7 +28,7 @@
                 $("#statusSelected").val(status);
 
                 var u = document.getElementById("listaUsuariosBusqueda");
-                var usuario = u.options[u.selectedIndex].value; 
+                var usuario = u.options[u.selectedIndex].value;
                 $("#usuarioSelected").val(usuario);
 
                 $("#idFilaEditar").val(fila);
@@ -54,12 +54,12 @@
                     var indice = document.getElementById("listaTipoAjustes2").value;
 
                     /*
-                    if (indice === "AUTORIZADO") {
-                        alert("Recuerde que no podrá autorizar mas de 500 registros al mismo tiempo");
-                        return false;
-
-                    }
-                    */
+                     if (indice === "AUTORIZADO") {
+                     alert("Recuerde que no podrá autorizar mas de 500 registros al mismo tiempo");
+                     return false;
+                     
+                     }
+                     */
                 });
 
             });
@@ -208,7 +208,7 @@
 
                                     <!-- PAGINACION QUE SUPLANTA EL ITERATOR (COMENTADO EN LA LINEA DE ARRIBA) -->
                                     <display:table export="false" class="table-bordered table-striped table-hover table-condensed"  style="width: 100%;text-align:center;" 
-                                    id="ajustesTable" name="ajustes" pagesize="15" requestURI="" >
+                                                   id="ajustesTable" name="ajustes" pagesize="15" requestURI="" >
 
                                         <tr>                                    
 
@@ -273,9 +273,11 @@
                                         <s:property value="#attr.ajustesTable.observacion"/>
                                     </display:column>  
 
-                                    <display:column title="<input type='checkbox' onclick='checkboxes(this)' />">
-                                        <input type="checkbox" name="selectedAjuste" value=${ajustesTable.getIdDetalleAjuste()} />
-                                    </display:column>
+                                    <s:if test="%{!#attr.ajustesTable.getStatus().equals(\"7\") && !#attr.ajustesTable.getStatus().equals(\"2\")}">
+                                        <display:column title="<input type='checkbox' onclick='checkboxes(this)' />">
+                                            <input type="checkbox" name="selectedAjuste" value=${ajustesTable.getIdDetalleAjuste()} />
+                                        </display:column>                              
+                                    </s:if>
 
                                     <s:if test="%{getStatusfromSelected(selectedStatus).equals(\"3\")}">
                                         <display:column title="Editar"> 
@@ -283,12 +285,14 @@
                                         </display:column>
                                     </s:if>
 
+
+
                                     </tr> 
 
                                     <display:setProperty name="paging.banner.placement" value="bottom"/>
 
                                 </display:table>
-                                   
+
 
                                 </tbody>                               
                             </table>
@@ -304,10 +308,14 @@
                                     </s:else>
                                     <s:hidden  name="filaEditar" id="idFilaEditar" />
                                     <s:if test="%{!isEditar()}">
-                                        <td style="text-align: center"><label>Cambiar Status: </label></td>
-                                        <td style="text-align: center"><s:select id="listaTipoAjustes2" name ="selectedStatus" list = "status2" /></td>
+                                        <s:if test="%{!selectedStatus.equals(\"ANULADO\") && !selectedStatus.equals(\"PROCESADO\")}">
+                                            <td style="text-align: center"><label>Cambiar Status: </label></td>
+                                            <td style="text-align: center"><s:select id="listaTipoAjustes2" name ="selectedStatus" list = "status2" /></td>
+                                        </s:if>
                                     </s:if>
-                                    <td style="text-align: center"><s:submit cssClass="btn btn-primary" value= "Confirmar" action= "actualizarStatusAjustesAjusteTransacciones"/></td>
+                                    <s:if test="%{!selectedStatus.equals(\"ANULADO\") && !selectedStatus.equals(\"PROCESADO\")}">
+                                        <td style="text-align: center"><s:submit cssClass="btn btn-primary" value= "Confirmar" action= "actualizarStatusAjustesAjusteTransacciones"/></td>
+                                    </s:if>
                                     <!--
                                     <td style="width:50%;text-align:right;" ><span class="text-1">Pagina</span></td>
                                     <td>  <s:textfield style="width:50%;" cssClass="search-query" name="nroPaginas" value="22" id="nroPaginas" disabled="true" /></td>  
