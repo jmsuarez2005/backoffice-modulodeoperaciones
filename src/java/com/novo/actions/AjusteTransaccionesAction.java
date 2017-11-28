@@ -292,8 +292,8 @@ public class AjusteTransaccionesAction extends ActionSupport
                         this.selectedAjuste = this.selectedAjuste + this.ajustes.get(i).getIdDetalleAjuste() + ",";
                     }
                     this.selectedAjuste = this.selectedAjuste.substring(0, this.selectedAjuste.length() - 1);
-                } 
-                
+                }
+
                 idstatus = getStatusfromSelected(status[1]);
                 log.info("AJUSTES [" + this.selectedAjuste + "]");
                 idAjustes = this.selectedAjuste.split(",");
@@ -303,10 +303,17 @@ public class AjusteTransaccionesAction extends ActionSupport
             }
             result = business.updateAjuste(idAjustes, idstatus);
 
-            if (result.equals("ok")) {
-                this.message = " Ajuste actualizado satisfactoriamente.";
-            } else {
-                this.message = "El Ajuste no se pudo actualizar en este momento.";
+            switch (result) {
+                case "ok":
+                    this.message = "Ajuste actualizado satisfactoriamente.";
+                    break;
+                case "vacio":
+                    this.message = "Tipo de ajuste [Autorizado/Anulado/Procesado] no puede ser [Autorizado].";
+                    tipoMessage = "error";
+                    return "listar";
+                default:
+                    this.message = "El Ajuste no se pudo actualizar en este momento.";
+                    break;
             }
 
         }

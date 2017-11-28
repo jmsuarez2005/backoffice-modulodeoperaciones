@@ -122,7 +122,9 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                     rif = rif + dbi.getFieldString("acrif").trim() + "','";
                 }
             }
-            rif = "'" + rif.substring(0, rif.length() - 2);
+            if (!rif.equals("")) {
+                rif = "'" + rif.substring(0, rif.length() - 2);
+            }
         }
 
         sql = "select cp.*,mpt.*,mct.FEC_EXPIRA from CONFIG_PRODUCTOS cp , maestro_plastico_tebca mpt, maestro_consolidado_tebca mct where mpt.SUBBIN  between substr(cp.NUMCUENTAI,0,8) and substr(cp.NUMCUENTAF,0,8) ";
@@ -199,7 +201,9 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                     rif = rif + dbi.getFieldString("acrif").trim() + "','";
                 }
             }
-            rif = "'" + rif.substring(0, rif.length() - 2);
+            if (!rif.equals("")) {
+                rif = "'" + rif.substring(0, rif.length() - 2);
+            }
         }
 
         sql = "select cp.*,mpt.*,mct.FEC_EXPIRA from CONFIG_PRODUCTOS cp , maestro_plastico_tebca mpt, maestro_consolidado_tebca mct where mpt.SUBBIN  between substr(cp.NUMCUENTAI,0,8) and substr(cp.NUMCUENTAF,0,8) "
@@ -393,7 +397,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
     public List<TAjuste> getTipoAjustesDAO() {
         List<TAjuste> tipoAjustes = new ArrayList<TAjuste>();
         TAjuste tipoAjuste = new TAjuste();
-        String sql = "select * from NOVO_CODIGO_AJUSTES";
+        String sql = "select * from NOVO_CODIGO_AJUSTES order by DESCRIPCION";
         Dbinterface dbo = ds.get("oracle");
         dbo.dbreset();
         log.info("Sql [" + sql + "]");
@@ -545,17 +549,29 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
     public String updateAjustesDAO(String[] idAjustes, String status) {
         Dbinterface dbo = ds.get("oracle");
         String filtro = "(";
+        String filtroStatus = "";
         for (String idAjuste : idAjustes) {
             filtro += "'" + idAjuste + "',";
         }
         filtro = filtro.substring(0, filtro.length() - 1) + ")";
-        String sql = "update novo_detalle_ajustes set status = '" + status + "' where id_REGISTRO in " + filtro;
+
+        if (status.equals("7")) { //ajuste autorizado(0) puede ser anulado(7)
+            filtroStatus = "2,7";
+        } else {
+            filtroStatus = "2,7,0";
+        }
+
+        String sql = "update novo_detalle_ajustes set status = '" + status + "' where id_REGISTRO in " + filtro + " and status not in (" + filtroStatus + ")";
         dbo.dbreset();
         log.info("sql [" + sql + "]");
         if (dbo.executeQuery(sql) == 0) {
             dbo.dbClose();
             log.info("Oracle - total de registros afectados = " + dbo.rowsCount);
-            return "ok";
+            if (dbo.rowsCount > 0) {
+                return "ok";
+            } else {
+                return "vacio";
+            }
         } else {
             dbo.dbClose();
             log.error("error actualizando el status de los ajustes");
@@ -663,15 +679,11 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         if (!exist) {
 
             String ActualizarSQL = "update TARJETAHABIENTE set status = 0, ";
-																		   
-		 
 
             if (!nombre.equals("")) {
                 ActualizarSQL = ActualizarSQL + "NOMBRES = '" + nombre + "', ";
             }
 
-															 
-																									   
             if (!apellido.equals("")) {
                 ActualizarSQL = ActualizarSQL + "APELLIDOS = '" + apellido + "', ";
             }
@@ -685,9 +697,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             ActualizarSQL = ActualizarSQL.substring(0, ActualizarSQL.length() - 2) + " where ID_INTERNO = '" + id + "'";
 
             log.info("SQL [" + ActualizarSQL + "]");
-						  
-																				
-																																											  
 
             if (dbo.executeQuery(ActualizarSQL) == 0) {
                 dbo.dbClose();
@@ -705,7 +714,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                             return "error2" + dni;
                         }
                     }
-				 
 
                     String InsertarSQL = "insert into TARJETAHABIENTE values (";
 
@@ -743,11 +751,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                 log.error("Oracle - Error actualizando los campos");
                 return "error";
             }
-				
-						  
-																
-						   
-		 
 
             if (dbi.executeQuery(ActualizarSQL) == 0) {
                 dbi.dbClose();
@@ -765,7 +768,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                             return "error";
                         }
                     }
-				 
 
                     String InsertarSQL = "insert into TARJETAHABIENTE values (";
 
@@ -803,10 +805,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                 log.error("Informix - Error actualizando los campos");
                 return "error";
             }
-				
-						  
-																  
-						   
+
         }
 
         return "success";
