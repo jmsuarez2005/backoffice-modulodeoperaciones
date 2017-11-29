@@ -176,6 +176,15 @@ public class ReporteTransacciones implements BasicConfig {
         dao.closeConection();
         return ajustes;
     }
+    
+    public List<Ajuste> getAjustes(String status, String usuario, Date fechaIni, Date fechaFin, String filtro) {
+        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        List<Ajuste> ajustes = new ArrayList<Ajuste>();
+        ajustes = dao.getAjustesDAO(status, usuario, fechaIni, fechaFin, filtro);
+        dao.closeConection();
+        return ajustes;
+    }
+    
 
     public List<String> getUsuarios() {
         AjustesDAO dao = new AjustesDAO(appName, databases, pais);

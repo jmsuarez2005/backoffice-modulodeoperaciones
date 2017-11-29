@@ -56,11 +56,13 @@ public class AjusteTransaccionesAction extends ActionSupport
     private String selectedAjuste;
     private List<String> status;
     private List<String> status2;
+    private List<String> filtro;
     private List<Producto> listaProductos;
     private List<Empresa> listaEmpresas;
     private String selectedStatus;
     private String selectedStatus2;
     private String selectedUsuario2;
+    private String selectedFiltro;
     private String selectedEmpresa = "";
     private String selectedProducto = "";
     private List<String> listaUsuariosBusqueda;
@@ -95,6 +97,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.usuarioSesion = ((UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion"));
         this.status = new ArrayList();
         this.status2 = new ArrayList();
+        this.filtro = new ArrayList();
         this.listaProductos = new ArrayList();
         this.listaEmpresas = new ArrayList();
         this.status.add("TODOS");
@@ -106,6 +109,14 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.status2.add("AUTORIZADO");
         this.status2.add("AUTORIZAR TODOS");
         this.status2.add("ANULADO");
+        this.filtro.add("Tarjeta");
+        this.filtro.add("Monto");
+        this.filtro.add("DNI");
+        this.filtro.add("Nombre");
+        this.filtro.add("Usuario");
+        this.filtro.add("Tipo Ajuste");
+        this.filtro.add("Estatus");
+        this.filtro.add("Observacion");
     }
 
     public String execute() {
@@ -393,7 +404,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         }
         //Fin valida sesion
 
-        log.info("status selected [" + this.selectedStatus + "] ---- usuario selected [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ");
+        log.info("status selected [" + this.selectedStatus + "] ---- usuario selected [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ---- filtro[" + this.selectedFiltro + "] ");
 
         ReporteTransacciones business = new ReporteTransacciones();
         DateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -420,7 +431,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         }
 
         this.listaUsuariosBusqueda = business.getUsuarios();
-        this.ajustes = business.getAjustes(getStatusfromSelected(this.selectedStatus), this.selectedUsuario, this.fechaIni, this.fechaFin);
+        this.ajustes = business.getAjustes(getStatusfromSelected(this.selectedStatus), this.selectedUsuario, this.fechaIni, this.fechaFin, this.selectedFiltro);
         return "listar";
     }
 
@@ -1146,6 +1157,22 @@ public class AjusteTransaccionesAction extends ActionSupport
 
     public void setReportFile(String reportFile) {
         this.reportFile = reportFile;
+    }
+
+    public List<String> getFiltro() {
+        return filtro;
+    }
+
+    public void setFiltro(List<String> filtro) {
+        this.filtro = filtro;
+    }
+
+    public String getSelectedFiltro() {
+        return selectedFiltro;
+    }
+
+    public void setSelectedFiltro(String selectedFiltro) {
+        this.selectedFiltro = selectedFiltro;
     }
 
 }

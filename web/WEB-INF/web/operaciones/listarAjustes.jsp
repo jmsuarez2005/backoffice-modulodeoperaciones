@@ -49,6 +49,7 @@
                 //$("#listaUsuariosBusqueda").prepend("<option selected>TODOS</option selected>");
                 //$("#listaTipoAjustes").prepend("<option selected>TODOS</option selected>");
                 $("#listaUsuariosBusqueda2").prepend("<option selected>TODOS</option selected>");
+                $("#listaFiltroAjustes").prepend("<option selected>Fecha</option selected>");
 
                 $("#listaTipoAjustes2").on('change', function () {
                     var indice = document.getElementById("listaTipoAjustes2").value;
@@ -92,21 +93,24 @@
                     <div class="panel" style="width: 1000px;margin: 0 auto;">
                         <table class="table" style="width: 100%; padding: 0px; margin: 0px; ">
                             <thead>
-                                <tr><th colspan="4" style="text-align:center;">Busqueda</th></tr>
+                                <tr><th colspan="6" style="text-align:center;">Busqueda</th></tr>
                             </thead>
                             <tbody>
                                 <tr id="picker1" style=" padding: 0px; margin: 0px">
-                                    <td style="padding: 0px; margin: 0px; text-align: center" colspan="2"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaIni" name="fechaIni" label="Fecha Inicio" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>                                                                
-                                    <td style="padding: 0px; margin: 0px; text-align: center" colspan="2"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaFin" name="fechaFin" label="Fecha Fin" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>
+                                    <td colspan="2" style="padding: 0px; margin: 0px; text-align: center"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaIni" name="fechaIni" label="Fecha Inicio" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>                                                                
+                                    <td colspan="2" style="padding: 0px; margin: 0px; text-align: center"><table  class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaFin" name="fechaFin" label="Fecha Fin" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>
                                 </tr>
                                 <tr>
                                     <td  style="width: 18.8%;">Status</td>
                                     <td  style=""><s:select id="listaTipoAjustes" name ="selectedStatus" list = "status"/></td>
                                     <td  style="width: 16.4%;">Usuario</td>
-                                    <td  style=""><s:select id="listaUsuariosBusqueda" name ="selectedUsuario" list = "listaUsuariosBusqueda"/></td>
+                                    <td  style=""><s:select id="listaUsuariosBusqueda" name ="selectedUsuario" list = "listaUsuariosBusqueda"/></td>         
 
                                 </tr>
-                                <tr>                                                                  
+                                <tr>                                 
+                                    <td style="width: 16.4%;">Ordenar</td>
+                                    <td style=""><s:select id="listaFiltroAjustes" name ="selectedFiltro" list = "filtro"/></td>                                                        
+                                </tr> 
                                     <td colspan="4" style="text-align:center;"><s:submit cssClass="btn btn-primary" value= "Buscar" action="buscarAjustesAjusteTransacciones" onclick="openDialogLoading()"/></td>
                                 </tr>  
                             </tbody>                            
@@ -198,25 +202,18 @@
                                     </s:iterator>   
                                     -->
 
-
-
-
-                                    <%
-                                        String abcdStr = (String) request.getAttribute("nroPaginas");
-                                        int abcdInt = Integer.valueOf("15").intValue();
-                                    %> 
-
+                                    
                                     <!-- PAGINACION QUE SUPLANTA EL ITERATOR (COMENTADO EN LA LINEA DE ARRIBA) -->
                                     <display:table export="false" class="table-bordered table-striped table-hover table-condensed"  style="width: 100%;text-align:center;" 
                                                    id="ajustesTable" name="ajustes" pagesize="15" requestURI="" >
 
                                         <tr>                                    
 
-                                            <display:column title="Tarjeta"  style="width:15%;text-align:center;" sortable="true"> 
+                                            <display:column title="Tarjeta"  style="width:15%;text-align:center;" > 
                                                 <s:property value="#attr.ajustesTable.mascara"/>
                                             </display:column> 
 
-                                            <display:column title="Monto"  style="width:15%;text-align:center;" sortable="true">  
+                                            <display:column title="Monto"  style="width:15%;text-align:center;" >  
                                                 <s:if test="%{!isEditar()}">
                                                     <s:property value="#attr.ajustesTable.monto"/>
                                                 </s:if>
@@ -231,23 +228,23 @@
                                             </display:column>
 
                                             </td>
-                                            <display:column title="Fecha"  style="width:15%;text-align:center;" sortable="true">
+                                            <display:column title="Fecha"  style="width:15%;text-align:center;" >
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column>
 
-                                            <display:column title="DNI"  style="width:15%;text-align:center;" sortable="true"> 
+                                            <display:column title="DNI"  style="width:15%;text-align:center;" > 
                                                 <s:property value="#attr.ajustesTable.idExtPer"/>
                                             </display:column>    
 
-                                            <display:column  title="Nombre"  style="width:15%;text-align:center;" sortable="true"> 
+                                            <display:column  title="Nombre"  style="width:15%;text-align:center;" > 
                                                 <s:property value="#attr.ajustesTable.nomCliente"/>
                                             </display:column> 
 
-                                            <display:column property="usuario" title="Usuario"  style="width:15%;text-align:center;" sortable="true"> 
+                                            <display:column property="usuario" title="Usuario"  style="width:15%;text-align:center;" > 
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column> 
 
-                                            <display:column title="Tipo Ajuste"  style="width:15%;text-align:center;" sortable="true">  
+                                            <display:column title="Tipo Ajuste"  style="width:15%;text-align:center;" >  
                                                 <s:if test="%{!isEditar()}">
                                                     <s:property value="#attr.ajustesTable.descripcion"/> 
                                                 </s:if>
@@ -265,11 +262,11 @@
                                         </s:else></td>
                                     </display:column>
 
-                                    <display:column  title="Estatus"  style="width:15%;text-align:center;" sortable="true">  
+                                    <display:column  title="Estatus"  style="width:15%;text-align:center;" >  
                                         <s:property value="#attr.ajustesTable.descStatus"/>
                                     </display:column>   
 
-                                    <display:column  title="Observacion"  style="width:15%;text-align:center;" sortable="true"> 
+                                    <display:column  title="Observacion"  style="width:15%;text-align:center;" > 
                                         <s:property value="#attr.ajustesTable.observacion"/>
                                     </display:column>  
 
@@ -353,7 +350,7 @@
                     }
                 }
             }
-
+            
         </script>
     </body>
 </html>
