@@ -527,6 +527,97 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         dbo.dbClose();
         return ajustes;
     }
+    
+    public List<Ajuste> getAjustesDAO(String status, String usuario, Date fechaIni, Date fechaFin, String filtro) {
+        List<Ajuste> ajustes = new ArrayList<Ajuste>();
+        Ajuste ajuste = new Ajuste();
+        String aux = "";
+        double daux = 0;
+
+        DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.US);
+        otherSymbols.setDecimalSeparator('.');
+        NumberFormat doublef = new DecimalFormat("#0.00", otherSymbols);
+        String sql = "select nda.*,NCA.DESCRIPCION AS DESCRIPCION2,NCA.ID_AJUSTE,mpt.NOM_CLIENTE,mpt.ID_EXT_PER  from novo_detalle_ajustes nda join novo_codigo_ajustes nca on (nda.ID_CODIGO_AJUSTE =nca.ID_AJUSTE) join maestro_plastico_tebca mpt on (nda.tarjeta=0000+mpt.NRO_CUENTA) where ";
+
+        if (fechaIni != null && fechaFin != null) {
+            DateFormat df = new SimpleDateFormat("ddMMyyyy");
+            aux = " trunc(nda.fecha) between to_date('" + df.format(fechaIni) + "','DDMMYYYY') and to_date('" + df.format(fechaFin) + "','DDMMYYYY') ";
+            sql = sql + aux;
+        }
+
+        if (!status.equals("TODOS")) {
+            sql = sql + " and status = '" + status + "'";
+        }
+
+        if (!usuario.equals("TODOS")) {
+            sql = sql + " and usuario = '" + usuario + "'";
+        }
+
+        sql = sql + " order by ";
+        
+        if (filtro.equals("Fecha")){
+            sql = sql + "nda.ID_REGISTRO, nda.FECHA";
+        }else if (filtro.equals("Tarjeta")){
+            sql = sql + "nda.TARJETA";
+        }else if (filtro.equals("Monto")){
+            sql = sql + "nda.MONTO";
+        }else if (filtro.equals("DNI")){
+            sql = sql + "mpt.ID_EXT_PER";
+        }else if (filtro.equals("Nombre")){
+            sql = sql + "mpt.NOM_CLIENTE";
+        }else if (filtro.equals("Usuario")){
+            sql = sql + "nda.USUARIO";
+        }else if (filtro.equals("Tipo Ajuste")){
+            sql = sql + "NCA.DESCRIPCION";
+        }else if (filtro.equals("Estatus")){
+            sql = sql + "nda.STATUS";
+        }else if (filtro.equals("Observacion")){
+            sql = sql + "nda.OBSERVACION";
+        }
+
+        Dbinterface dbo = ds.get("oracle");
+        dbo.dbreset();
+        log.info("sql [" + sql + "]");
+        if (dbo.executeQuery(sql) == 0) {
+            while (dbo.nextRecord()) {
+                ajuste.setTarjeta(dbo.getFieldString("TARJETA"));
+                daux = Double.parseDouble(dbo.getFieldString("MONTO"));
+                ajuste.setMonto(doublef.format(daux));
+                ajuste.setFecha(dbo.getFieldString("FECHA"));
+                ajuste.setIdCodigoAjuste(dbo.getFieldString("ID_CODIGO_AJUSTE"));
+                ajuste.setStatus(dbo.getFieldString("STATUS"));
+                ajuste.setIdDetalleAjuste(dbo.getFieldString("ID_REGISTRO"));
+                ajuste.setMascara(ajuste.getTarjeta().substring(0, 6) + "******" + ajuste.getTarjeta().substring(12));
+                ajuste.setNomCliente(dbo.getFieldString("NOM_CLIENTE"));
+                ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_PER"));
+                if (ajuste.getStatus().equals("2")) {
+                    ajuste.setDescStatus("PROCESADO");
+                }
+                if (ajuste.getStatus().equals("3")) {
+                    ajuste.setDescStatus("PENDIENTE");
+                }
+                if (ajuste.getStatus().equals("0")) {
+                    ajuste.setDescStatus("AUTORIZADO");
+                }
+                if (ajuste.getStatus().equals("7")) {
+                    ajuste.setDescStatus("ANULADO");
+                }
+                if (ajuste.getStatus().equals("1")) {
+                    ajuste.setDescStatus("EN PROCESO");
+                }
+                ajuste.setUsuario(dbo.getFieldString("USUARIO"));
+                ajuste.setDescripcion(dbo.getFieldString("DESCRIPCION2"));
+                ajuste.setObservacion(dbo.getFieldString("OBSERVACION"));
+                if (ajuste.getObservacion().equals("")) {
+                    ajuste.setObservacion("N/A");
+                }
+                ajustes.add(ajuste);
+                ajuste = new Ajuste();
+            }
+        }
+        dbo.dbClose();
+        return ajustes;
+    }
 
     public List<String> getUsuariosDao() {
         Dbinterface dbi = ds.get("informix");

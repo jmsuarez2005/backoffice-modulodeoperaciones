@@ -98,15 +98,15 @@
                                         <tr>
                                             <td>
                                                 <display:column property="mascara" title="Tarjeta" style="width:15%;text-align:center;" 
-                                                                href="getTransaccionesTarjetaAjusteTransacciones.do?tarjetaSelected=${tarjetasTable.nroTarjeta}" sortable="true">
+                                                                href="getTransaccionesTarjetaAjusteTransacciones.do?tarjetaSelected=${tarjetasTable.nroTarjeta}" >
                                                     <a href="getTransaccionesTarjetaAjusteTransacciones.do?tarjetaSelected=${tarjetasTable.nroTarjeta}">${tarjetasTable.mascara}</a> 
 
                                                 </display:column>
                                             </td>      
-                                            <td><display:column property="idExtPer" title="DNI"  style="width:15%;text-align:center;" sortable="true"/></td>                                        
-                                            <td><display:column property="cardProgram" title="Producto" style="width:15%;text-align:center;" sortable="true"/></td>                                            
-                                            <td><display:column property="nombreCliente" title="Nombre" style="width:15%;text-align:center;" sortable="true"/></td>
-                                            <td><display:column property="nombreEmpresa" title="Empresa" style="width:15%;text-align:center;" sortable="true"/></td>
+                                            <td><display:column property="idExtPer" title="DNI"  style="width:15%;text-align:center;" /></td>                                        
+                                            <td><display:column property="cardProgram" title="Producto" style="width:15%;text-align:center;" /></td>                                            
+                                            <td><display:column property="nombreCliente" title="Nombre" style="width:15%;text-align:center;" /></td>
+                                            <td><display:column property="nombreEmpresa" title="Empresa" style="width:15%;text-align:center;" /></td>
                                         </tr>
 
                                         <display:setProperty name="export.excel" value="false"/>
