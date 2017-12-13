@@ -5,9 +5,11 @@
  */
 package com.novo.actions;
 
+import static com.novo.actions.AfiliacionAction.findDuplicates;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.RenovacionDAO;
+import com.novo.model.Ajuste;
 import com.novo.model.Empresa;
 import com.novo.model.Producto;
 import com.novo.model.Renovacion;
@@ -18,15 +20,25 @@ import com.novo.objects.util.Utils;
 import com.novo.process.RenovacionProc;
 import com.novo.process.ReporteTransacciones;
 import com.novo.util.SessionUtil;
+import static com.opensymphony.xwork2.Action.SUCCESS;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
@@ -100,11 +112,87 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         this.file.createNewFile();
         this.message = "Carga de archivo exitosa";
         log.info("iniciando conexion");
-        RenovacionProc conectar = new RenovacionProc();
         log.info(this.file.getAbsolutePath() + nombreRenovacion);
+        double tarjetaDouble = 0;
+        boolean procesoOk = true;
 
-        conectar.addFile(rutaOrigen + "/" + nombreRenovacion, rutaDestino, host, usuarioR);
-        ren.InsertarRenovacion(nombreRenovacion, rutaDestino, "", usuario.getIdUsuario(), "", "", "", "", null);
+        List<Ajuste> ajustes = new ArrayList<Ajuste>();
+        Ajuste ajuste = new Ajuste();
+        RenovacionProc business = new RenovacionProc();
+
+        try {
+            InputStream buffer = new FileInputStream(file2.getAbsolutePath());
+            Workbook workbook = WorkbookFactory.create(buffer);
+            Sheet sheet = workbook.getSheetAt(0);
+            String tarjetaString = "";
+            int i = 0;
+
+            do {
+                Row row = sheet.getRow(i);
+
+                if (row == null) {
+                    break;
+                }
+
+                //TARJETA
+                if (row.getCell(0).getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                    tarjetaDouble = row.getCell(0).getNumericCellValue();
+                    tarjetaString = String.valueOf(tarjetaDouble);
+                } else {
+                    tarjetaString = row.getCell(0).getStringCellValue();
+                }
+
+                if (!tarjetaString.equals("")) {
+                    if (!tarjetaString.matches("\\d{16}")) {
+                        this.message = "Error con el formato de la tarjeta";
+                        tipoMessage = "error";
+                        procesoOk = false;
+                        break;
+                    }
+
+                    ajuste.setTarjeta(tarjetaString);
+                    ajustes.add(ajuste);
+                    ajuste = new Ajuste();
+                    log.info("tarjeta [" + tarjetaString + "] ");
+                }
+
+                i++;
+            } while (!tarjetaString.equals(""));
+
+            if (procesoOk) {
+                //VERIFICAR SI LAS TARJETAS SON APTAS PARA RENOVACION
+                List<Renovacion> listaRenovacion = business.checkTarjetasARenovar(ajustes);
+                String respuesta = listaRenovacion.get(listaRenovacion.size() - 1).getRespuesta();
+
+                if (respuesta.contains("errorT")) {
+                    message = "Error, Tarjeta(s) no son validos para renovar: [" + respuesta.substring(6, respuesta.length()) + "]";
+                    tipoMessage = "error";
+                    return SUCCESS;
+                } else if (respuesta.contains("error")) {
+                    message = "[!] Error de sistema";
+                    tipoMessage = "error";
+                    return SUCCESS;
+                } else if (respuesta.contains("ok")) {
+                    //SE PROCEDE A INSERTAR EN NOVO_RENOVACION
+                    respuesta = business.insertarRenovacion(listaRenovacion);
+                    if (respuesta.equals("ok")) {
+                        business.addFile(rutaOrigen + "/" + nombreRenovacion, rutaDestino, host, usuarioR);
+                        ren.InsertarRenovacion(nombreRenovacion, rutaDestino, "", usuario.getIdUsuario(), "", "", "", "", null);
+                    } else {
+                        message = "[!] Error al registrar la instruccion para renovacion";
+                        tipoMessage = "error";
+                        return SUCCESS;
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            log.error("error ", e);
+            this.message = "[!] Error de sistema";
+            tipoMessage = "error";
+            return "success";
+        }
 
         return "success";
     }

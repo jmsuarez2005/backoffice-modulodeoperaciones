@@ -12,10 +12,14 @@ package com.novo.model;
 public class Renovacion {
 
     private String id_ext_per;
+    private String cod_cliente;
     private String nro_cuenta;
+    private String nro_tarjeta;
     private String nombre;
     private String nom_cliente;
     private String fec_reg;
+    private String prefix;
+    private String respuesta;
 
     public String getId_ext_per() {
         return this.id_ext_per;
@@ -55,6 +59,38 @@ public class Renovacion {
 
     public void setFec_reg(String fec_reg) {
         this.fec_reg = fec_reg;
+    }
+
+    public String getCod_cliente() {
+        return cod_cliente;
+    }
+
+    public void setCod_cliente(String cod_cliente) {
+        this.cod_cliente = cod_cliente;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(String respuesta) {
+        this.respuesta = respuesta;
+    }
+
+    public String getNro_tarjeta() {
+        return nro_tarjeta;
+    }
+
+    public void setNro_tarjeta(String nro_tarjeta) {
+        this.nro_tarjeta = nro_tarjeta;
     }
 
 }
