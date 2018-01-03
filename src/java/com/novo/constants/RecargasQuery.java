@@ -19,7 +19,7 @@ public interface RecargasQuery {
             + "where a.NRO_CUENTA = b.NRO_CUENTA "
             + "and a.FEC_TRANSACCION "
             + "between to_date('$FECHAINI','$FORMATO') and to_date('$FECHAFIN','$FORMATO') "
-            + "and  SUBSTR(a.NRO_CUENTA,1,12) in ('000042205000','000042205010','000042205011','000042205014','000062198414','000062198418','000062198419','000052674918') "
+            + "and  SUBSTR(a.NRO_CUENTA,1,12) in ('000042205000','000042205010','000042205011','000042205014','000062198414','000062198418','000062198419','000052674918','000060484200') "
             + "and b.NRO_CORPORA_AFINI in ('0','1000000000','9000000000') "
             + "and a.COD_TRANSACCION = '$CODTRANSACCION'";
                                                                                      
