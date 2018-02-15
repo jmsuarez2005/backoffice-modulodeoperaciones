@@ -8,9 +8,11 @@ import com.novo.constants.BasicConfig;
 import com.novo.constants.RecargasQuery;
 import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
+import com.novo.objects.util.Utils;
 import com.novo.util.DateUtil;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
@@ -52,10 +54,18 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         
         if (this.pais.equals(co)){
             query = "";
-        }else if(this.pais.equals(pe)){
-            query = recargasPersonaNatPeQuery;
-        }else if(this.pais.equals(ve)){
-            query = recargasPersonaNatVeQuery; 
+        }else if(this.pais.equals(pe)){            
+            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = recargasPersonaNatPeQuery
+                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatPe"));
+            
+        }else if(this.pais.equals(ve)){            
+            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = recargasPersonaNatVeQuery
+                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatVe"));
+            
         }else if(this.pais.equals(peusd)){
             
         }
@@ -110,9 +120,17 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         if (this.pais.equals(co)){
             query = "";
         }else if(this.pais.equals(pe)){
-            query = recargasPersonaNatPeQuery;
+            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = recargasPersonaNatPeQuery
+                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatPe"));
+            
         }else if(this.pais.equals(ve)){
-            query = recargasPersonaNatVeQuery;
+            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = recargasPersonaNatVeQuery
+                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatVe"));
+            
         }else if(this.pais.equals(peusd)){
             
         }
@@ -281,9 +299,13 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         day = DateUtil.rellenarCeros(day, 2);
         
         String query = "";
-        
+                
         if (this.pais.equals(co)){
-            query = recargasAbonosMaestroDiaCoQuery;
+            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = recargasAbonosMaestroDiaCoQuery
+                    .replace("$BINES$", properties.getProperty("binesRecargaMaestroCo"));
+            
         }else if(this.pais.equals(pe)){
             //query = recargasPersonaNatPeQuery;
         }else if(this.pais.equals(ve)){
@@ -338,7 +360,11 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         String query = "";
         
         if (this.pais.equals(co)){
-            query = recargasAbonosMaestroMesCoQuery;
+            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = recargasAbonosMaestroMesCoQuery
+                    .replace("$BINES$", properties.getProperty("binesRecargaMaestroCo"));
+            
         }else if(this.pais.equals(pe)){
             //query = recargasPersonaNatPeQuery;
         }else if(this.pais.equals(ve)){
