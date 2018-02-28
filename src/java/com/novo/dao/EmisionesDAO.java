@@ -8,8 +8,10 @@ import com.novo.constants.BasicConfig;
 import com.novo.constants.EmisionesQuery;
 import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
+import com.novo.objects.util.Utils;
 import com.novo.util.DateUtil;
 import java.util.Date;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
@@ -48,7 +50,11 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
         String query = "";
         
         if (this.pais.equals(co)) {
-            query = obtenerTarjEmitidasPersonaJurDiaCoQuery;
+            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = obtenerTarjEmitidasPersonaJurDiaCoQuery
+                    .replace("$ACRIF$", properties.getProperty("codCiaEmisionCo"));
+            
         }else if(this.pais.equals(pe)) {
             query = obtenerTarjEmitidasPersonaJurDiaPeQuery;
         }else if(this.pais.equals(ve)) {
@@ -102,8 +108,10 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
         
         String query = "";
         
-        if (this.pais.equals(co)) {
-            query = obtenerTarjEmitidasPersonaJurMesCoQuery;
+        if (this.pais.equals(co)) {            
+            Properties properties = Utils.getConfig("operaciones.properties");
+            query = obtenerTarjEmitidasPersonaJurMesCoQuery
+                    .replace("$ACRIF$", properties.getProperty("codCiaEmisionCo"));
         }else if(this.pais.equals(pe)) {
             query = obtenerTarjEmitidasPersonaJurMesPeQuery;
         }else if(this.pais.equals(ve)) {
