@@ -49,7 +49,7 @@
                 //$("#listaUsuariosBusqueda").prepend("<option selected>TODOS</option selected>");
                 //$("#listaTipoAjustes").prepend("<option selected>TODOS</option selected>");
                 $("#listaUsuariosBusqueda2").prepend("<option selected>TODOS</option selected>");
-                $("#listaFiltroAjustes").prepend("<option selected>Fecha</option selected>");
+                //$("#listaFiltroAjustes").prepend("<option selected>Fecha</option selected>");
 
                 $("#listaTipoAjustes2").on('change', function () {
                     var indice = document.getElementById("listaTipoAjustes2").value;
@@ -108,12 +108,14 @@
 
                                 </tr>
                                 <tr>                                 
-                                    <td style="width: 16.4%;">Ordenar</td>
-                                    <td style=""><s:select id="listaFiltroAjustes" name ="selectedFiltro" list = "filtro"/></td>                                                        
+                                    <td style="width: 18.8%;">Ordenar</td>
+                                    <td style=""><s:select id="listaFiltroAjustes" name ="selectedFiltro" list = "filtro"/></td>     
+                                    <td  style="width: 16.4%;">Listar</td>
+                                    <td  style=""><s:select id="listarRegistrosPorPagina" name ="selectedPages" list = "registrosPorPagina"/></td>                                                   
                                 </tr> 
-                                    <td colspan="4" style="text-align:center;"><s:submit cssClass="btn btn-primary" value= "Buscar" action="buscarAjustesAjusteTransacciones" onclick="openDialogLoading()"/></td>
-                                </tr>  
-                            </tbody>                            
+                            <td colspan="4" style="text-align:center;"><s:submit cssClass="btn btn-primary" value= "Buscar" action="buscarAjustesAjusteTransacciones" onclick="openDialogLoading()"/></td>
+                            </tr>
+                            </tbody>      
                         </table>
 
 
@@ -127,8 +129,8 @@
                     <s:textfield cssStyle="display:none" id="fechaFin2" name="fechaFin2"  displayFormat="dd-MMM-yyyy" value="%{today}"/>
                     <s:textfield cssStyle="display:none" id="fechaIni"  name="fechaIni"  displayFormat="dd-MMM-yyyy" />
                     <s:textfield cssStyle="display:none" id="fechaFin" name="fechaFin"  displayFormat="dd-MMM-yyyy" />
-                    <s:textfield cssStyle="display:none" id="selectedStatus" name="selectedStatus"  />
-
+                    <s:textfield cssStyle="display:none" id="selectedStatus" name="selectedStatus" />
+                    
                     <s:if test="%{getAjustes().size()>0}">
                         <div class="panel" style="width: 1000px;margin: 0 auto;">
                             <table class="table" style="width: 100%;">
@@ -137,7 +139,7 @@
                                     <!--
                                     <tr><th colspan="12">Ajustes</th></tr>
                                     <tr>
-
+                         
                                         <th>Tarjeta</th>
                                         <th>Monto</th>
                                         <th>Fecha</th>
@@ -201,11 +203,11 @@
                                         </tr>                                     
                                     </s:iterator>   
                                     -->
-
+                                    
                                     
                                     <!-- PAGINACION QUE SUPLANTA EL ITERATOR (COMENTADO EN LA LINEA DE ARRIBA) -->
                                     <display:table export="false" class="table-bordered table-striped table-hover table-condensed"  style="width: 100%;text-align:center;" 
-                                                   id="ajustesTable" name="ajustes" pagesize="15" requestURI="" >
+                                                   id="ajustesTable" name="ajustes" pagesize="${selectedPages}" requestURI="" >
 
                                         <tr>                                    
 
@@ -225,9 +227,9 @@
                                                         <s:property value="#attr.ajustesTable.monto"/> 
                                                     </s:else>                                                                          
                                                 </s:else>
+                                                <input type="hidden" name="montoChecked" value="${ajustesTable.getMonto()}@@${ajustesTable.getStatus()}"/>          
                                             </display:column>
 
-                                            </td>
                                             <display:column title="Fecha"  style="width:15%;text-align:center;" >
                                                 <s:property value="#attr.ajustesTable.fecha"/>
                                             </display:column>
@@ -238,6 +240,10 @@
 
                                             <display:column  title="Nombre"  style="width:15%;text-align:center;" > 
                                                 <s:property value="#attr.ajustesTable.nomCliente"/>
+                                            </display:column> 
+                                            
+                                            <display:column  title="Empresa"  style="width:15%;text-align:center;" > 
+                                                <s:property value="#attr.ajustesTable.idExtEmp"/>
                                             </display:column> 
 
                                             <display:column property="usuario" title="Usuario"  style="width:15%;text-align:center;" > 
@@ -270,11 +276,11 @@
                                         <s:property value="#attr.ajustesTable.observacion"/>
                                     </display:column>  
 
-                                    <s:if test="%{!#attr.ajustesTable.getStatus().equals(\"7\") && !#attr.ajustesTable.getStatus().equals(\"2\")}">
-                                        <display:column title="<input type='checkbox' onclick='checkboxes(this)' />">
-                                            <input type="checkbox" name="selectedAjuste" value=${ajustesTable.getIdDetalleAjuste()} />
-                                        </display:column>                              
-                                    </s:if>
+                                    <display:column title="<input type='checkbox' name='selectedAjusteAll' onclick='checkboxes(this)'/>">
+                                        <s:if test="%{!#attr.ajustesTable.getStatus().equals(\"7\") && !#attr.ajustesTable.getStatus().equals(\"2\")}">
+                                            <input type="checkbox" name="selectedAjuste" onclick="checkbox(this,${ajustesTable.getMonto()})" value=${ajustesTable.getIdDetalleAjuste()} />                     
+                                        </s:if>
+                                    </display:column>         
 
                                     <s:if test="%{getStatusfromSelected(selectedStatus).equals(\"3\")}">
                                         <display:column title="Editar"> 
@@ -311,7 +317,7 @@
                                         </s:if>
                                     </s:if>
                                     <s:if test="%{!selectedStatus.equals(\"ANULADO\") && !selectedStatus.equals(\"PROCESADO\")}">
-                                        <td style="text-align: center"><s:submit cssClass="btn btn-primary" value= "Confirmar" action= "actualizarStatusAjustesAjusteTransacciones"/></td>
+                                        <td style="text-align: center"><s:submit cssClass="btn btn-primary" value= "Confirmar" action= "actualizarStatusAjustesAjusteTransacciones" onclick="return confirmBox(selectedStatus);"/></td>
                                     </s:if>
                                     <!--
                                     <td style="width:50%;text-align:right;" ><span class="text-1">Pagina</span></td>
@@ -321,7 +327,8 @@
                                 </tr>   
                             </table>
                         </div>
-                    </s:if>            
+                    </s:if>   
+                                               
                 </s:form>
                 <s:form theme="simple" namespace="/operaciones" action="AjusteTransacciones" name="formularioEditar">
 
@@ -330,27 +337,162 @@
         </div>
         <%@include file="../include/footer.jsp" %>
         <script>
+            
+            var c = 0;
+            var x = 0;
+            var z = 0;
+            var l = 0;
+            var montoTotal = 0;
+            
             //Para confirmar antes de accionar, colocar en el elemento class="confirmation"
             $('.confirmation').on('click', function () {
                 var data = 'Desea ajustar la transaccion?';
 
                 return  confirm(data);
             });
+            
+            function checkbox(box,monto) {
+                if (box.checked) {
+                    c = c + 1;
+                    montoTotal = montoTotal + monto;
+                }else{
+                    c = c - 1;
+                    montoTotal = montoTotal - monto;
+                }
+                
+                if(c > 0){
+                    x = 1;
+                }
+                if(montoTotal < 0){
+                    montoTotal = 0;
+                }
+                
+                z = 0;            
+                
+            }
             function checkboxes(box) {
-                /*
+                    /*
                  *var elements = getElementById("AjusteTransacciones_checkMe");                                                
                  for( i = 0; i< elements.length;i++){                    
                  elements[i].checked = box.checked;
                  }*/
-
+                if(x == 1){
+                    c = 0;
+                    montoTotal = 0;
+                    x = 0;
+                }
                 var inputs = document.getElementsByTagName('input');
+                var inputsMonto = document.getElementsByTagName('input');
+                //var inputsStatus = document.getElementsByTagName('input');
+                var statusNum, montoNum;
                 for (var i = 0; i < inputs.length; i++) {
                     if (inputs[i].getAttribute('type') == 'checkbox') {
                         inputs[i].checked = box.checked;
+                        if (box.checked) {
+                            c = c + 1;
+                        }else { 
+                            c = c - 1;
+                        }
                     }
+                    /*
+                    if (inputsStatus[i].getAttribute('type') == 'hidden') {
+                        if (inputsStatus[i].getAttribute('name') == 'statusChecked') {
+                            statusNum = Number(inputsStatus[i].getAttribute('value'));
+                        }
+                    }*/
+                    if (inputsMonto[i].getAttribute('type') == 'hidden') {
+                       
+                        if (inputsMonto[i].getAttribute('name') == 'montoChecked') {
+                            statusNum = inputsMonto[i].getAttribute('value');
+                            montoNum = inputsMonto[i].getAttribute('value');
+                            
+                            statusNum = Number(statusNum.substring(statusNum.length - 1, statusNum.length));
+                            montoNum = Number(montoNum.substring(0, montoNum.length - 3));
+                            
+                            if(statusNum != 2 && statusNum != 7 && l == 0){
+                                //montoTotal = montoTotal + Number(inputsMonto[i].getAttribute('value'));
+                                montoTotal = montoTotal + montoNum;
+                            }
+                            if(l == 1){
+                                 montoTotal = 0;
+                                 l = 2;
+                            }
+                        }                       
+                    }                    
                 }
+                if(l == 2){
+                    l = 0;
+                }else{
+                    l = 1;
+                }
+                //window.confirm(montoTotal);
+                if(c > 0){
+                    c = c - 1;
+                    z = 1;
+                }else if(c < 0){
+                    c = 0;
+                    montoTotal = 0;
+                }
+                
+                
+                
             }
             
+            function confirmBox() {
+                
+                var sel = document.getElementById('listaTipoAjustes2');
+                var inputs = document.getElementsByTagName('input');
+                
+                if(sel.options[sel.selectedIndex].text == "AUTORIZAR TODOS"){
+                    
+                    //CANTIDAD DE REGISTRO Y MONTO TOTAL
+                    z = 0;
+                    c = 0;
+                    montoTotal = 0; 
+                    <s:iterator value="ajustes" >
+                        var monto = <s:property value="monto"/>;
+                        var status = <s:property value="status"/>;
+                        if(status != 7 && status != 2){
+                            montoTotal = montoTotal + monto;
+                            c = c + 1;
+                        }
+                    </s:iterator>
+                        
+                }
+                var resp;
+                
+                if(c > 0){
+                    if(montoTotal > 0){
+                        montoTotal = parseFloat(Math.round(montoTotal * 100) / 100).toFixed(2);
+                    }
+                    if(z != 1){
+                        resp = window.confirm("Total registros: " + c + "\n" +
+                                        "    Total monto: " + montoTotal + "\n");
+                    }else{
+                        resp = window.confirm("Total registros: " + c + "\n" +
+                                        "    Total monto: " + montoTotal + "\n");                        
+                    }
+                }else{
+                    alert("Debe seleccionar un registro");
+                    resp = false;
+                }
+                
+                if (resp == true) {
+                   return true;
+                } else {
+                   z = 0;
+                   c = 0;
+                   l = 0;
+                   montoTotal = 0;
+                   for (var i = 0; i < inputs.length; i++) {
+                        if (inputs[i].getAttribute('type') == 'checkbox') {
+                            $('input:checkbox[name=selectedAjuste]').attr('checked',false);
+                            $('input:checkbox[name=selectedAjusteAll]').attr('checked',false);
+                        }
+                    }
+                   return false;
+                }
+             }
         </script>
     </body>
 </html>

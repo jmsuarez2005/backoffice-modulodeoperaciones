@@ -426,7 +426,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         }
 
         log.info(monto);
-        if (!monto.matches("\\d{1,8}.\\d{1,2}")) {
+        if (!monto.matches("\\d{1,15}.\\d{1,2}")) {
             log.info("Error formato de monto no válido");
             return "error";
         }
@@ -444,7 +444,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         }
 
         String a = referencia.substring(referencia.length() - 6, referencia.length());
-
+        
         String sql = "insert into novo_detalle_ajustes (ID_REGISTRO,FECHA,TARJETA,MONTO,STATUS,USUARIO,ID_CODIGO_AJUSTE,DTREGISTRO,AUTORIZACION,descripcion,cod_operacion,cod_moneda,cat_comercio,dtproceso) values (SEQ_ID_DETALLE_AJUSTE.NEXTVAL,sysdate,'" + tarjeta + "'," + monto + ",'" + status + "','" + usuario + "','" + codigoAjuste + "',SYSDATE,'" + a + "',(select descripcion from novo_codigo_ajustes where id_ajuste ='" + codigoAjuste + "'),(select COD_OPERACION from novo_codigo_ajustes where id_ajuste ='" + codigoAjuste + "'),'604','0000'," + dtproceso + ")";
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbo.dbreset();
@@ -537,7 +537,12 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.US);
         otherSymbols.setDecimalSeparator('.');
         NumberFormat doublef = new DecimalFormat("#0.00", otherSymbols);
-        String sql = "select nda.*,NCA.DESCRIPCION AS DESCRIPCION2,NCA.ID_AJUSTE,mpt.NOM_CLIENTE,mpt.ID_EXT_PER  from novo_detalle_ajustes nda join novo_codigo_ajustes nca on (nda.ID_CODIGO_AJUSTE =nca.ID_AJUSTE) join maestro_plastico_tebca mpt on (nda.tarjeta=0000+mpt.NRO_CUENTA) where ";
+        String sql = "select nda.TARJETA,nda.MONTO,nda.STATUS,nda.FECHA,nda.ID_CODIGO_AJUSTE,nda.ID_REGISTRO,nda.USUARIO,nda.OBSERVACION,NCA.DESCRIPCION AS DESCRIPCION2,NCA.ID_AJUSTE,mpt.NOM_CLIENTE,mpt.ID_EXT_PER, mct.ID_EXT_EMP "
+                + "from novo_detalle_ajustes nda "
+                + "inner join novo_codigo_ajustes nca on (nda.ID_CODIGO_AJUSTE =nca.ID_AJUSTE) "
+                + "inner join maestro_plastico_tebca mpt on (nda.tarjeta=0000+mpt.NRO_CUENTA) "
+                + "inner join MAESTRO_CONSOLIDADO_TEBCA mct on SUBSTR(mct.NRO_CUENTA,1,18) = SUBSTR(mpt.NRO_CUENTA,1,18) "
+                + "where ";
 
         if (fechaIni != null && fechaFin != null) {
             DateFormat df = new SimpleDateFormat("ddMMyyyy");
@@ -565,6 +570,8 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             sql = sql + "mpt.ID_EXT_PER";
         }else if (filtro.equals("Nombre")){
             sql = sql + "mpt.NOM_CLIENTE";
+        }else if (filtro.equals("Empresa")){
+            sql = sql + "mct.ID_EXT_EMP";
         }else if (filtro.equals("Usuario")){
             sql = sql + "nda.USUARIO";
         }else if (filtro.equals("Tipo Ajuste")){
@@ -590,6 +597,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                 ajuste.setMascara(ajuste.getTarjeta().substring(0, 6) + "******" + ajuste.getTarjeta().substring(12));
                 ajuste.setNomCliente(dbo.getFieldString("NOM_CLIENTE"));
                 ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_PER"));
+                ajuste.setIdExtEmp(dbo.getFieldString("ID_EXT_EMP"));
                 if (ajuste.getStatus().equals("2")) {
                     ajuste.setDescStatus("PROCESADO");
                 }
