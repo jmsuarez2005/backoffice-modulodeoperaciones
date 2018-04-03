@@ -9,7 +9,7 @@ package com.novo.model;
  * @author ggutierrez
  */
 public class Ajuste {
-    
+
     private String mascara;
     private String tarjeta;
     private String monto;
@@ -23,8 +23,9 @@ public class Ajuste {
     private String checkMe;
     private String nomCliente;
     private String idExtPer;
+    private String idExtEmp;
     private String observacion;
-    
+
     public Ajuste() {
     }
 
@@ -139,6 +140,13 @@ public class Ajuste {
     public void setObservacion(String observacion) {
         this.observacion = observacion;
     }
-    
-    
+
+    public String getIdExtEmp() {
+        return idExtEmp;
+    }
+
+    public void setIdExtEmp(String idExtEmp) {
+        this.idExtEmp = idExtEmp;
+    }
+
 }

@@ -7,6 +7,7 @@
 <%@taglib uri="/struts-tags" prefix="s" %>
 <%@taglib uri="/struts-dojo-tags" prefix="sx" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page buffer = "16kb" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -57,22 +58,24 @@
                     </div>
                                 </s:form>
                     <s:if test="%{getTarjetas().size()>0}">
-                        <div class="panel" style="width: 900px;margin: 0 auto;">
+                        <div class="panel" style="width: 1200px;margin: 0 auto;">
                             <table class="table" style="width: 1076px;">
                                 <thead>
-                                    <tr><th colspan="8" style="text-align:center;">Tarjetas</th></tr>
+                                    <tr><th colspan="9" style="text-align:center;">Tarjetas</th></tr>
                                     <tr>
                                         <th>Tarjeta</th>
                                         <th>DNI</th>
                                         <th>Producto</th>
                                         <th>Nombre</th>
                                         <th>Monto Ajuste</th>
+                                        <th>Fecha Ajuste</th>
                                         <th>Tipo Ajuste</th>
                                         <th>Observación</th>
                                         <th>Realizar Ajuste</th>
                                     </tr>
                                 </thead>
-                                <tbody>                                      
+                                <tbody> 
+                                    
                                     <s:iterator value="tarjetas" var="myObj">
                                         <s:form theme="simple" namespace="/operaciones" action="AjusteTransacciones">
                                         <tr><s:hidden value="%{nroTarjeta}" name="nroTarjeta" />
@@ -84,11 +87,12 @@
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="cardProgram"/></td>                                            
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="nombreCliente"/></td>                                            
                                             <td><s:textfield cssClass="input-mini search-query" name="montoAjuste" id="monto"/></td>
+                                            <!-- <td style="padding-right: 25px;" colspan="1"><sx:datetimepicker name="fechaIni" label="Format (dd-MMM-yyyy)" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></td> -->
                                             <td><s:select id="listaTipoAjustes" name="selectedAjuste" headerValue="Tipo de Ajuste" list = "tipoAjustes" listKey = "idCodigoAjuste"  listValue="descripcion" /></td>
                                             <td><s:textfield cssClass="search-query" name="observacion" id="observacion"/></td>
-                                            <td><s:submit cssClass="btn btn-primary" value="Realizar Ajuste" action="registrarAjusteAjusteTransacciones" onclick="openDialogLoading()"/></td>
+                                            <td><s:submit cssClass="btn btn-primary" value="Realizar Ajuste" action="registrarAjusteAjusteTransacciones" onclick="openDialogLoading()"/></td>                                        
                                         </tr>
-                                        </s:form>
+                                        </s:form>                                            
                                     </s:iterator>
                                 </tbody>
                             </table>

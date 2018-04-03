@@ -57,6 +57,8 @@ public class AjusteTransaccionesAction extends ActionSupport
     private List<String> status;
     private List<String> status2;
     private List<String> filtro;
+    private List<String> registrosPorPagina;
+    private String selectedPages;
     private List<Producto> listaProductos;
     private List<Empresa> listaEmpresas;
     private String selectedStatus;
@@ -73,6 +75,7 @@ public class AjusteTransaccionesAction extends ActionSupport
     private Date fechaFin;
     private Date fechaIni2;
     private Date fechaFin2;
+    private Date fechaAjuste;
     private boolean editar = false;
     private String filaEditar;
     private String montoEditar;
@@ -98,6 +101,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.status = new ArrayList();
         this.status2 = new ArrayList();
         this.filtro = new ArrayList();
+        this.registrosPorPagina = new ArrayList();
         this.listaProductos = new ArrayList();
         this.listaEmpresas = new ArrayList();
         this.status.add("TODOS");
@@ -109,14 +113,21 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.status2.add("AUTORIZADO");
         this.status2.add("AUTORIZAR TODOS");
         this.status2.add("ANULADO");
+        this.filtro.add("Fecha");
         this.filtro.add("Tarjeta");
         this.filtro.add("Monto");
         this.filtro.add("DNI");
         this.filtro.add("Nombre");
+        this.filtro.add("Empresa");
         this.filtro.add("Usuario");
         this.filtro.add("Tipo Ajuste");
         this.filtro.add("Estatus");
         this.filtro.add("Observacion");
+        this.registrosPorPagina.add("TODOS");
+        this.registrosPorPagina.add("15 REGISTROS POR PAG.");
+        this.registrosPorPagina.add("30 REGISTROS POR PAG.");
+        this.registrosPorPagina.add("50 REGISTROS POR PAG.");
+        this.registrosPorPagina.add("100 REGISTROS POR PAG.");
     }
 
     public String execute() {
@@ -405,6 +416,19 @@ public class AjusteTransaccionesAction extends ActionSupport
         //Fin valida sesion
 
         log.info("status selected [" + this.selectedStatus + "] ---- usuario selected [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ---- filtro[" + this.selectedFiltro + "] ");
+
+        //validos el listado de registros por pagina
+        if (this.selectedPages.equals("TODOS")) {
+            this.setSelectedPages("0");
+        } else if (this.selectedPages.equals("15 REGISTROS POR PAG.")) {
+            this.setSelectedPages("15");
+        } else if (this.selectedPages.equals("30 REGISTROS POR PAG.")) {
+            this.setSelectedPages("30");
+        } else if (this.selectedPages.equals("50 REGISTROS POR PAG.")) {
+            this.setSelectedPages("50");
+        } else if (this.selectedPages.equals("100 REGISTROS POR PAG.")) {
+            this.setSelectedPages("100");
+        }
 
         ReporteTransacciones business = new ReporteTransacciones();
         DateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -1175,4 +1199,28 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.selectedFiltro = selectedFiltro;
     }
 
+    public List<String> getRegistrosPorPagina() {
+        return registrosPorPagina;
+    }
+
+    public void setRegistrosPorPagina(List<String> registrosPorPagina) {
+        this.registrosPorPagina = registrosPorPagina;
+    }
+
+    public String getSelectedPages() {
+        return selectedPages;
+    }
+
+    public void setSelectedPages(String selectedPages) {
+        this.selectedPages = selectedPages;
+    }
+
+    public Date getFechaAjuste() {
+        return this.fechaAjuste;
+    }
+
+    public void setFechaAjuste(Date fechaAjuste) {
+        this.fechaAjuste = fechaAjuste;
+    }
+   
 }
