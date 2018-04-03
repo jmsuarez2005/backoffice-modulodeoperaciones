@@ -74,12 +74,14 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Natural en BD
         natural.setProducto("Persona Natural");
-        emisionesNatDAO = new EmisionesDAO(appName,databases,ve);
+        //emisionesNatDAO = new EmisionesDAO(appName,databases,ve);
+        emisionesNatDAO = new EmisionesDAO(appName,dbOracle,ve);
         natural.setEmisionesFecha(emisionesNatDAO.obtenerTarjEmitidasPersonaNatDia(fecha));
         natural.setEmisionesAcum(emisionesNatDAO.obtenerTarjEmitidasPersonaNatMes(fecha));
         emisionesNatDAO.closeConection(); //Cierre de conexion
         
-        recargasNatDAO = new RecargasDAO(appName,databases,ve);
+        //recargasNatDAO = new RecargasDAO(appName,databases,ve);
+        recargasNatDAO = new RecargasDAO(appName,dbOracle,ve);
         natural.setRecargasDiaLocal(recargasNatDAO.obtenerMontoRecargasPersonaNatDia(fecha,"20").subtract(recargasNatDAO.obtenerMontoRecargasPersonaNatDia(fecha,"27")));
         natural.setRecargasAcumLocal(recargasNatDAO.obtenerMontoRecargasPersonaNatMes(fecha,"20").subtract(recargasNatDAO.obtenerMontoRecargasPersonaNatMes(fecha,"27")));
         natural.setRecargasDiaDolares(natural.getRecargasDiaLocal().divide(cambioBsDolar,2,RoundingMode.HALF_UP));
@@ -89,12 +91,14 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Juridica en BD
         juridica.setProducto("Persona Jurídica");
-        emisionesJurDAO = new EmisionesDAO(appName,databases,ve);  
+//        emisionesJurDAO = new EmisionesDAO(appName,databases,ve); 
+        emisionesJurDAO = new EmisionesDAO(appName,dbOracle,ve);  
         juridica.setEmisionesFecha(emisionesJurDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
         juridica.setEmisionesAcum(emisionesJurDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
         emisionesJurDAO.closeConection(); //Cierre de conexion
         
-        recargasJurDAO = new RecargasDAO(appName,databases,ve);
+//        recargasJurDAO = new RecargasDAO(appName,databases,ve);
+        recargasJurDAO = new RecargasDAO(appName,dbOracle,ve);
         juridica.setRecargasDiaLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurDia(fecha));
         juridica.setRecargasAcumLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurMes(fecha));
         juridica.setRecargasDiaDolares(juridica.getRecargasDiaLocal().divide(cambioBsDolar,2,RoundingMode.HALF_UP));
@@ -141,12 +145,14 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Juridica en BD
         juridica.setProducto("Persona Jurídica");
-        emisionesJurDAO = new EmisionesDAO(appName,databases,co);
+//        emisionesJurDAO = new EmisionesDAO(appName,databases,co);
+        emisionesJurDAO = new EmisionesDAO(appName,dbOracle,co);
         juridica.setEmisionesFecha(emisionesJurDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
         juridica.setEmisionesAcum(emisionesJurDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
         emisionesJurDAO.closeConection(); //Cierre de conexion
         
-        recargasJurDAO = new RecargasDAO(appName,databases,co);
+//        recargasJurDAO = new RecargasDAO(appName,databases,co);
+        recargasJurDAO = new RecargasDAO(appName,dbOracle,co);
         juridica.setRecargasDiaLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurDia(fecha));
         juridica.setRecargasAcumLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurMes(fecha));
         juridica.setRecargasDiaDolares(juridica.getRecargasDiaLocal().divide(cambioPesosDolar,2,RoundingMode.HALF_UP));
@@ -155,7 +161,8 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Abonos Maestro en BD
         maestro.setProducto("Abonos Maestro");
-        recargasMaestroDAO = new RecargasDAO(appName, databases, co);
+//        recargasMaestroDAO = new RecargasDAO(appName, databases, co);
+        recargasMaestroDAO = new RecargasDAO(appName, dbOracle, co);
         maestro.setRecargasDiaLocal(recargasMaestroDAO.obtenerMontoRecargasAbonosMaestroDia(fecha,"20"));
         maestro.setRecargasAcumLocal(recargasMaestroDAO.obtenerMontoRecargasAbonosMaestroMes(fecha,"20"));
         maestro.setRecargasDiaDolares(maestro.getRecargasDiaLocal().divide(cambioPesosDolar, 2, RoundingMode.HALF_UP));
@@ -204,12 +211,14 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Natural en BD
         natural.setProducto("Persona Natural");
-        emisionesNatDAO = new EmisionesDAO(appName,databases,pe);
+//        emisionesNatDAO = new EmisionesDAO(appName,databases,pe);
+        emisionesNatDAO = new EmisionesDAO(appName,dbOracle,pe);
         natural.setEmisionesFecha(emisionesNatDAO.obtenerTarjEmitidasPersonaNatDia(fecha));
         natural.setEmisionesAcum(emisionesNatDAO.obtenerTarjEmitidasPersonaNatMes(fecha));
         emisionesNatDAO.closeConection(); //Cierre de conexion
         
-        recargasNatDAO = new RecargasDAO(appName,databases,pe);
+//        recargasNatDAO = new RecargasDAO(appName,databases,pe);
+        recargasNatDAO = new RecargasDAO(appName,dbOracle,pe);
         natural.setRecargasDiaLocal(recargasNatDAO.obtenerMontoRecargasPersonaNatDia(fecha,"20").subtract(recargasNatDAO.obtenerMontoRecargasPersonaNatDia(fecha,"27")));
         natural.setRecargasAcumLocal(recargasNatDAO.obtenerMontoRecargasPersonaNatMes(fecha,"20").subtract(recargasNatDAO.obtenerMontoRecargasPersonaNatMes(fecha,"27")));
         natural.setRecargasDiaDolares(natural.getRecargasDiaLocal().divide(cambioSolesDolar,2,RoundingMode.HALF_UP));
@@ -219,12 +228,14 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Juridica en BD
         juridica.setProducto("Persona Jurídica");
-        emisionesJurDAO = new EmisionesDAO(appName,databases,pe);
+//        emisionesJurDAO = new EmisionesDAO(appName,databases,pe);
+        emisionesJurDAO = new EmisionesDAO(appName,dbOracle,pe);
         juridica.setEmisionesFecha(emisionesJurDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
         juridica.setEmisionesAcum(emisionesJurDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
         emisionesJurDAO.closeConection(); //Cierre de conexion
         
-        recargasJurDAO = new RecargasDAO(appName,databases,pe);
+//        recargasJurDAO = new RecargasDAO(appName,databases,pe);
+        recargasJurDAO = new RecargasDAO(appName,dbOracle,pe);
         juridica.setRecargasDiaLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurDia(fecha));
         juridica.setRecargasAcumLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurMes(fecha));
         juridica.setRecargasDiaDolares(juridica.getRecargasDiaLocal().divide(cambioSolesDolar,2,RoundingMode.HALF_UP));
@@ -234,12 +245,14 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Juridica US$ en BD
         juridicaUS.setProducto("Persona Jurídica US$");
-        emisionesUSDAO = new EmisionesDAO(appName,databases,peusd);
+//        emisionesUSDAO = new EmisionesDAO(appName,databases,peusd);
+        emisionesUSDAO = new EmisionesDAO(appName,dbOracle,peusd);
         juridicaUS.setEmisionesFecha(emisionesUSDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
         juridicaUS.setEmisionesAcum(emisionesUSDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
         emisionesUSDAO.closeConection(); //Cierre de conexion
         
-        recargasUSDAO = new RecargasDAO(appName,databases,peusd);
+//        recargasUSDAO = new RecargasDAO(appName,databases,peusd);
+        recargasUSDAO = new RecargasDAO(appName,dbOracle,peusd);
         juridicaUS.setRecargasDiaLocal(recargasUSDAO.obtenerMontoRecargasPersonaJurDia(fecha));
         juridicaUS.setRecargasAcumLocal(recargasUSDAO.obtenerMontoRecargasPersonaJurMes(fecha));
         juridicaUS.setRecargasDiaDolares(juridicaUS.getRecargasDiaLocal());
@@ -716,7 +729,8 @@ public class ReporteActividadDiariaProc implements BasicConfig {
     }
     
     public static String obtenerCambioMoneda(String pais){
-        ParametrosDAO parametrosDAO = new ParametrosDAO(appName,dbInformix,pais);
+        //ParametrosDAO parametrosDAO = new ParametrosDAO(appName,dbInformix,pais);
+        ParametrosDAO parametrosDAO = new ParametrosDAO(appName,dbOracle,pais);
         Parametro parametro = parametrosDAO.obtenerParametro("CambioDolares"+pais.toUpperCase());
         
         if (parametro!=null){
@@ -728,7 +742,8 @@ public class ReporteActividadDiariaProc implements BasicConfig {
     }
     
     public boolean modificarCambioMoneda(String pais,String valor){
-        ParametrosDAO parametrosDAO = new ParametrosDAO(appName,dbInformix,pais);
+        //ParametrosDAO parametrosDAO = new ParametrosDAO(appName,dbInformix,pais);
+        ParametrosDAO parametrosDAO = new ParametrosDAO(appName,dbOracle,pais);
         return parametrosDAO.modificarParametro(new Parametro("CambioDolares"+pais.toUpperCase(),valor,"default","00"));
     }
 

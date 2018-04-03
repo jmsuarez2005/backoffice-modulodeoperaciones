@@ -162,7 +162,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
         List<Ajuste> ajustes = new ArrayList<Ajuste>();
         Ajuste ajuste = new Ajuste();
         boolean procesoOk = true;
-        SobregirosDAO sobregiros = new SobregirosDAO(appName, databases, pais);
+        SobregirosDAO sobregiros = new SobregirosDAO(appName, dbOracle, pais);
         try {
 
             if (this.file == null) {

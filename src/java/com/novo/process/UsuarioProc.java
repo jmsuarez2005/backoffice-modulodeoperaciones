@@ -34,7 +34,7 @@ public class UsuarioProc implements BasicConfig, RCConfig {
     }
 
     public int login(String user, String password, String pais) {
-        UsuarioDAO usuarioDAO = new UsuarioDAO(appName, databases, pais);
+        UsuarioDAO usuarioDAO = new UsuarioDAO(appName, dbOracle, pais);
         UsuarioSesion usuario;
         usuario = usuarioDAO.obtenerUsuarioSesion(user.toUpperCase());
 
@@ -137,7 +137,7 @@ public class UsuarioProc implements BasicConfig, RCConfig {
 
         if (usuario.getPassword().toUpperCase().equals(claveActual.toUpperCase())) {
             //Proceder a Actualizar la clave
-            UsuarioDAO usuarioDAO = new UsuarioDAO(appName, databases, pais);
+            UsuarioDAO usuarioDAO = new UsuarioDAO(appName, dbOracle, pais);
 
             usuarioDAO.actualizarClaveUsuario(this.usuarioSesion.getIdUsuario(), claveNueva);
             this.usuarioSesion.setPassword(claveNueva.toUpperCase());

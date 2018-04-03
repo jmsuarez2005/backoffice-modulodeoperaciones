@@ -41,7 +41,7 @@ public class ReporteTransacciones implements BasicConfig {
      */
 
     public List<Transaccion> getTransaccionesUsuario(String nroTarjeta) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Transaccion> transacciones;
 
         if (nroTarjeta != null) {
@@ -53,7 +53,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Producto> getProductos() {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Producto> productos;
         productos = dao.getProductosDAO();
         dao.closeConection();
@@ -61,7 +61,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Empresa> getEmpresas() {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Empresa> empresas;
         empresas = dao.getEmpresasDAO();
         dao.closeConection();
@@ -72,7 +72,7 @@ public class ReporteTransacciones implements BasicConfig {
      * obtiene las tarjetas pertenecientes al usuario, ya sea por la tarjeta o documento de identidad
      */
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Tarjeta> tarjetas = null;
         if (documento != null) {
             tarjetas = dao.getTarjetasDAO(documento, true);
@@ -88,7 +88,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta, String prefix, String rif) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Tarjeta> tarjetas = null;
 
         //if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
@@ -129,7 +129,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Tarjeta> getTarjetasUsuarioTransacciones(String documento, String nroTarjeta, String prefix, String rif, String fechaIni, String fechaFin) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Tarjeta> tarjetas = null;
 
         if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
@@ -141,7 +141,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<TAjuste> getTipoAjustes() {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<TAjuste> tipoAjustes;
         tipoAjustes = dao.getTipoAjustesDAO();
         dao.closeConection();
@@ -149,7 +149,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<TBloqueo> getTipoBloqueo() {
-        BloqueoDesbloqueoDAO dao = new BloqueoDesbloqueoDAO("operaciones", databases, this.pais);
+        BloqueoDesbloqueoDAO dao = new BloqueoDesbloqueoDAO("operaciones", dbOracle, this.pais);
 
         List tipoBloqueo = dao.getTipoBloqueoDAO();
 
@@ -157,7 +157,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public String RegistrarAjuste(String tarjeta, String monto, String codigoAjuste, String referencia, String usuario, String obs, boolean tras) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         if (referencia == null || referencia.equals("")) {
             referencia = "000000";
         }
@@ -170,7 +170,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Ajuste> getAjustes(String status, String usuario, Date fechaIni, Date fechaFin) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Ajuste> ajustes = new ArrayList<Ajuste>();
         ajustes = dao.getAjustesDAO(status, usuario, fechaIni, fechaFin);
         dao.closeConection();
@@ -178,7 +178,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
     
     public List<Ajuste> getAjustes(String status, String usuario, Date fechaIni, Date fechaFin, String filtro) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Ajuste> ajustes = new ArrayList<Ajuste>();
         ajustes = dao.getAjustesDAO(status, usuario, fechaIni, fechaFin, filtro);
         dao.closeConection();
@@ -187,7 +187,7 @@ public class ReporteTransacciones implements BasicConfig {
     
 
     public List<String> getUsuarios() {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<String> usuarios;
         usuarios = dao.getUsuariosDao();
         dao.closeConection();
@@ -195,7 +195,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public String updateAjuste(String[] idAjustes, String status) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         String result = "";
         for (String idAjuste : idAjustes) {
             idAjuste = idAjuste.replaceAll(" ", "");
@@ -206,7 +206,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public String updateEdicion(String[] idAjustes, String monto, String tipoAjusteEditar, String AjusteDesc) {
-        AjustesDAO dao = new AjustesDAO("operaciones", databases, this.pais);
+        AjustesDAO dao = new AjustesDAO("operaciones", dbOracle, this.pais);
         String result = "";
         for (String idAjuste : idAjustes) {
             idAjuste = idAjuste.replaceAll(" ", "");
@@ -218,7 +218,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public String doAjusteMasivo(List<Ajuste> ajustes, String idAjuste, String usuario, String obs) {
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         if (obs == null) {
             obs = "";
         }
@@ -240,14 +240,14 @@ public class ReporteTransacciones implements BasicConfig {
         Collections.sort(listaTarjetaAux);
         //VALIDAR QUE EXISTAN LAS TARJETAS
 
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         String result = dao.checkTarjetasDAO(listaTarjetaAux);
         dao.closeConection();
         return result;
     }
 
     public Tarjeta consultarSaldo(Tarjeta tarjeta) {
-        TransactionProcess tp = new TransactionProcess(appName, databases, pais);
+        TransactionProcess tp = new TransactionProcess(appName, dbOracle, pais);
         String systrace = tp.getSystrace();
         Transaccion trans = new Transaccion();
         trans = tp.balance(tarjeta, systrace, pais, tarjeta.getFechaExpiracion());
@@ -263,7 +263,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public int traslado(Tarjeta tarjetaOrigen, Tarjeta tarjetaDestino, String usuario) {
-        TransactionProcess tp = new TransactionProcess(appName, databases, pais);
+        TransactionProcess tp = new TransactionProcess(appName, dbOracle, pais);
         int rc = 0;
         String systrace = tp.getSystrace();
         Transaccion trans = new Transaccion();
@@ -277,7 +277,7 @@ public class ReporteTransacciones implements BasicConfig {
 
     public List getCampos() {
         List<CamposActualizacion> campos;
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         campos = dao.getCamposActualizacionDAO("1");
         dao.closeConection();
         return campos;
@@ -285,7 +285,7 @@ public class ReporteTransacciones implements BasicConfig {
 
     public List getHoldCodes() {
         List<HoldCode> codigos;
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         codigos = dao.getHoldResponseCodes();
         dao.closeConection();
         return codigos;
@@ -294,7 +294,7 @@ public class ReporteTransacciones implements BasicConfig {
     public String makeUpdates(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario) {
         //(campos)fields already matched together, the id with the value selected by the user.
         //(tarjetas)list of cards that are going to be updated with the selected fields.
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         String respuesta = dao.makeUpdatesDAO(tarjetas, campos, usuario, pais);
         
         if (respuesta.contains("-3")) {
@@ -311,7 +311,7 @@ public class ReporteTransacciones implements BasicConfig {
     public String makeAfiliacion(List<Tarjeta> tarjetas, String usuario) {
         //(campos)fields already matched together, the id with the value selected by the user.
         //(tarjetas)list of cards that are going to be updated with the selected fields.
-        AjustesDAO dao = new AjustesDAO(appName, databases, pais);
+        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         String resp = dao.makeAfiliacionDAO(tarjetas, usuario);
         if (resp.contains("error2")) {
             dao.closeConection();
