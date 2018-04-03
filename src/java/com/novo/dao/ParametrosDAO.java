@@ -39,19 +39,20 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
         
         log.info("Ejecutando ["+query+"]");
         try{
-            Dbinterface dbi=ds.get(INFORMIX);
-            dbi.dbreset();
+            //Dbinterface dbi=ds.get(INFORMIX);
+            Dbinterface dbo=ds.get(ORACLE);
+            dbo.dbreset();
 
-            if (dbi.executeQuery(query) == 0){
-                if (dbi.nextRecord()){
+            if (dbo.executeQuery(query) == 0){
+                if (dbo.nextRecord()){
                     parametro = new Parametro();
-                    parametro.setAcname(dbi.getFieldString("acname"));
-                    parametro.setAcvalue(dbi.getFieldString("acvalue"));
-                    parametro.setAcprofile(dbi.getFieldString("acprofile"));
-                    parametro.setAcgroup(dbi.getFieldString("acgroup"));
+                    parametro.setAcname(dbo.getFieldString("acname"));
+                    parametro.setAcvalue(dbo.getFieldString("acvalue"));
+                    parametro.setAcprofile(dbo.getFieldString("acprofile"));
+                    parametro.setAcgroup(dbo.getFieldString("acgroup"));
                 }
             }
-            dbi.dbClose();
+            dbo.dbClose();
         } catch (Exception e){
             log.info("Se capturó una excepción al intentar buscar el parámetro "+param);
             log.info("Causa: "+e.getMessage()+" localizado en: "+e.getLocalizedMessage());
@@ -68,13 +69,14 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
         query=query.replace("$ACNAME$", parametro.getAcname());
         query=query.replace("$ACVALUE$", parametro.getAcvalue());
         
-        log.info("Ejecutando ["+query+"]"+INFORMIX);
+        log.info("Ejecutando ["+query+"]"+ORACLE);
         
         try{
-            Dbinterface dbi=ds.get(INFORMIX);
-            dbi.dbreset();
+            //Dbinterface dbi=ds.get(INFORMIX);
+            Dbinterface dbo=ds.get(ORACLE);
+            dbo.dbreset();
             
-                if (dbi.executeQuery(query) != 0) {
+                if (dbo.executeQuery(query) != 0) {
                     log.error("modificarParametro: Error modificando parametro "+parametro.getAcname()+" [" + query + "]");
                     modificado=false;
                 } else {
@@ -82,7 +84,7 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
                     modificado=true;
                 }
             
-            dbi.dbClose();
+            dbo.dbClose();
         }catch(Exception ex){
             log.info("modificarParametro: Se capturó una excepción al intentar ejecutar la consulta: ["+query+"]");
             log.info("Causa: "+ex.getMessage()+" localizado en: "+ex.getLocalizedMessage());

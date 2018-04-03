@@ -170,7 +170,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
         TBloqueo ajuste = new TBloqueo();
         Ajuste ajusteB = new Ajuste();
         boolean procesoOk = true;
-        BloqueoDesbloqueoDAO bloqueo = new BloqueoDesbloqueoDAO("operaciones", databases, this.pais);
+        BloqueoDesbloqueoDAO bloqueo = new BloqueoDesbloqueoDAO("operaciones", dbOracle, this.pais);
         try {
             if (this.file == null) {
                 this.message = "Error al cargar el archivo";

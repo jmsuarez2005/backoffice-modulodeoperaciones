@@ -16,11 +16,11 @@ public interface BasicConfig {
     String properties=appName+".properties";
     String version = Utils.getConfig(properties).getProperty("version","No Definida");
     String server = Utils.getConfig(properties).getProperty("server","2"); //1= Tomcat, 2=WebLogic
-    String[] databases = {"informix","oracle"};
+    //String[] databases = {"informix","oracle"};
     String[] dbOracle = {"oracle"};
-    String[] dbInformix = {"informix"};
+    //String[] dbInformix = {"informix"};
     String oracle="oracle";
-    String informix="informix";
+    //String informix="informix";
     String co="co";
     String pe="pe";
     String peusd="peusd";
