@@ -95,7 +95,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
             return SUCCESS;
         }
 
-        RenovacionDAO ren = new RenovacionDAO("operaciones", databases, this.pais);
+        RenovacionDAO ren = new RenovacionDAO("operaciones", dbOracle, this.pais);
 
         ValoresRen renoAction = new ValoresRen();
 
@@ -256,7 +256,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         }
         //Fin valida sesion
 
-        RenovacionDAO ren = new RenovacionDAO("operaciones", databases, this.pais);
+        RenovacionDAO ren = new RenovacionDAO("operaciones", dbOracle, this.pais);
         this.renovar = ren.QueryRenovacion(this.selectedEmpresa, this.selectedProducto, this.documentoIdentidad, this.fechaIni, this.fechaFin);
         listar();
 
