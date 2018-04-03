@@ -33,10 +33,10 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
     }
     
     /**
-     * OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA EN EL DIA  (Oracle)
+     * OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA EN EL DIA  (Informix)
      */
     public int obtenerTarjEmitidasPersonaJurDia(Date fecha) {
-        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA EN EL DIA  (ORACLE)");
+        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA EN EL DIA  (Informix)");
         int cantidad=0;
         String day=""+fecha.getDate();
         String month=""+(fecha.getMonth()+1);
@@ -64,20 +64,19 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
-            Dbinterface dbo=ds.get(oracle);
-            dbo.dbreset();
+            Dbinterface dbi=ds.get(informix);
+            dbi.dbreset();
         
-            if (dbo.executeQuery(query) == 0) {
-                if (dbo.nextRecord()) {
-                    if (dbo.getFieldString("cant_plast") != null && !"".equals(dbo.getFieldString("cant_plast"))) {
-                        cantidad = Integer.valueOf(dbo.getFieldString("cant_plast"));
+            if (dbi.executeQuery(query) == 0) {
+                if (dbi.nextRecord()) {
+                    if (dbi.getFieldString("cant_plast") != null && !"".equals(dbi.getFieldString("cant_plast"))) {
+                        cantidad = Integer.valueOf(dbi.getFieldString("cant_plast"));
                     } else {
                         cantidad = 0;
                     }
                 }
             }
-            //dbo.dbClose();
+            //dbi.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica dia "+this.pais);
             log.error("Causa: "+e);
@@ -89,10 +88,10 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
     }
     
     /**
-     * OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Oracle)
+     * OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Informix)
      */
     public int obtenerTarjEmitidasPersonaJurMes(Date fecha) {
-        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Oracle)");
+        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Informix)");
         int cantidad=0;
         String day=""+fecha.getDate();
         String month=""+(fecha.getMonth()+1);
@@ -118,20 +117,19 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
-            Dbinterface dbo=ds.get(oracle);
-            dbo.dbreset();
+            Dbinterface dbi=ds.get(informix);
+            dbi.dbreset();
         
-            if (dbo.executeQuery(query) == 0) {
-                if (dbo.nextRecord()) {
-                    if (dbo.getFieldString("cant_plast") != null && !"".equals(dbo.getFieldString("cant_plast"))) {
-                        cantidad = Integer.valueOf(dbo.getFieldString("cant_plast"));
+            if (dbi.executeQuery(query) == 0) {
+                if (dbi.nextRecord()) {
+                    if (dbi.getFieldString("cant_plast") != null && !"".equals(dbi.getFieldString("cant_plast"))) {
+                        cantidad = Integer.valueOf(dbi.getFieldString("cant_plast"));
                     } else {
                         cantidad = 0;
                     }
                 }
             }
-            //dbo.dbClose();
+            //dbi.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica mes "+this.pais);
             log.error("Causa: "+e);

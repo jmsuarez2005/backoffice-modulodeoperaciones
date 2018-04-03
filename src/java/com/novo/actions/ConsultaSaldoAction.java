@@ -151,7 +151,7 @@ public class ConsultaSaldoAction extends ActionSupport
         this.ajustex = new ArrayList();
 
         boolean procesoOk = true;
-        ConsultaDAO consulta = new ConsultaDAO("operaciones", dbOracle, this.pais);
+        ConsultaDAO consulta = new ConsultaDAO("operaciones", databases, this.pais);
         try {
 
             if (this.file == null) {

@@ -96,13 +96,12 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
                 + "(\n"
                 + "SELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n"
                 + ") AS TIMEOUT\n"
-                + " FROM DUAL where ROWNUM = 1";
+                + " FROM systables where tabid = 1";
 
-        //Dbinterface dbi = ds.get("informix");
-        Dbinterface dbo2 = ds.get("oracle");
+        Dbinterface dbi = ds.get("informix");
         Dbinterface dbo = ds.get("oracle");
 
-        dbo2.dbreset();
+        dbi.dbreset();
         TransactionHandler handler = null;
         String Terminal = "";
         String nro_cliente = "";
@@ -122,15 +121,15 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
             return "error";
         }
 
-        if (dbo2.executeQuery(sql1) == 0) {
-            if (dbo2.nextRecord()) {
-                handler = new TransactionHandler(dbo2.getFieldString("IP"), Integer.parseInt(dbo2.getFieldString("PORT")), Integer.parseInt(dbo2.getFieldString("TIMEOUT")));
-                Terminal = dbo2.getFieldString("TERMINAL");
+        if (dbi.executeQuery(sql1) == 0) {
+            if (dbi.nextRecord()) {
+                handler = new TransactionHandler(dbi.getFieldString("IP"), Integer.parseInt(dbi.getFieldString("PORT")), Integer.parseInt(dbi.getFieldString("TIMEOUT")));
+                Terminal = dbi.getFieldString("TERMINAL");
             }
 
-            dbo2.dbClose();
+            dbi.dbClose();
         } else {
-            dbo2.dbClose();
+            dbi.dbClose();
             return "error";
         }
 

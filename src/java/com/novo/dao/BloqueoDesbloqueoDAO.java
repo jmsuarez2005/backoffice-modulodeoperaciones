@@ -114,12 +114,10 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
         String uf = "";
         String uf2 = "";
         String trn = "";
-//        String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM systables where tabid = 1";
-        String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM DUAL where ROWNUM = 1";
+        String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM systables where tabid = 1";
 
-        //Dbinterface dbi = (Dbinterface) this.ds.get("informix");
-        Dbinterface dbo2 = (Dbinterface) this.ds.get("oracle");
-        dbo2.dbreset();
+        Dbinterface dbi = (Dbinterface) this.ds.get("informix");
+        dbi.dbreset();
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbo.dbreset();
         TransactionHandler handler = null;
@@ -141,15 +139,15 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
             return "error";
         }
 
-        if (dbo2.executeQuery(sql1) == 0) {
-            if (dbo2.nextRecord()) {
-                handler = new TransactionHandler(dbo2.getFieldString("IP"), Integer.parseInt(dbo2.getFieldString("PORT")), Integer.parseInt(dbo2.getFieldString("TIMEOUT")));
-                terminal = dbo2.getFieldString("TERMINAL");
+        if (dbi.executeQuery(sql1) == 0) {
+            if (dbi.nextRecord()) {
+                handler = new TransactionHandler(dbi.getFieldString("IP"), Integer.parseInt(dbi.getFieldString("PORT")), Integer.parseInt(dbi.getFieldString("TIMEOUT")));
+                terminal = dbi.getFieldString("TERMINAL");
             }
 
-            dbo2.dbClose();
+            dbi.dbClose();
         } else {
-            dbo2.dbClose();
+            dbi.dbClose();
             return "error";
         }
 

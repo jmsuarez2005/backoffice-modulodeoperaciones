@@ -63,27 +63,26 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
                 + "(\n"
                 + "SELECT ACVALUE AS NombreRenovacion FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_nombreRenovacion'\n"
                 + ") AS NombreRenovacion\n"
-                + " FROM DUAL where ROWNUM = 1";
+                + " FROM systables where tabid = 1";
 
         ValoresRen reno = new ValoresRen();
 
-        //Dbinterface dbi = (Dbinterface) ds.get("informix");
-        Dbinterface dbo = (Dbinterface) ds.get("oracle");
-        dbo.dbreset();
+        Dbinterface dbi = (Dbinterface) ds.get("informix");
+        dbi.dbreset();
 
-        if (dbo.executeQuery(sql1) == 0) {
-            if (dbo.nextRecord()) {
-                RutaOrigen = dbo.getFieldString("rutaOrigen");
-                RutaDestino = dbo.getFieldString("rutaDestino");
-                host = dbo.getFieldString("Host");
-                Usuario = dbo.getFieldString("Usuario");
-                nombreRenovacion = dbo.getFieldString("NombreRenovacion");
+        if (dbi.executeQuery(sql1) == 0) {
+            if (dbi.nextRecord()) {
+                RutaOrigen = dbi.getFieldString("rutaOrigen");
+                RutaDestino = dbi.getFieldString("rutaDestino");
+                host = dbi.getFieldString("Host");
+                Usuario = dbi.getFieldString("Usuario");
+                nombreRenovacion = dbi.getFieldString("NombreRenovacion");
             }
 
-            dbo.dbClose();
+            dbi.dbClose();
         } else {
 
-            dbo.dbClose();
+            dbi.dbClose();
 
         }
 
@@ -186,8 +185,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
 
     public List<Renovacion> checkTarjetasARenovarDAO(List<String> tarjetas) {
         Dbinterface dbo = ds.get("oracle");
-        //Dbinterface dbi = ds.get("informix");
-        Dbinterface dbo2 = ds.get("oracle");
+        Dbinterface dbi = ds.get("informix");
         Renovacion renovacion = new Renovacion();
         List<Renovacion> listarenovar = new ArrayList();
         List<Renovacion> listarenovar1 = new ArrayList();
@@ -271,17 +269,17 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         if (cantidad == tarjetas.size()) {
             dbo.dbClose();
 
-            //VERIFICAR EN ORACLE SI EXISTE REPOSICIONES PENDIENTES
+            //VERIFICAR EN INFORMIX SI EXISTE REPOSICIONES PENDIENTES
             //SI SE ENCUENTRAN REGISTROS DE LAS TARJETAS SELECCIONADAS, ESTAS SE ACTUALIZAN EL ESTATUS A 7 
             //SIEMPRE Y CUANDO ESTEN EN ESTATUS 1
             sql = "UPDATE teb_reposiciones SET idestatus = 7 "
                     + "WHERE idestatus = 1 AND nocuenta IN " + filtroUpdate;
             log.info("SQL:" + sql);
-            dbo2.dbreset();
-            if (dbo2.executeQuery(sql) == 0) {
-                log.info("Oracle - total de reposiciones anulados = " + dbo2.rowsCount);
+            dbi.dbreset();
+            if (dbi.executeQuery(sql) == 0) {
+                log.info("Informix - total de reposiciones anulados = " + dbi.rowsCount);
             } else {
-                dbo2.dbClose();
+                dbi.dbClose();
                 renovacion = new Renovacion();
                 renovacion.setRespuesta("error");
                 listarenovar.clear();
@@ -289,7 +287,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
                 return listarenovar;
             }
 
-            dbo2.dbClose();
+            dbi.dbClose();
             renovacion.setRespuesta("ok");
             listarenovar.add(renovacion);
             return listarenovar;

@@ -6,8 +6,7 @@
 package com.novo.process;
 
 import static com.novo.constants.BasicConfig.appName;
-import static com.novo.constants.BasicConfig.dbOracle;
-//import static com.novo.constants.BasicConfig.databases;
+import static com.novo.constants.BasicConfig.databases;
 import com.novo.dao.RenovacionDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.Renovacion;
@@ -68,7 +67,7 @@ public class RenovacionProc {
         listaTarjetaAux.addAll(set);
         Collections.sort(listaTarjetaAux);
         //VALIDAR QUE EXISTAN LAS TARJETAS
-        RenovacionDAO dao = new RenovacionDAO(appName, dbOracle, this.pais);
+        RenovacionDAO dao = new RenovacionDAO(appName, databases, this.pais);
         listaRenovacion = dao.checkTarjetasARenovarDAO(listaTarjetaAux);
 
         dao.closeConection();
@@ -77,7 +76,7 @@ public class RenovacionProc {
 
     public String insertarRenovacion(List<Renovacion> listaRenovacion) {
 
-        RenovacionDAO dao = new RenovacionDAO(appName, dbOracle, this.pais);
+        RenovacionDAO dao = new RenovacionDAO(appName, databases, this.pais);
         String respuesta = dao.insertarNovoRenovacion(listaRenovacion);
 
         dao.closeConection();

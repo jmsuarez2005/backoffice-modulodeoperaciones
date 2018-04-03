@@ -44,28 +44,26 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         String query = obtenerUsuarioQuery.replace("$IDUSUARIO", idUsuario);
 
-        //log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
-        log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
+        log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         try {
             log.info("equis" + ds);
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
-            Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
+            Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
 
-            dbo.dbreset();
+            dbi.dbreset();
 
-            if (dbo.executeQuery(query) == 0) {
-                if (dbo.nextRecord()) {
+            if (dbi.executeQuery(query) == 0) {
+                if (dbi.nextRecord()) {
                     usuario = new UsuarioSesion();
                     usuario.setIdUsuario(idUsuario);
-                    usuario.setAcNombre(dbo.getFieldString("acnombre").trim());
-                    usuario.setPassword(dbo.getFieldString("acclave").trim());
-                    usuario.setAcEstatus(dbo.getFieldString("acestatus").trim());
-                    usuario.setAcTipo(dbo.getFieldString("actipo").trim());
-                    usuario.setAcUbicacion(dbo.getFieldString("acubicacion").trim());
-                    usuario.setAcEmail(dbo.getFieldString("acemail").trim());
-                    usuario.setIdPersona(dbo.getFieldString("idpersona").trim());
-                    usuario.setModificadoPor(dbo.getFieldString("cidusuario").trim());
-                    usuario.setModificado(new Date(dbo.getFieldString("timestamp").split(" ")[0].replace("-", "/")));
+                    usuario.setAcNombre(dbi.getFieldString("acnombre").trim());
+                    usuario.setPassword(dbi.getFieldString("acclave").trim());
+                    usuario.setAcEstatus(dbi.getFieldString("acestatus").trim());
+                    usuario.setAcTipo(dbi.getFieldString("actipo").trim());
+                    usuario.setAcUbicacion(dbi.getFieldString("acubicacion").trim());
+                    usuario.setAcEmail(dbi.getFieldString("acemail").trim());
+                    usuario.setIdPersona(dbi.getFieldString("idpersona").trim());
+                    usuario.setModificadoPor(dbi.getFieldString("cidusuario").trim());
+                    usuario.setModificado(new Date(dbi.getFieldString("timestamp").split(" ")[0].replace("-", "/")));
 
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                     Date date = new Date();
@@ -74,11 +72,11 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
                     log.info("Se encontró el usuario " + usuario.getIdUsuario());
                 }
             } else {
-                log.error("Ocurrió un error al intentar buscar al usuario [" + idUsuario + "] Error[" + dbo.msgErr + "]");
+                log.error("Ocurrió un error al intentar buscar al usuario [" + idUsuario + "] Error[" + dbi.msgErr + "]");
                 rc.setRc(rcError);
-                rc.setMensaje("-> Error Interno [" + dbo.msgErr + "]");
+                rc.setMensaje("-> Error Interno [" + dbi.msgErr + "]");
             }
-            dbo.dbClose();
+            dbi.dbClose();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,22 +89,21 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         String query = obtenerPerfilesUsuarioQuery.replace("$IDUSUARIO", idUsuario);
 
-        log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
+        log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
-            Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
-            dbo.dbreset();
+            Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
+            dbi.dbreset();
 
-            if (dbo.executeQuery(query) == 0) {
-                while (dbo.nextRecord()) {
+            if (dbi.executeQuery(query) == 0) {
+                while (dbi.nextRecord()) {
                     Perfil aux = new Perfil();
-                    aux.setIdPerfil(dbo.getFieldString("idperfil"));
-                    aux.setDescripcion(dbo.getFieldString("acdesc"));
+                    aux.setIdPerfil(dbi.getFieldString("idperfil"));
+                    aux.setDescripcion(dbi.getFieldString("acdesc"));
                     //aux.setFunciones(this.obtenerFuncionesPerfil(aux.getIdPerfil()));
                     perfiles.add(aux);
                 }
             }
-            dbo.dbClose();
+            dbi.dbClose();
 
             log.info("--- FUNCIONES ---");
             int f = 0;
@@ -129,23 +126,22 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         String query = obtenerFuncionesPerfilQuery.replace("$IDPERFIL", idPerfil);
 
-        log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
+        log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
-            Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
-            dbo.dbreset();
+            Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
+            dbi.dbreset();
 
-            if (dbo.executeQuery(query) == 0) {
-                while (dbo.nextRecord()) {
+            if (dbi.executeQuery(query) == 0) {
+                while (dbi.nextRecord()) {
                     Funcion aux = new Funcion();
-                    aux.setIdFuncion(dbo.getFieldString("idfuncion"));
-                    aux.setDescripcion(dbo.getFieldString("acdescfun"));
-                    aux.setIdModulo(dbo.getFieldString("idmodulo"));
+                    aux.setIdFuncion(dbi.getFieldString("idfuncion"));
+                    aux.setDescripcion(dbi.getFieldString("acdescfun"));
+                    aux.setIdModulo(dbi.getFieldString("idmodulo"));
 
                     funciones.add(aux);
                 }
             }
-            dbo.dbClose();
+            dbi.dbClose();
         } catch (Exception e) {
             log.info("obtenerFuncionesPerfil: Ocurrió un error al intentar buscar las funciones del perfil " + idPerfil);
             log.info(e.getMessage() + " localizado en: " + e.getLocalizedMessage());
@@ -160,23 +156,22 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         String query = obtenerFuncionesUsuarioQuery.replace("$IDUSUARIO", idUsuario);
 
-        log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
+        log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         try {
-           // Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
-            Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
-            dbo.dbreset();
+            Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
+            dbi.dbreset();
 
-            if (dbo.executeQuery(query) == 0) {
-                while (dbo.nextRecord()) {
+            if (dbi.executeQuery(query) == 0) {
+                while (dbi.nextRecord()) {
                     Funcion aux = new Funcion();
-                    aux.setIdFuncion(dbo.getFieldString("idfuncion"));
-                    aux.setDescripcion(dbo.getFieldString("acdescfun"));
-                    aux.setIdModulo(dbo.getFieldString("idmodulo"));
+                    aux.setIdFuncion(dbi.getFieldString("idfuncion"));
+                    aux.setDescripcion(dbi.getFieldString("acdescfun"));
+                    aux.setIdModulo(dbi.getFieldString("idmodulo"));
 
                     funciones.add(aux);
                 }
             }
-            dbo.dbClose();
+            dbi.dbClose();
         } catch (Exception e) {
             log.info("obtenerFuncionesUsuario: Ocurrió un error al intentar buscar las funciones de un usuario.");
             log.info(e.getMessage() + " localizado en: " + e.getLocalizedMessage());
@@ -194,19 +189,18 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
         query = query.replace("$IDUSUARIO", idUsuario);
         query = query.replace("$ACCLAVE", acClave);
 
-        log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
+        log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
-            Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
-            dbo.dbreset();
-            if (dbo.executeQuery(query) != 0) {
+            Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
+            dbi.dbreset();
+            if (dbi.executeQuery(query) != 0) {
                 log.error("actualizarClaveUsuario: Error modificando clave de " + idUsuario + " [" + query + "]");
             } else {
                 log.info("actualizarClaveUsuario: Modificación Exitosa");
                 modificado = true;
             }
 
-            dbo.dbClose();
+            dbi.dbClose();
         } catch (Exception ex) {
             log.info("modificarConsulta: Se capturó una excepción al intentar ejecutar la consulta: [" + query + "]");
             log.info("Causa: " + ex.getMessage() + " localizado en: " + ex.getLocalizedMessage());
@@ -221,19 +215,18 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
         String query = actualizarFechaLoginUsuarioQuery;
         query = query.replace("$IDUSUARIO", idUsuario);
 
-        log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
+        log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
-            Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
-            dbo.dbreset();
-            if (dbo.executeQuery(query) != 0) {
+            Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
+            dbi.dbreset();
+            if (dbi.executeQuery(query) != 0) {
                 log.error("actualizarFechaLoginUsuario: Error actualizando fecha login de " + idUsuario + " [" + query + "]");
             } else {
                 log.info("actualizarFechaLoginUsuario: Modificación Exitosa");
                 modificado = true;
             }
 
-            dbo.dbClose();
+            dbi.dbClose();
         } catch (Exception ex) {
             log.info("modificarConsulta: Se capturó una excepción al intentar ejecutar la consulta: [" + query + "]");
             log.info("Causa: " + ex.getMessage() + " localizado en: " + ex.getLocalizedMessage());

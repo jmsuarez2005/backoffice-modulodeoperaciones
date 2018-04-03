@@ -149,7 +149,7 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
     }
     
     /*
-     * MONTO RECARGAS PERSONA JURIDICA DIA(oracle)
+     * MONTO RECARGAS PERSONA JURIDICA DIA(Informix)
      */
     public BigDecimal obtenerMontoRecargasPersonaJurDia(Date fecha){
         BigDecimal monto=new BigDecimal("0.00");
@@ -182,21 +182,20 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
-            Dbinterface dbo=ds.get(oracle);
-            dbo.dbreset();
+            Dbinterface dbi=ds.get(informix);
+            dbi.dbreset();
         
-            if (dbo.executeQuery(query) == 0){
-                if (dbo.nextRecord()){
-                    log.info("EL MONTO ES: ["+dbo.getFieldString("MONTO")+"]");
-                    if (dbo.getFieldString("MONTO") != null && !"".equals(dbo.getFieldString("MONTO"))) {
-                        monto=monto.add(new BigDecimal(dbo.getFieldString("MONTO")).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+            if (dbi.executeQuery(query) == 0){
+                if (dbi.nextRecord()){
+                    log.info("EL MONTO ES: ["+dbi.getFieldString("MONTO")+"]");
+                    if (dbi.getFieldString("MONTO") != null && !"".equals(dbi.getFieldString("MONTO"))) {
+                        monto=monto.add(new BigDecimal(dbi.getFieldString("MONTO")).setScale(2,BigDecimal.ROUND_HALF_EVEN));
                     } else {
                         monto=monto.add(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_EVEN));
                     }
                 }
             }
-            //dbo.dbClose();
+            //dbi.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica dia "+this.pais);
             log.error("Causa: "+e);
@@ -207,7 +206,7 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
     }
     
     /*
-     * MONTO RECARGAS PERSONA JURIDICA DIA(Oracle)
+     * MONTO RECARGAS PERSONA JURIDICA DIA(Informix)
      */
     public BigDecimal obtenerMontoRecargasPersonaJurMes(Date fecha){
         BigDecimal monto=new BigDecimal("0.00");
@@ -238,21 +237,20 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
-            Dbinterface dbo=ds.get(oracle);
-            dbo.dbreset();
+            Dbinterface dbi=ds.get(informix);
+            dbi.dbreset();
         
-            if (dbo.executeQuery(query) == 0){
-                if (dbo.nextRecord()){
-                    log.info("EL MONTO ES: ["+dbo.getFieldString("MONTO")+"]");
-                    if (dbo.getFieldString("MONTO") != null && !"".equals(dbo.getFieldString("MONTO"))) {
-                        monto=monto.add(new BigDecimal(dbo.getFieldString("MONTO")).setScale(2,BigDecimal.ROUND_HALF_EVEN));
+            if (dbi.executeQuery(query) == 0){
+                if (dbi.nextRecord()){
+                    log.info("EL MONTO ES: ["+dbi.getFieldString("MONTO")+"]");
+                    if (dbi.getFieldString("MONTO") != null && !"".equals(dbi.getFieldString("MONTO"))) {
+                        monto=monto.add(new BigDecimal(dbi.getFieldString("MONTO")).setScale(2,BigDecimal.ROUND_HALF_EVEN));
                     } else {
                         monto=monto.add(new BigDecimal("0.00").setScale(2,BigDecimal.ROUND_HALF_EVEN));
                     }
                 }
             }
-            //dbo.dbClose();
+            //dbi.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica mes "+this.pais);
             log.error("Causa: "+e.getMessage()+" localizado en: "+e.getLocalizedMessage());

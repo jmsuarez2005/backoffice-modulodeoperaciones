@@ -11,27 +11,17 @@ package com.novo.constants;
 public interface EmisionesQuery {
     
                         /** Venezuela **/
-//    String obtenerTarjEmitidasPersonaJurDiaVeQuery=""
-//            + "select sum(a.ncantregs)cant_plast "
-//            + "from teb_lote a, empresas b "
-//            + "where a.accodcia = b.accodcia and a.ctipolote = '1' and a.cestatus = '4' "
-//            + "and year(a.dtfechorproceso) = '$YEAR' and month(a.dtfechorproceso) = '$MONTH' and day(a.dtfechorproceso) = '$DAY'";
     String obtenerTarjEmitidasPersonaJurDiaVeQuery=""
             + "select sum(a.ncantregs)cant_plast "
-            + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
-            + "where a.accodcia = b.COD_CLIENTE and a.ctipolote = '1' and a.cestatus = '4' "
-            + "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' and EXTRACT(MONTH FROM a.dtfechorproceso) = '$MONTH' and EXTRACT(DAY FROM a.dtfechorproceso) = '$DAY'";
+            + "from teb_lote a, empresas b "
+            + "where a.accodcia = b.accodcia and a.ctipolote = '1' and a.cestatus = '4' "
+            + "and year(a.dtfechorproceso) = '$YEAR' and month(a.dtfechorproceso) = '$MONTH' and day(a.dtfechorproceso) = '$DAY'";
     
-//    String obtenerTarjEmitidasPersonaJurMesVeQuery=""
-//            + "select sum(a.ncantregs)cant_plast "
-//            + "from teb_lote a, empresas b "
-//            + "where a.accodcia = b.accodcia and a.ctipolote = '1' and a.cestatus = '4' "
-//            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','%Y-%m-%d %R') and TO_DATE('$FECHAFIN','%Y-%m-%d %R') ";
     String obtenerTarjEmitidasPersonaJurMesVeQuery=""
             + "select sum(a.ncantregs)cant_plast "
-            + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
-            + "where a.accodcia = b.COD_CLIENTE and a.ctipolote = '1' and a.cestatus = '4' "
-            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MM') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MM') ";
+            + "from teb_lote a, empresas b "
+            + "where a.accodcia = b.accodcia and a.ctipolote = '1' and a.cestatus = '4' "
+            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','%Y-%m-%d %R') and TO_DATE('$FECHAFIN','%Y-%m-%d %R') ";
 
     String obtenerTarjEmitidasPersonaNatDiaVeQuery=""
             + "select count(*)cant_plast "
@@ -48,39 +38,23 @@ public interface EmisionesQuery {
             + "ORDER BY 1 ";
 
                             /** Colombia **/
-//    String obtenerTarjEmitidasPersonaJurDiaCoQuery=""
-//            + "select sum(a.ncantregs)cant_plast "
-//            + "from teb_lote a, empresas b "
-//            + "where a.accodcia = b.accodcia "
-//            + "and a.ctipolote = '1' "
-//            + "and a.cestatus = '4' "
-//            + "and year(a.dtfechorproceso) = '$YEAR' "
-//            + "and month(a.dtfechorproceso) = '$MONTH' "
-//            + "and day (a.dtfechorproceso) = '$DAY' ";
     String obtenerTarjEmitidasPersonaJurDiaCoQuery=""
             + "select sum(a.ncantregs)cant_plast "
-            + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
-            + "where a.accodcia = b.COD_CLIENTE "
+            + "from teb_lote a, empresas b "
+            + "where a.accodcia = b.accodcia "
             + "and a.ctipolote = '1' "
             + "and a.cestatus = '4' "
-            + "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' "
-            + "and EXTRACT(MONTH FROM a.dtfechorproceso) = '$MONTH' "
-            + "and EXTRACT(DAY FROM a.dtfechorproceso) = '$DAY' ";
+            + "and year(a.dtfechorproceso) = '$YEAR' "
+            + "and month(a.dtfechorproceso) = '$MONTH' "
+            + "and day (a.dtfechorproceso) = '$DAY' ";
     
-//    String obtenerTarjEmitidasPersonaJurMesCoQuery=""
-//            + "select sum(a.ncantregs)cant_plast "
-//            + "from teb_lote a, empresas b "
-//            + "where a.accodcia = b.accodcia "
-//            + "and a.ctipolote = '1' "
-//            + "and a.cestatus = '4' "
-//            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','%Y-%m-%d %R') and TO_DATE('$FECHAFIN','%Y-%m-%d %R') ";
     String obtenerTarjEmitidasPersonaJurMesCoQuery=""
             + "select sum(a.ncantregs)cant_plast "
-            + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
-            + "where a.accodcia = b.COD_CLIENTE "
+            + "from teb_lote a, empresas b "
+            + "where a.accodcia = b.accodcia "
             + "and a.ctipolote = '1' "
             + "and a.cestatus = '4' "
-            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MM') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MM') ";
+            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','%Y-%m-%d %R') and TO_DATE('$FECHAFIN','%Y-%m-%d %R') ";
 
                             /** Perú **/    
     String obtenerTarjEmitidasPersonaNatMesPeQuery=""
@@ -99,37 +73,21 @@ public interface EmisionesQuery {
             + "AND COD_OPERACION = '20' "
             + "AND TO_CHAR(FECHA,'$FORMATO') = '$FECHA' ";
                                                                                                     
-//    String obtenerTarjEmitidasPersonaJurDiaPeQuery=""
-//            + "select sum(a.ncantregs)cant_plast "
-//            + "from teb_lote a, empresas b "
-//            + "where a.accodcia = b.accodcia "
-//            + "and a.ctipolote = '1' "
-//            + "and a.cestatus = '4' "
-//            + "and year(a.dtfechorproceso) = '$YEAR' "
-//            + "and month(a.dtfechorproceso) = '$MONTH' "
-//            + "and day (a.dtfechorproceso) = '$DAY' ";
     String obtenerTarjEmitidasPersonaJurDiaPeQuery=""
             + "select sum(a.ncantregs)cant_plast "
-            + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
-            + "where a.accodcia = b.COD_CLIENTE "
+            + "from teb_lote a, empresas b "
+            + "where a.accodcia = b.accodcia "
             + "and a.ctipolote = '1' "
             + "and a.cestatus = '4' "
-            + "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' "
-            + "and EXTRACT(MONTH FROM a.dtfechorproceso) = '$MONTH' "
-            + "and EXTRACT(DAY FROM a.dtfechorproceso) = '$DAY' ";
+            + "and year(a.dtfechorproceso) = '$YEAR' "
+            + "and month(a.dtfechorproceso) = '$MONTH' "
+            + "and day (a.dtfechorproceso) = '$DAY' ";
     
-//    String obtenerTarjEmitidasPersonaJurMesPeQuery=""
-//            + "select sum(a.ncantregs)cant_plast "
-//            + "from teb_lote a, empresas b "
-//            + "where a.accodcia = b.accodcia "
-//            + "and a.ctipolote = '1' "
-//            + "and a.cestatus = '4' "
-//            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','%Y-%m-%d %R') and TO_DATE('$FECHAFIN','%Y-%m-%d %R') ";
     String obtenerTarjEmitidasPersonaJurMesPeQuery=""
             + "select sum(a.ncantregs)cant_plast "
-            + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
-            + "where a.accodcia = b.COD_CLIENTE "
+            + "from teb_lote a, empresas b "
+            + "where a.accodcia = b.accodcia "
             + "and a.ctipolote = '1' "
             + "and a.cestatus = '4' "
-            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MM') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MM') ";
+            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','%Y-%m-%d %R') and TO_DATE('$FECHAFIN','%Y-%m-%d %R') ";
 }
