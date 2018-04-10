@@ -37,7 +37,7 @@ public interface RecargasQuery {
             + "select sum(a.nmonto)MONTO "
             +  "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             +  "where a.accodcia = b.COD_CLIENTE "
-            +  "and a.ctipolote IN (2,5) "
+            +  "and a.ctipolote IN ('2','5') "
             +  "and a.cestatus = '4' "
             +  "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' "
             +  "and EXTRACT(MONTH FROM a.dtfechorproceso) = '$MONTH' "
@@ -56,9 +56,9 @@ public interface RecargasQuery {
             + "select sum(a.nmonto)MONTO "
             +  "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             +  "where a.accodcia = b.COD_CLIENTE "
-            +  "and a.ctipolote IN (2,5) "
+            +  "and a.ctipolote IN ('2','5') "
             +  "and a.cestatus = '4' "
-            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MM') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MM') ";
+            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MI') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MI') ";
 
                             /** Colombia **/    
 //    String recargasPersonaJurDiaCoQuery=""
@@ -74,7 +74,7 @@ public interface RecargasQuery {
             + "select  sum(a.nmonto)MONTO "
             + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             + "where a.accodcia = b.COD_CLIENTE "
-            + "and a.ctipolote IN (2,5) "
+            + "and a.ctipolote IN ('2','5') "
             + "and a.cestatus = '4' "
             + "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' "
             + "and EXTRACT(MONTH FROM a.dtfechorproceso) = '$MONTH' "
@@ -93,9 +93,9 @@ public interface RecargasQuery {
             + "select  sum(a.nmonto)MONTO "
             + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             + "where a.accodcia = b.COD_CLIENTE "
-            + "and a.ctipolote IN (2,5) "
+            + "and a.ctipolote IN ('2','5') "
             + "and a.cestatus = '4' "
-            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MM') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MM') ";
+            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MI') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MI') ";
     
     String recargasAbonosMaestroDiaCoQuery = ""
             + "select sum(a.MON_TRANSACCION/100) MONTO "
@@ -142,7 +142,7 @@ public interface RecargasQuery {
             + "select sum(a.nmonto)MONTO "
             + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             + "where a.accodcia = b.COD_CLIENTE "
-            + "and a.ctipolote IN (2,5) "
+            + "and a.ctipolote IN ('2','5') "
             + "and a.cestatus = '4' "
             + "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' "
             + "and EXTRACT(MONTH FROM a.dtfechorproceso) = '$MONTH' "
@@ -161,9 +161,9 @@ public interface RecargasQuery {
             + "select sum(a.nmonto)MONTO "
             + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             + "where a.accodcia = b.COD_CLIENTE "
-            + "and a.ctipolote IN (2,5) "
+            + "and a.ctipolote IN ('2','5') "
             + "and a.cestatus = '4' "
-            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MM') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MM') ";
+            + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MI') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MI') ";
 
 }                                                                                                                   
               

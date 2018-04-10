@@ -156,6 +156,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         juridica.setRecargasDiaLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurDia(fecha));
         juridica.setRecargasAcumLocal(recargasJurDAO.obtenerMontoRecargasPersonaJurMes(fecha));
         juridica.setRecargasDiaDolares(juridica.getRecargasDiaLocal().divide(cambioPesosDolar,2,RoundingMode.HALF_UP));
+        System.out.println("dividir;" + juridica.getRecargasAcumLocal() + " " + cambioPesosDolar);
         juridica.setRecargasAcumDolares(juridica.getRecargasAcumLocal().divide(cambioPesosDolar,2,RoundingMode.HALF_UP));
         recargasJurDAO.closeConection(); //Cierre de conexion
         
@@ -221,6 +222,8 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         recargasNatDAO = new RecargasDAO(appName,dbOracle,pe);
         natural.setRecargasDiaLocal(recargasNatDAO.obtenerMontoRecargasPersonaNatDia(fecha,"20").subtract(recargasNatDAO.obtenerMontoRecargasPersonaNatDia(fecha,"27")));
         natural.setRecargasAcumLocal(recargasNatDAO.obtenerMontoRecargasPersonaNatMes(fecha,"20").subtract(recargasNatDAO.obtenerMontoRecargasPersonaNatMes(fecha,"27")));
+        
+        System.out.println("dividir;" + natural.getRecargasDiaLocal() + " " + cambioSolesDolar);
         natural.setRecargasDiaDolares(natural.getRecargasDiaLocal().divide(cambioSolesDolar,2,RoundingMode.HALF_UP));
         natural.setRecargasAcumDolares(natural.getRecargasAcumLocal().divide(cambioSolesDolar,2,RoundingMode.HALF_UP));
         recargasNatDAO.closeConection(); //Cierre de conexion
