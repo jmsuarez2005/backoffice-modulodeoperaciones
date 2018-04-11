@@ -70,6 +70,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         //Dbinterface dbi = (Dbinterface) ds.get("informix");
         Dbinterface dbo = (Dbinterface) ds.get("oracle");
         dbo.dbreset();
+        log.info("SQL [" + sql1 + "]");
 
         if (dbo.executeQuery(sql1) == 0) {
             if (dbo.nextRecord()) {
