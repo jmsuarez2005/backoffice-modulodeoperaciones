@@ -7,11 +7,13 @@ package com.novo.actions;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.SobregirosDAO;
+import com.novo.dao.temp.SobregirosDAOINF;
 import com.novo.model.Ajuste;
 import com.novo.model.CamposActualizacion;
 import com.novo.model.TAjuste;
 import com.novo.model.Tarjeta;
 import com.novo.model.UsuarioSesion;
+import com.novo.objects.util.Utils;
 import com.novo.process.ReporteTransacciones;
 import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
@@ -21,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -51,17 +54,21 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     private String filename;
     private String pais;
     private String tipoMessage = ""; //Error, manejo para el jsp
+    private Properties prop;
+    private String propMigra;
 
     public SobregirosAction() {
         tipoAjustes = new ArrayList<TAjuste>();
         tarjetas = new ArrayList<Tarjeta>();
         tarjetasAct = new ArrayList<Tarjeta>();
         usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
     }
 
     @Override
     public String execute() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         if (usuarioSesion == null) {
@@ -79,7 +86,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
             return "out";
         }
         //Fin valida sesion
-        
+
         ReporteTransacciones business = new ReporteTransacciones();
         tipoAjustes = business.getTipoAjustes();
         return SUCCESS;
@@ -102,7 +109,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     }
 
     public String buscarUsuario() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         if (usuarioSesion == null) {
@@ -120,7 +127,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
             return "out";
         }
         //Fin valida sesion
-        
+
         ReporteTransacciones business = new ReporteTransacciones();
         if (nroTarjeta != null && !nroTarjeta.equals("")) {
             log.info("tarjeta = " + nroTarjeta);
@@ -133,7 +140,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     }
 
     public String Upload() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         if (usuarioSesion == null) {
@@ -151,7 +158,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
             return "out";
         }
         //Fin valida sesion
-        
+
         ReporteTransacciones business = new ReporteTransacciones();
 
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION);
@@ -162,7 +169,13 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
         List<Ajuste> ajustes = new ArrayList<Ajuste>();
         Ajuste ajuste = new Ajuste();
         boolean procesoOk = true;
-        SobregirosDAO sobregiros = new SobregirosDAO(appName, dbOracle, pais);
+        SobregirosDAO sobregiros = null;
+        SobregirosDAOINF sobregirosInf = null;
+        if (propMigra.toUpperCase().contains(pais.toUpperCase())) {
+            sobregiros = new SobregirosDAO(appName, dbOracle, pais);
+        } else {
+            sobregirosInf = new SobregirosDAOINF(appName, databases, pais);
+        }
         try {
 
             if (this.file == null) {
@@ -251,8 +264,14 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
                     return SUCCESS;
                 }
 
-                sobregiros.setAjustes(ajustes);
-                sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
+                if (propMigra.toUpperCase().contains(pais.toUpperCase())) {
+                    sobregiros.setAjustes(ajustes);
+                    sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
+                } else {
+                    sobregirosInf.setAjustes(ajustes);
+                    sobregirosInf.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
+
+                }
                 ajustex = ajustes;
 
                 tipoAjustes = business.getTipoAjustes();

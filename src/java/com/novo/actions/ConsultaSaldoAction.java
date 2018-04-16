@@ -3,6 +3,7 @@ package com.novo.actions;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.ConsultaDAO;
+import com.novo.dao.temp.ConsultaDAOINF;
 import com.novo.model.Ajuste;
 import com.novo.model.TAjuste;
 import com.novo.model.TBloqueo;
@@ -56,16 +57,20 @@ public class ConsultaSaldoAction extends ActionSupport
     private File file;
     private String contentType;
     private String filename;
+    private Properties prop;
+    private String propMigra;
     private String tipoMessage = ""; //Error, manejo para el jsp
 
     public ConsultaSaldoAction() {
         this.tarjetas = new ArrayList();
         this.tarjetasAct = new ArrayList();
         this.tarjetasRes = new ArrayList();
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
     }
 
     public String execute() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -84,7 +89,7 @@ public class ConsultaSaldoAction extends ActionSupport
             return "out";
         }
         //Fin valida sesion
-        
+
         return "success";
     }
 
@@ -121,7 +126,7 @@ public class ConsultaSaldoAction extends ActionSupport
     }
 
     public String Upload() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -140,7 +145,7 @@ public class ConsultaSaldoAction extends ActionSupport
             return "out";
         }
         //Fin valida sesion
-        
+
         ReporteTransacciones business = new ReporteTransacciones();
         Properties properties = Utils.getConfig("operaciones.properties");
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -149,9 +154,15 @@ public class ConsultaSaldoAction extends ActionSupport
         Tarjeta tar = new Tarjeta();
         Ajuste ajusteB = new Ajuste();
         this.ajustex = new ArrayList();
-
+        ConsultaDAO consulta = null;
+        ConsultaDAOINF consultaInf = null;
         boolean procesoOk = true;
-        ConsultaDAO consulta = new ConsultaDAO("operaciones", dbOracle, this.pais);
+
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            consulta = new ConsultaDAO("operaciones", dbOracle, this.pais);
+        } else {
+            consultaInf = new ConsultaDAOINF("operaciones", databases, this.pais);
+        }
         try {
 
             if (this.file == null) {
@@ -224,7 +235,11 @@ public class ConsultaSaldoAction extends ActionSupport
 
                 }
 
-                consulta.RegistrarConsultaDAO(tar);
+                if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                    consulta.RegistrarConsultaDAO(tar);
+                } else {
+                    consultaInf.RegistrarConsultaDAO(tar);
+                }
                 row1.createCell(1).setCellValue(tar.getSaldoDisponible());
 
                 this.ajustex.add(ajusteB);

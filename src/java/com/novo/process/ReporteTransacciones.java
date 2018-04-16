@@ -7,6 +7,8 @@ package com.novo.process;
 import com.novo.constants.BasicConfig;
 import com.novo.dao.AjustesDAO;
 import com.novo.dao.BloqueoDesbloqueoDAO;
+import com.novo.dao.temp.AjustesDAOINF;
+import com.novo.dao.temp.BloqueoDesbloqueoDAOINF;
 import com.novo.model.Ajuste;
 import com.novo.model.CamposActualizacion;
 import com.novo.model.Empresa;
@@ -24,6 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import org.apache.log4j.Logger;
 
@@ -36,9 +39,16 @@ public class ReporteTransacciones implements BasicConfig {
     private static Logger log = Logger.getLogger(ReporteTransacciones.class);
 
     private String pais = (String) ActionContext.getContext().getSession().get("pais");
+    private Properties prop;
+    private String propMigra;
+
     /*
      * obtiene las transacciones por usuario, ya sea por la tarjeta o documento de identidad
      */
+    public ReporteTransacciones() {
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
+    }
 
     public List<Transaccion> getTransaccionesUsuario(String nroTarjeta) {
         AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
@@ -61,10 +71,17 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Empresa> getEmpresas() {
-        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Empresa> empresas;
-        empresas = dao.getEmpresasDAO();
-        dao.closeConection();
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
+            empresas = dao.getEmpresasDAO();
+            dao.closeConection();
+        } else {
+            AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
+            empresas = dao.getEmpresasDAO();
+            dao.closeConection();
+
+        }
         return empresas;
     }
 
@@ -72,28 +89,52 @@ public class ReporteTransacciones implements BasicConfig {
      * obtiene las tarjetas pertenecientes al usuario, ya sea por la tarjeta o documento de identidad
      */
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta) {
-        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
-        List<Tarjeta> tarjetas = null;
-        if (documento != null) {
-            tarjetas = dao.getTarjetasDAO(documento, true);
-            dao.closeConection();
-            return tarjetas;
-        }
-        if (nroTarjeta != null) {
-            tarjetas = dao.getTarjetasDAO(nroTarjeta, false);
-            dao.closeConection();
-            return tarjetas;
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
+            List<Tarjeta> tarjetas = null;
+            if (documento != null) {
+                tarjetas = dao.getTarjetasDAO(documento, true);
+                dao.closeConection();
+                return tarjetas;
+            }
+            if (nroTarjeta != null) {
+                tarjetas = dao.getTarjetasDAO(nroTarjeta, false);
+                dao.closeConection();
+                return tarjetas;
+            }
+
+        } else {
+            AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
+            List<Tarjeta> tarjetas = null;
+            if (documento != null) {
+                tarjetas = dao.getTarjetasDAO(documento, true);
+                dao.closeConection();
+                return tarjetas;
+            }
+            if (nroTarjeta != null) {
+                tarjetas = dao.getTarjetasDAO(nroTarjeta, false);
+                dao.closeConection();
+                return tarjetas;
+            }
         }
         return null;
     }
 
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta, String prefix, String rif) {
-        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Tarjeta> tarjetas = null;
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
 
-        //if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
-        tarjetas = dao.getTarjetasFiltrosDAO(documento, nroTarjeta, prefix, rif);
-        dao.closeConection();
+            //if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
+            tarjetas = dao.getTarjetasFiltrosDAO(documento, nroTarjeta, prefix, rif);
+            dao.closeConection();
+
+        } else {
+            AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
+            tarjetas = dao.getTarjetasFiltrosDAO(documento, nroTarjeta, prefix, rif);
+            dao.closeConection();
+
+        }
         return tarjetas;
         // }
 //        if (documento != null) {
@@ -129,13 +170,25 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Tarjeta> getTarjetasUsuarioTransacciones(String documento, String nroTarjeta, String prefix, String rif, String fechaIni, String fechaFin) {
-        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
-        List<Tarjeta> tarjetas = null;
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
+            List<Tarjeta> tarjetas = null;
 
-        if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
-            tarjetas = dao.getTarjetasFiltrosTransaccionesDAO(documento, nroTarjeta, prefix, rif, fechaIni, fechaFin);
-            dao.closeConection();
-            return tarjetas;
+            if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
+                tarjetas = dao.getTarjetasFiltrosTransaccionesDAO(documento, nroTarjeta, prefix, rif, fechaIni, fechaFin);
+                dao.closeConection();
+                return tarjetas;
+            }
+
+        } else {
+            AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
+            List<Tarjeta> tarjetas = null;
+
+            if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
+                tarjetas = dao.getTarjetasFiltrosTransaccionesDAO(documento, nroTarjeta, prefix, rif, fechaIni, fechaFin);
+                dao.closeConection();
+                return tarjetas;
+            }
         }
         return null;
     }
@@ -176,7 +229,7 @@ public class ReporteTransacciones implements BasicConfig {
         dao.closeConection();
         return ajustes;
     }
-    
+
     public List<Ajuste> getAjustes(String status, String usuario, Date fechaIni, Date fechaFin, String filtro) {
         AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<Ajuste> ajustes = new ArrayList<Ajuste>();
@@ -184,13 +237,18 @@ public class ReporteTransacciones implements BasicConfig {
         dao.closeConection();
         return ajustes;
     }
-    
 
     public List<String> getUsuarios() {
-        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
         List<String> usuarios;
-        usuarios = dao.getUsuariosDao();
-        dao.closeConection();
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
+            usuarios = dao.getUsuariosDao();
+            dao.closeConection();
+        } else {
+            AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
+            usuarios = dao.getUsuariosDao();
+            dao.closeConection();
+        }
         return usuarios;
     }
 
@@ -294,42 +352,79 @@ public class ReporteTransacciones implements BasicConfig {
     public String makeUpdates(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario) {
         //(campos)fields already matched together, the id with the value selected by the user.
         //(tarjetas)list of cards that are going to be updated with the selected fields.
-        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
-        String respuesta = dao.makeUpdatesDAO(tarjetas, campos, usuario, pais);
-        
-        if (respuesta.contains("-3")) {
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
+            String respuesta = dao.makeUpdatesDAO(tarjetas, campos, usuario, pais);
+
+            if (respuesta.contains("-3")) {
+                dao.closeConection();
+                return respuesta;
+            } else if (!respuesta.equals("0")) {
+                dao.closeConection();
+                return "-1";
+            }
             dao.closeConection();
-            return respuesta;
-        }else if (!respuesta.equals("0")) {
+        } else {
+            AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
+            String respuesta = dao.makeUpdatesDAO(tarjetas, campos, usuario, pais);
+
+            if (respuesta.contains("-3")) {
+                dao.closeConection();
+                return respuesta;
+            } else if (!respuesta.equals("0")) {
+                dao.closeConection();
+                return "-1";
+            }
             dao.closeConection();
-            return "-1";
+
         }
-        dao.closeConection();
         return "0";
     }
 
     public String makeAfiliacion(List<Tarjeta> tarjetas, String usuario) {
         //(campos)fields already matched together, the id with the value selected by the user.
         //(tarjetas)list of cards that are going to be updated with the selected fields.
-        AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
-        String resp = dao.makeAfiliacionDAO(tarjetas, usuario);
-        if (resp.contains("error2")) {
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
+            String resp = dao.makeAfiliacionDAO(tarjetas, usuario);
+            if (resp.contains("error2")) {
+                dao.closeConection();
+                return resp;
+            } else if (resp.contains("error3")) {
+                dao.closeConection();
+                return resp;
+            } else if (resp.contains("error4")) {
+                dao.closeConection();
+                return resp;
+            } else if (resp.contains("error5")) {
+                dao.closeConection();
+                return resp;
+            } else if (!resp.equals("0")) {
+                dao.closeConection();
+                return "-1";
+            }
             dao.closeConection();
-            return resp;
-        } else if (resp.contains("error3")) {
+        } else {
+            AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
+            String resp = dao.makeAfiliacionDAO(tarjetas, usuario);
+            if (resp.contains("error2")) {
+                dao.closeConection();
+                return resp;
+            } else if (resp.contains("error3")) {
+                dao.closeConection();
+                return resp;
+            } else if (resp.contains("error4")) {
+                dao.closeConection();
+                return resp;
+            } else if (resp.contains("error5")) {
+                dao.closeConection();
+                return resp;
+            } else if (!resp.equals("0")) {
+                dao.closeConection();
+                return "-1";
+            }
             dao.closeConection();
-            return resp;
-        } else if (resp.contains("error4")) {
-            dao.closeConection();
-            return resp;
-        } else if (resp.contains("error5")) {
-            dao.closeConection();
-            return resp;
-        } else if (!resp.equals("0")) {
-            dao.closeConection();
-            return "-1";
         }
-        dao.closeConection();
         return "0";
     }
 }

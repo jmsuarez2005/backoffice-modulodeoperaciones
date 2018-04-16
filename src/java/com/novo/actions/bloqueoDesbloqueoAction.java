@@ -8,11 +8,13 @@ package com.novo.actions;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.BloqueoDesbloqueoDAO;
+import com.novo.dao.temp.BloqueoDesbloqueoDAOINF;
 import com.novo.model.Ajuste;
 import com.novo.model.TAjuste;
 import com.novo.model.TBloqueo;
 import com.novo.model.Tarjeta;
 import com.novo.model.UsuarioSesion;
+import com.novo.objects.util.Utils;
 import com.novo.process.ReporteTransacciones;
 import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
@@ -24,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -53,15 +56,19 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     private String contentType;
     private String filename;
     private String tipoMessage = ""; //Error, manejo para el jsp
+    private Properties prop;
+    private String propMigra;
 
     public bloqueoDesbloqueoAction() {
         //this.tipoAjustes = new ArrayList();
         this.tarjetas = new ArrayList();
         this.tarjetasAct = new ArrayList();
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
     }
 
     public String execute() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -80,7 +87,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
             return "out";
         }
         //Fin valida sesion
-        
+
         ReporteTransacciones business = new ReporteTransacciones();
         //this.tipoAjustes = business.getTipoAjustes();
         this.tipoBloqueo = business.getTipoBloqueo();
@@ -104,7 +111,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     }
 
     public String buscarUsuario() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -123,8 +130,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
             return "out";
         }
         //Fin valida sesion
-        
-        
+
         ReporteTransacciones business = new ReporteTransacciones();
         if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals(""))) {
             log.info("tarjeta = " + this.nroTarjeta);
@@ -137,7 +143,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     }
 
     public String Upload() {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -156,8 +162,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
             return "out";
         }
         //Fin valida sesion
-        
-        
+
         ReporteTransacciones business = new ReporteTransacciones();
 
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -170,7 +175,13 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
         TBloqueo ajuste = new TBloqueo();
         Ajuste ajusteB = new Ajuste();
         boolean procesoOk = true;
-        BloqueoDesbloqueoDAO bloqueo = new BloqueoDesbloqueoDAO("operaciones", dbOracle, this.pais);
+        BloqueoDesbloqueoDAO bloqueo = null;
+        BloqueoDesbloqueoDAOINF bloqueoInf = null;
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            bloqueo = new BloqueoDesbloqueoDAO("operaciones", dbOracle, this.pais);
+        } else {
+            bloqueoInf = new BloqueoDesbloqueoDAOINF("operaciones", databases, this.pais);
+        }
         try {
             if (this.file == null) {
                 this.message = "Error al cargar el archivo";
@@ -247,8 +258,14 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                 }
 
                 bloqueo.setBloqueo(bloquex);
-                bloqueo.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
-                this.tipoBloqueo = bloqueo.getBloqueo();
+
+                if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                    bloqueo.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
+                    this.tipoBloqueo = bloqueo.getBloqueo();
+                } else {
+                    bloqueoInf.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
+                    this.tipoBloqueo = bloqueoInf.getBloqueo();
+                }
                 this.tipoBloqueo = business.getTipoBloqueo();
 
                 ActionContext.getContext().getSession().put("tarjetasAct", this.tarjetasAct);

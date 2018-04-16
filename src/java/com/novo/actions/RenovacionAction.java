@@ -9,6 +9,7 @@ import static com.novo.actions.AfiliacionAction.findDuplicates;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.RenovacionDAO;
+import com.novo.dao.temp.RenovacionDAOINF;
 import com.novo.model.Ajuste;
 import com.novo.model.Empresa;
 import com.novo.model.Producto;
@@ -19,6 +20,7 @@ import com.novo.model.ValoresRen;
 import com.novo.objects.util.Utils;
 import com.novo.process.RenovacionProc;
 import com.novo.process.ReporteTransacciones;
+import com.novo.process.temp.RenovacionProcINF;
 import com.novo.util.SessionUtil;
 import static com.opensymphony.xwork2.Action.SUCCESS;
 import com.opensymphony.xwork2.ActionContext;
@@ -66,6 +68,13 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     private String fechaIni;
     private String fechaFin;
     private String tipoMessage = ""; //Error, manejo para el jsp
+    private Properties prop;
+    private String propMigra;
+
+    public RenovacionAction() {
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
+    }
 
     public String carga() throws IOException {
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
@@ -94,12 +103,22 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
             tipoMessage = "error";
             return SUCCESS;
         }
-
-        RenovacionDAO ren = new RenovacionDAO("operaciones", dbOracle, this.pais);
+        RenovacionDAO ren = null;
+        RenovacionDAOINF renInf = null;
+        RenovacionProc business = null;
+        RenovacionProcINF businessInf = null;
 
         ValoresRen renoAction = new ValoresRen();
 
-        renoAction = ren.ValoresCarga();
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            ren = new RenovacionDAO("operaciones", dbOracle, this.pais);
+            renoAction = ren.ValoresCarga();
+            business = new RenovacionProc();
+        } else {
+            renInf = new RenovacionDAOINF("operaciones", databases, this.pais);
+            renoAction = renInf.ValoresCarga();
+            businessInf = new RenovacionProcINF();
+        }
 
         String rutaOrigen = renoAction.getRutaOrigen();
         String rutaDestino = renoAction.getRutaDestino();
@@ -118,7 +137,6 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
 
         List<Ajuste> ajustes = new ArrayList<Ajuste>();
         Ajuste ajuste = new Ajuste();
-        RenovacionProc business = new RenovacionProc();
 
         try {
             InputStream buffer = new FileInputStream(file2.getAbsolutePath());
@@ -161,7 +179,13 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
 
             if (procesoOk) {
                 //VERIFICAR SI LAS TARJETAS SON APTAS PARA RENOVACION
-                List<Renovacion> listaRenovacion = business.checkTarjetasARenovar(ajustes);
+                List<Renovacion> listaRenovacion;
+                if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                    listaRenovacion = business.checkTarjetasARenovar(ajustes);
+                } else {
+                    listaRenovacion = businessInf.checkTarjetasARenovar(ajustes);
+
+                }
                 String respuesta = listaRenovacion.get(listaRenovacion.size() - 1).getRespuesta();
 
                 if (respuesta.contains("errorT")) {
@@ -174,10 +198,25 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                     return SUCCESS;
                 } else if (respuesta.contains("ok")) {
                     //SE PROCEDE A INSERTAR EN NOVO_RENOVACION
-                    respuesta = business.insertarRenovacion(listaRenovacion);
+                    if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                        respuesta = business.insertarRenovacion(listaRenovacion);
+                    } else {
+                        respuesta = businessInf.insertarRenovacion(listaRenovacion);
+
+                    }
                     if (respuesta.equals("ok")) {
-                        business.addFile(rutaOrigen + "/" + nombreRenovacion, rutaDestino, host, usuarioR);
-                        ren.InsertarRenovacion(nombreRenovacion, rutaDestino, "", usuario.getIdUsuario(), "", "", "", "", null);
+
+                        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                            business.addFile(rutaOrigen + "/" + nombreRenovacion, rutaDestino, host, usuarioR);
+                        } else {
+                            businessInf.addFile(rutaOrigen + "/" + nombreRenovacion, rutaDestino, host, usuarioR);
+
+                        }
+                        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                            ren.InsertarRenovacion(nombreRenovacion, rutaDestino, "", usuario.getIdUsuario(), "", "", "", "", null);
+                        } else {
+                            renInf.InsertarRenovacion(nombreRenovacion, rutaDestino, "", usuario.getIdUsuario(), "", "", "", "", null);
+                        }
                     } else {
                         message = "[!] Error al registrar la instruccion para renovacion";
                         tipoMessage = "error";
@@ -255,9 +294,15 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
             return "out";
         }
         //Fin valida sesion
-
-        RenovacionDAO ren = new RenovacionDAO("operaciones", dbOracle, this.pais);
-        this.renovar = ren.QueryRenovacion(this.selectedEmpresa, this.selectedProducto, this.documentoIdentidad, this.fechaIni, this.fechaFin);
+        RenovacionDAO ren = null;
+        RenovacionDAOINF renInf = null;
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            ren = new RenovacionDAO("operaciones", dbOracle, this.pais);
+            this.renovar = ren.QueryRenovacion(this.selectedEmpresa, this.selectedProducto, this.documentoIdentidad, this.fechaIni, this.fechaFin);
+        } else {
+            renInf = new RenovacionDAOINF("operaciones", databases, this.pais);
+            this.renovar = renInf.QueryRenovacion(this.selectedEmpresa, this.selectedProducto, this.documentoIdentidad, this.fechaIni, this.fechaFin);
+        }
         listar();
 
         return "consultar";

@@ -7,9 +7,11 @@ package com.novo.actions;
 import com.novo.constants.BasicConfig;
 import com.novo.constants.RCConfig;
 import com.novo.process.UsuarioProc;
+import com.novo.process.temp.UsuarioProcINF;
 import com.novo.util.Utils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
@@ -23,34 +25,58 @@ public class LoginAction extends ActionSupport implements BasicConfig, RCConfig 
     private String user;
     private String password;
     private String message, successMessage, errorMessage;
-     private String Pais;
+    private String Pais;
+    private Properties prop;
+    private String propMigra;
 
     public LoginAction() {
         log.info("Llamada al LoginAction");
+        this.prop = com.novo.objects.util.Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
     }
 
     @Override
     public String execute() throws Exception {
         String result;
         int rc;
-        UsuarioProc business = new UsuarioProc();
-
         ActionContext.getContext().getSession().put("pais", this.Pais);
-        business.login(this.user, this.password, this.Pais);
-        rc = business.getRc().getRc();
-        
 
-        if (rc == rcUsuarioExitoso) {
-            successMessage = "Login Exitoso";
-            ActionContext.getContext().getSession().put(USUARIO_SESION, business.getUsuarioSesion());
-            result = SUCCESS;
-        } else if (rc == rcCambiarClave) {
-            ActionContext.getContext().getSession().put(USUARIO_SESION, business.getUsuarioSesion());
-            message = business.getRc().getMensaje();
-            result = "cambiarClave";
+        if (propMigra.toUpperCase().contains(this.Pais.toUpperCase())) {
+            UsuarioProc business = new UsuarioProc();
+
+            business.login(this.user, this.password, this.Pais);
+            rc = business.getRc().getRc();
+
+            if (rc == rcUsuarioExitoso) {
+                successMessage = "Login Exitoso";
+                ActionContext.getContext().getSession().put(USUARIO_SESION, business.getUsuarioSesion());
+                result = SUCCESS;
+            } else if (rc == rcCambiarClave) {
+                ActionContext.getContext().getSession().put(USUARIO_SESION, business.getUsuarioSesion());
+                message = business.getRc().getMensaje();
+                result = "cambiarClave";
+            } else {
+                errorMessage = business.getRc().getMensaje();
+                result = ERROR;
+            }
         } else {
-            errorMessage = business.getRc().getMensaje();
-            result = ERROR;
+            UsuarioProcINF businessInf = new UsuarioProcINF();
+
+            businessInf.login(this.user, this.password, this.Pais);
+            rc = businessInf.getRc().getRc();
+
+            if (rc == rcUsuarioExitoso) {
+                successMessage = "Login Exitoso";
+                ActionContext.getContext().getSession().put(USUARIO_SESION, businessInf.getUsuarioSesion());
+                result = SUCCESS;
+            } else if (rc == rcCambiarClave) {
+                ActionContext.getContext().getSession().put(USUARIO_SESION, businessInf.getUsuarioSesion());
+                message = businessInf.getRc().getMensaje();
+                result = "cambiarClave";
+            } else {
+                errorMessage = businessInf.getRc().getMensaje();
+                result = ERROR;
+            }
         }
 
         log.info("Mensaje: " + message);

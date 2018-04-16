@@ -8,7 +8,9 @@ import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.ReporteEmisionRecarga;
 import com.novo.model.UsuarioSesion;
+import com.novo.objects.util.Utils;
 import com.novo.process.ReporteActividadDiariaProc;
+import com.novo.process.temp.ReporteActividadDiariaProcINF;
 import com.novo.util.DateUtil;
 import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
 
@@ -45,16 +48,22 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
     private InputStream inputStream;
     private String reportFile;
     private String tipoMessage = ""; //Error, manejo para el jsp
+    private Properties prop;
+    private String propMigra;
+    private String pais;
 
     public ReporteActividadDiariaAction() {
         this.totales = new ReporteEmisionRecarga();
         this.ingresoComedorPe = "0.00";
         this.fecha = com.novo.util.DateUtil.getYesterday();
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
+        this.pais = ((String) ActionContext.getContext().getSession().get("pais"));
     }
 
     @Override
-    public String execute() throws Exception {        
-        
+    public String execute() throws Exception {
+
         //Valido sesion
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
         if (usuario == null) {
@@ -73,23 +82,35 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
             return "out";
         }
         //Fin valida sesion
-        
-        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
-        this.reporteCo = business.obtenerEmisionRecargaColombia();
-        this.reportePe = business.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
-        this.reporteVe = business.obtenerEmisionRecargaVenezuela();
-        this.totales = business.obtenerTotales();
-        this.cambioBsDolar = business.getCambioBsDolar().toString();
-        this.cambioSolesDolar = business.getCambioSolesDolar().toString();
-        this.cambioPesosDolar = business.getCambioPesosDolar().toString();
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+
+            this.reporteCo = business.obtenerEmisionRecargaColombia();
+            this.reportePe = business.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
+            this.reporteVe = business.obtenerEmisionRecargaVenezuela();
+            this.totales = business.obtenerTotales();
+            this.cambioBsDolar = business.getCambioBsDolar().toString();
+            this.cambioSolesDolar = business.getCambioSolesDolar().toString();
+            this.cambioPesosDolar = business.getCambioPesosDolar().toString();
+        } else {
+            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+
+            this.reporteCo = businessInf.obtenerEmisionRecargaColombia();
+            this.reportePe = businessInf.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
+            this.reporteVe = businessInf.obtenerEmisionRecargaVenezuela();
+            this.totales = businessInf.obtenerTotales();
+            this.cambioBsDolar = businessInf.getCambioBsDolar().toString();
+            this.cambioSolesDolar = businessInf.getCambioSolesDolar().toString();
+            this.cambioPesosDolar = businessInf.getCambioPesosDolar().toString();
+        }
 
         return SUCCESS;
 
     }
 
     public String generarExcel() throws Exception {
-        
+
         //Valido sesion
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
         if (usuario == null) {
@@ -108,23 +129,42 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
             return "out";
         }
         //Fin valida sesion
-        
+
         this.message = "Llamada al método de Generar Excel. " + this.fecha.toString();
         this.execute();
-        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
-        business.setReporteCo(this.reporteCo);
-        business.setReportePe(this.reportePe);
-        business.setReporteVe(this.reporteVe);
-        business.setTotales(this.totales);
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
-        this.reportFile = "reporte_actividad_diaria_" + DateUtil.format("YYYYMMdd", fecha) + ".xls";
-        try {
-            ByteArrayOutputStream boas = new ByteArrayOutputStream();
-            business.crearWorkBookExcel().write(boas);
-            setInputStream(new ByteArrayInputStream(boas.toByteArray()));
-        } catch (IOException e) {
-            e.printStackTrace();
+            business.setReporteCo(this.reporteCo);
+            business.setReportePe(this.reportePe);
+            business.setReporteVe(this.reporteVe);
+            business.setTotales(this.totales);
+
+            this.reportFile = "reporte_actividad_diaria_" + DateUtil.format("YYYYMMdd", fecha) + ".xls";
+            try {
+                ByteArrayOutputStream boas = new ByteArrayOutputStream();
+                business.crearWorkBookExcel().write(boas);
+                setInputStream(new ByteArrayInputStream(boas.toByteArray()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+
+            businessInf.setReporteCo(this.reporteCo);
+            businessInf.setReportePe(this.reportePe);
+            businessInf.setReporteVe(this.reporteVe);
+            businessInf.setTotales(this.totales);
+
+            this.reportFile = "reporte_actividad_diaria_" + DateUtil.format("YYYYMMdd", fecha) + ".xls";
+            try {
+                ByteArrayOutputStream boas = new ByteArrayOutputStream();
+                businessInf.crearWorkBookExcel().write(boas);
+                setInputStream(new ByteArrayInputStream(boas.toByteArray()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return EXCEL;
     }
@@ -133,17 +173,32 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
 
         this.execute();
 
-        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
-        business.setReporteCo(this.reporteCo);
-        business.setReportePe(this.reportePe);
-        business.setReporteVe(this.reporteVe);
-        business.setTotales(this.totales);
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+            business.setReporteCo(this.reporteCo);
+            business.setReportePe(this.reportePe);
+            business.setReporteVe(this.reporteVe);
+            business.setTotales(this.totales);
 
-        try {
-            business.enviarCorreo();
-        } catch (Exception ex) {
-            this.message = "No se pudo enviar: " + ex.toString();
-            tipoMessage = "error";
+            try {
+                business.enviarCorreo();
+            } catch (Exception ex) {
+                this.message = "No se pudo enviar: " + ex.toString();
+                tipoMessage = "error";
+            }
+        } else {
+            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+            businessInf.setReporteCo(this.reporteCo);
+            businessInf.setReportePe(this.reportePe);
+            businessInf.setReporteVe(this.reporteVe);
+            businessInf.setTotales(this.totales);
+
+            try {
+                businessInf.enviarCorreo();
+            } catch (Exception ex) {
+                this.message = "No se pudo enviar: " + ex.toString();
+                tipoMessage = "error";
+            }
         }
 
         return SUCCESS;
