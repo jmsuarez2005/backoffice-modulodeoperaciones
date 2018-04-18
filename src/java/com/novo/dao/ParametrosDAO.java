@@ -9,6 +9,7 @@ import com.novo.constants.ParametrosQuery;
 import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.model.Parametro;
+import com.novo.util.Utils;
 import org.apache.log4j.Logger;
 
 /**
@@ -39,8 +40,14 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(INFORMIX);
-            Dbinterface dbo=ds.get(ORACLE);
+            String propMigra = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
+            Dbinterface dbo;
+             if (propMigra.toLowerCase().contains(pais)) {                 
+                dbo=ds.get(ORACLE);
+             }else{
+                dbo=ds.get(INFORMIX);
+             }
+             
             dbo.dbreset();
 
             if (dbo.executeQuery(query) == 0){
@@ -69,11 +76,17 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
         query=query.replace("$ACNAME$", parametro.getAcname());
         query=query.replace("$ACVALUE$", parametro.getAcvalue());
         
-        log.info("Ejecutando ["+query+"]"+ORACLE);
         
         try{
-            //Dbinterface dbi=ds.get(INFORMIX);
-            Dbinterface dbo=ds.get(ORACLE);
+            String propMigra = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
+            Dbinterface dbo;
+            if (propMigra.toLowerCase().contains(pais)) {                 
+                dbo=ds.get(ORACLE);
+                log.info("Ejecutando ["+query+"]"+ORACLE);
+             }else{
+                dbo=ds.get(INFORMIX);
+                log.info("Ejecutando ["+query+"]"+INFORMIX);
+             }
             dbo.dbreset();
             
                 if (dbo.executeQuery(query) != 0) {

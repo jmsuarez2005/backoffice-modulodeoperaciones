@@ -9,7 +9,6 @@ import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.UsuarioSesion;
 import com.novo.objects.util.Utils;
 import com.novo.process.ReporteActividadDiariaProc;
-import com.novo.process.temp.ReporteActividadDiariaProcINF;
 import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -62,17 +61,11 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
         }
         //Fin valida sesion
 
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
-            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc();
-            this.cambioDolaresVE = business.getCambioBsDolar().toString();
-            this.cambioDolaresPE = business.getCambioSolesDolar().toString();
-            this.cambioDolaresCO = business.getCambioPesosDolar().toString();
-        } else {
-            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF();
-            this.cambioDolaresVE = businessInf.getCambioBsDolar().toString();
-            this.cambioDolaresPE = businessInf.getCambioSolesDolar().toString();
-            this.cambioDolaresCO = businessInf.getCambioPesosDolar().toString();
-        }
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc();
+        this.cambioDolaresVE = business.getCambioBsDolar().toString();
+        this.cambioDolaresPE = business.getCambioSolesDolar().toString();
+        this.cambioDolaresCO = business.getCambioPesosDolar().toString();
+
         return SUCCESS;
     }
 
@@ -96,29 +89,17 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
         }
         //Fin valida sesion
 
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
-            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc();
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc();
 
-            if (business.modificarCambioMoneda(ve, this.cambioDolaresVE)
-                    && business.modificarCambioMoneda(pe, this.cambioDolaresPE)
-                    && business.modificarCambioMoneda(co, this.cambioDolaresCO)) {
-                this.message = "Cambios de Moneda actualizados.";
-            } else {
-                this.message = "Ocurrió un error al intentar actualizar.";
-                tipoMessage = "error";
-            }
+        if (business.modificarCambioMoneda(ve, this.cambioDolaresVE)
+                && business.modificarCambioMoneda(pe, this.cambioDolaresPE)
+                && business.modificarCambioMoneda(co, this.cambioDolaresCO)) {
+            this.message = "Cambios de Moneda actualizados.";
         } else {
-            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF();
-
-            if (businessInf.modificarCambioMoneda(ve, this.cambioDolaresVE)
-                    && businessInf.modificarCambioMoneda(pe, this.cambioDolaresPE)
-                    && businessInf.modificarCambioMoneda(co, this.cambioDolaresCO)) {
-                this.message = "Cambios de Moneda actualizados.";
-            } else {
-                this.message = "Ocurrió un error al intentar actualizar.";
-                tipoMessage = "error";
-            }
+            this.message = "Ocurrió un error al intentar actualizar.";
+            tipoMessage = "error";
         }
+
         this.execute();
 
         return SUCCESS;

@@ -10,7 +10,6 @@ import com.novo.model.ReporteEmisionRecarga;
 import com.novo.model.UsuarioSesion;
 import com.novo.objects.util.Utils;
 import com.novo.process.ReporteActividadDiariaProc;
-import com.novo.process.temp.ReporteActividadDiariaProcINF;
 import com.novo.util.DateUtil;
 import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
@@ -20,9 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.log4j.Logger;
@@ -82,28 +79,15 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
             return "out";
         }
         //Fin valida sesion
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
-            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
-
-            this.reporteCo = business.obtenerEmisionRecargaColombia();
-            this.reportePe = business.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
-            this.reporteVe = business.obtenerEmisionRecargaVenezuela();
-            this.totales = business.obtenerTotales();
-            this.cambioBsDolar = business.getCambioBsDolar().toString();
-            this.cambioSolesDolar = business.getCambioSolesDolar().toString();
-            this.cambioPesosDolar = business.getCambioPesosDolar().toString();
-        } else {
-            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
-
-            this.reporteCo = businessInf.obtenerEmisionRecargaColombia();
-            this.reportePe = businessInf.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
-            this.reporteVe = businessInf.obtenerEmisionRecargaVenezuela();
-            this.totales = businessInf.obtenerTotales();
-            this.cambioBsDolar = businessInf.getCambioBsDolar().toString();
-            this.cambioSolesDolar = businessInf.getCambioSolesDolar().toString();
-            this.cambioPesosDolar = businessInf.getCambioPesosDolar().toString();
-        }
+        this.reporteCo = business.obtenerEmisionRecargaColombia();
+        this.reportePe = business.obtenerEmisionRecargaPeru(this.ingresoComedorPe);
+        this.reporteVe = business.obtenerEmisionRecargaVenezuela();
+        this.totales = business.obtenerTotales();
+        this.cambioBsDolar = business.getCambioBsDolar().toString();
+        this.cambioSolesDolar = business.getCambioSolesDolar().toString();
+        this.cambioPesosDolar = business.getCambioPesosDolar().toString();
 
         return SUCCESS;
 
@@ -133,39 +117,22 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         this.message = "Llamada al método de Generar Excel. " + this.fecha.toString();
         this.execute();
 
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
-            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
-            business.setReporteCo(this.reporteCo);
-            business.setReportePe(this.reportePe);
-            business.setReporteVe(this.reporteVe);
-            business.setTotales(this.totales);
+        business.setReporteCo(this.reporteCo);
+        business.setReportePe(this.reportePe);
+        business.setReporteVe(this.reporteVe);
+        business.setTotales(this.totales);
 
-            this.reportFile = "reporte_actividad_diaria_" + DateUtil.format("YYYYMMdd", fecha) + ".xls";
-            try {
-                ByteArrayOutputStream boas = new ByteArrayOutputStream();
-                business.crearWorkBookExcel().write(boas);
-                setInputStream(new ByteArrayInputStream(boas.toByteArray()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
-
-            businessInf.setReporteCo(this.reporteCo);
-            businessInf.setReportePe(this.reportePe);
-            businessInf.setReporteVe(this.reporteVe);
-            businessInf.setTotales(this.totales);
-
-            this.reportFile = "reporte_actividad_diaria_" + DateUtil.format("YYYYMMdd", fecha) + ".xls";
-            try {
-                ByteArrayOutputStream boas = new ByteArrayOutputStream();
-                businessInf.crearWorkBookExcel().write(boas);
-                setInputStream(new ByteArrayInputStream(boas.toByteArray()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        this.reportFile = "reporte_actividad_diaria_" + DateUtil.format("YYYYMMdd", fecha) + ".xls";
+        try {
+            ByteArrayOutputStream boas = new ByteArrayOutputStream();
+            business.crearWorkBookExcel().write(boas);
+            setInputStream(new ByteArrayInputStream(boas.toByteArray()));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return EXCEL;
     }
 
@@ -173,32 +140,17 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
 
         this.execute();
 
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
-            ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
-            business.setReporteCo(this.reporteCo);
-            business.setReportePe(this.reportePe);
-            business.setReporteVe(this.reporteVe);
-            business.setTotales(this.totales);
+        ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
+        business.setReporteCo(this.reporteCo);
+        business.setReportePe(this.reportePe);
+        business.setReporteVe(this.reporteVe);
+        business.setTotales(this.totales);
 
-            try {
-                business.enviarCorreo();
-            } catch (Exception ex) {
-                this.message = "No se pudo enviar: " + ex.toString();
-                tipoMessage = "error";
-            }
-        } else {
-            ReporteActividadDiariaProcINF businessInf = new ReporteActividadDiariaProcINF(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
-            businessInf.setReporteCo(this.reporteCo);
-            businessInf.setReportePe(this.reportePe);
-            businessInf.setReporteVe(this.reporteVe);
-            businessInf.setTotales(this.totales);
-
-            try {
-                businessInf.enviarCorreo();
-            } catch (Exception ex) {
-                this.message = "No se pudo enviar: " + ex.toString();
-                tipoMessage = "error";
-            }
+        try {
+            business.enviarCorreo();
+        } catch (Exception ex) {
+            this.message = "No se pudo enviar: " + ex.toString();
+            tipoMessage = "error";
         }
 
         return SUCCESS;
