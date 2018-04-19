@@ -7,7 +7,7 @@ package com.novo.process.temp;
 
 import static com.novo.constants.BasicConfig.appName;
 import static com.novo.constants.BasicConfig.databases;
-import com.novo.dao.RenovacionDAO;
+import com.novo.dao.temp.RenovacionDAOINF;
 import com.novo.model.Ajuste;
 import com.novo.model.Renovacion;
 import com.opensymphony.xwork2.ActionContext;
@@ -61,7 +61,7 @@ public class RenovacionProcINF {
         listaTarjetaAux.addAll(set);
         Collections.sort(listaTarjetaAux);
         //VALIDAR QUE EXISTAN LAS TARJETAS
-        RenovacionDAO dao = new RenovacionDAO(appName, databases, this.pais);
+        RenovacionDAOINF dao = new RenovacionDAOINF(appName, databases, this.pais);
         listaRenovacion = dao.checkTarjetasARenovarDAO(listaTarjetaAux);
 
         dao.closeConection();
@@ -70,7 +70,7 @@ public class RenovacionProcINF {
 
     public String insertarRenovacion(List<Renovacion> listaRenovacion) {
 
-        RenovacionDAO dao = new RenovacionDAO(appName, databases, this.pais);
+        RenovacionDAOINF dao = new RenovacionDAOINF(appName, databases, this.pais);
         String respuesta = dao.insertarNovoRenovacion(listaRenovacion);
 
         dao.closeConection();

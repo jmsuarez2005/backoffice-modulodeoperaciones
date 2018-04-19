@@ -6,7 +6,7 @@ package com.novo.process.temp;
 
 import com.novo.constants.BasicConfig;
 import com.novo.constants.RCConfig;
-import com.novo.dao.UsuarioDAO;
+import com.novo.dao.temp.UsuarioDAOINF;
 import com.novo.model.Funcion;
 import com.novo.model.Perfil;
 import com.novo.model.ResponseRC;
@@ -34,7 +34,7 @@ public class UsuarioProcINF implements BasicConfig, RCConfig {
     }
 
     public int login(String user, String password, String pais) {
-        UsuarioDAO usuarioDAO = new UsuarioDAO(appName, databases, pais);
+        UsuarioDAOINF usuarioDAO = new UsuarioDAOINF(appName, databases, pais);
         UsuarioSesion usuario;
         usuario = usuarioDAO.obtenerUsuarioSesion(user.toUpperCase());
 
@@ -101,7 +101,7 @@ public class UsuarioProcINF implements BasicConfig, RCConfig {
      * D: Método para obtener los perfiles de un usuario, se agrega un perfil adicional por defecto para aquellas
      * funciones del usuario que no estén relacionadas con un perfil (funciones que le fueron agregadas particularmente)
      */
-    private void obtenerPerfiles(UsuarioDAO usuarioDAO) {
+    private void obtenerPerfiles(UsuarioDAOINF usuarioDAO) {
 
         //Si es Usuario Master, no se obtienen sus perfiles por tener Full Access
         if (this.usuarioSesion.getAcTipo().equals("M") != true) {
@@ -137,7 +137,7 @@ public class UsuarioProcINF implements BasicConfig, RCConfig {
 
         if (usuario.getPassword().toUpperCase().equals(claveActual.toUpperCase())) {
             //Proceder a Actualizar la clave
-            UsuarioDAO usuarioDAO = new UsuarioDAO(appName, databases, pais);
+            UsuarioDAOINF usuarioDAO = new UsuarioDAOINF(appName, databases, pais);
 
             usuarioDAO.actualizarClaveUsuario(this.usuarioSesion.getIdUsuario(), claveNueva);
             this.usuarioSesion.setPassword(claveNueva.toUpperCase());
