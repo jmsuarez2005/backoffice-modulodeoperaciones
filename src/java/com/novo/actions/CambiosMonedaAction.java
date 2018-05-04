@@ -91,6 +91,24 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
 
         ReporteActividadDiariaProc business = new ReporteActividadDiariaProc();
 
+        if (this.cambioDolaresVE == null) {
+            this.cambioDolaresVE = "0.00";
+        } else if (this.cambioDolaresVE.equals("")) {
+            this.cambioDolaresVE = "0.00";
+        }
+
+        if (this.cambioDolaresPE == null) {
+            this.cambioDolaresPE = "0.00";
+        } else if (this.cambioDolaresPE.equals("")) {
+            this.cambioDolaresPE = "0.00";
+        }
+        
+        if (this.cambioDolaresCO == null) {
+            this.cambioDolaresCO = "0.00";
+        } else if (this.cambioDolaresCO.equals("")) {
+            this.cambioDolaresCO = "0.00";
+        }
+
         if (business.modificarCambioMoneda(ve, this.cambioDolaresVE)
                 && business.modificarCambioMoneda(pe, this.cambioDolaresPE)
                 && business.modificarCambioMoneda(co, this.cambioDolaresCO)) {
