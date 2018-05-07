@@ -89,7 +89,7 @@ public class CambioClaveAction extends ActionSupport implements BasicConfig {
         if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
             UsuarioProc business = new UsuarioProc();
 
-            if (business.cambiarClave(usuarioSesion, this.claveActual, this.newpw)) {
+            if (business.cambiarClave(usuarioSesion, this.claveActual, this.newpw, this.pais.toLowerCase())) {
                 this.successMessage = "Clave actualizada de forma exitosa.";
                 ActionContext.getContext().getSession().put(USUARIO_SESION, usuarioSesion);
                 return "cambioExitoso";
@@ -99,7 +99,7 @@ public class CambioClaveAction extends ActionSupport implements BasicConfig {
         } else {
             UsuarioProcINF businessInf = new UsuarioProcINF();
 
-            if (businessInf.cambiarClave(usuarioSesion, this.claveActual, this.newpw)) {
+            if (businessInf.cambiarClave(usuarioSesion, this.claveActual, this.newpw, this.pais.toLowerCase())) {
                 this.successMessage = "Clave actualizada de forma exitosa.";
                 ActionContext.getContext().getSession().put(USUARIO_SESION, usuarioSesion);
                 return "cambioExitoso";

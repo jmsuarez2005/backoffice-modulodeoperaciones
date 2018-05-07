@@ -131,9 +131,9 @@ public class UsuarioProc implements BasicConfig, RCConfig {
         }
     }
 
-    public boolean cambiarClave(UsuarioSesion usuario, String claveActual, String claveNueva) {
+    public boolean cambiarClave(UsuarioSesion usuario, String claveActual, String claveNueva, String pais) {
         this.usuarioSesion = usuario;
-        String pais = Utils.getConfig(BasicConfig.properties).getProperty("pais");
+        //String pais = Utils.getConfig(BasicConfig.properties).getProperty("pais");
 
         if (usuario.getPassword().toUpperCase().equals(claveActual.toUpperCase())) {
             //Proceder a Actualizar la clave

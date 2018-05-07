@@ -257,12 +257,12 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                     return "success";
                 }
 
-                bloqueo.setBloqueo(bloquex);
-
                 if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                    bloqueo.setBloqueo(bloquex);
                     bloqueo.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
                     this.tipoBloqueo = bloqueo.getBloqueo();
                 } else {
+                    bloqueoInf.setBloqueo(bloquex);
                     bloqueoInf.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
                     this.tipoBloqueo = bloqueoInf.getBloqueo();
                 }
