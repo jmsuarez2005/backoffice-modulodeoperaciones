@@ -202,7 +202,7 @@
                                 </td>
                                 <td>
                                     <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.juridica.porcRepGlobal)" />%<br/>
-                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.porcRep)" />%
+                                    <s:property value="@com.novo.util.TextUtil@formatearDecimal(reporteCo.maestro.porcRepGlobal)" />%
                                 </td>
                             </tr>
                             <tr>
