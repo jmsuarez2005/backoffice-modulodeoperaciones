@@ -60,7 +60,7 @@ public interface EmisionesQuery {
     String obtenerTarjEmitidasPersonaJurDiaCoQuery=""
             + "select sum(a.ncantregs)cant_plast "
             + "from teb_lote a "
-            + "inner join MAESTRO_CLIENTES_TEBCA b on a.accodcia = b.COD_CLIENTE "
+            + "inner join MAESTRO_CLIENTES_TEBCA b on a.accodcia = TO_CHAR(b.COD_CLIENTE) "
             + "where (a.ctipolote = '3' and LTRIM(b.CIRIF_CLIENTE,0) IN ($ACRIF$) or a.ctipolote = '1' ) "
             + "and a.cestatus = '4' "
             + "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' "
@@ -77,7 +77,7 @@ public interface EmisionesQuery {
     String obtenerTarjEmitidasPersonaJurMesCoQuery=""
             + "select sum(a.ncantregs)cant_plast "
             + "from teb_lote a "
-            + "inner join MAESTRO_CLIENTES_TEBCA b on a.accodcia = b.COD_CLIENTE "
+            + "inner join MAESTRO_CLIENTES_TEBCA b on a.accodcia = TO_CHAR(b.COD_CLIENTE) "
             + "where (a.ctipolote = '3' and LTRIM(b.CIRIF_CLIENTE,0) IN ($ACRIF$) or a.ctipolote = '1' ) "
             + "and a.cestatus = '4' "
             + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MI') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MI') ";
