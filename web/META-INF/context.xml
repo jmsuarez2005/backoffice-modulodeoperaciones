@@ -5,10 +5,10 @@
   <ResourceLink global="jdbc/informix_novodesa" name="jdbc/informix_novodesa" type="javax.sql.DataSource"/>
   <ResourceLink global="jdbc/oracle_desaperu" name="jdbc/oracle_desaperu" type="javax.sql.DataSource"/>
   <ResourceLink global="jdbc/informix_desaperu" name="jdbc/informix_desaperu" type="javax.sql.DataSource"/>
-  <ResourceLink global="jdbc/oracle_desaperudolares" name="jdbc/oracle_desaperudolares" type="javax.sql.DataSource"/>
-  <ResourceLink global="jdbc/informix_desaperudolares" name="jdbc/informix_desaperudolares" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/oracle_desausd" name="jdbc/oracle_desausd" type="javax.sql.DataSource"/>
+  <ResourceLink global="jdbc/informix_desausd" name="jdbc/informix_desausd" type="javax.sql.DataSource"/>
 
-  <!-- Resources del Servidor en Tomcat Test -->
+  <!--  Resources del Servidor en Tomcat Test -->
   <ResourceLink global="jdbc/oracle_colombia" name="jdbc/oracle_colombia" type="javax.sql.DataSource"/>
   <ResourceLink global="jdbc/informix_colombia" name="jdbc/informix_colombia" type="javax.sql.DataSource"/>
   <ResourceLink global="jdbc/informix_peru" name="jdbc/informix_peru" type="javax.sql.DataSource"/>

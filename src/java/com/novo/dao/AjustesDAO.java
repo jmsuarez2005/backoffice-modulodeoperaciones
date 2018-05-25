@@ -92,7 +92,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             dbo2.dbreset();
             //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             ////sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
-            sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where CIRIF_CLIENTE = '" + tarjetaAux.getIdExtEmp() + "'";
+            sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
                 if (dbo2.nextRecord()) {
@@ -118,7 +118,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             dbo2.dbreset();
             //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             ////sql = "select acrif from empresas where acnomciacorto like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
-            sql = "select CIRIF_CLIENTE AS acrif from MAESTRO_CLIENTES_TEBCA where NOMBRE_CORTO like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
+            sql = "select LTRIM(CIRIF_CLIENTE,'0') AS acrif from MAESTRO_CLIENTES_TEBCA where NOMBRE_CORTO like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
                 while (dbo2.nextRecord()) {
@@ -174,7 +174,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             dbo2.dbreset();
             //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             /////sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
-            sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where CIRIF_CLIENTE = '" + tarjetaAux.getIdExtEmp() + "'";
+            sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
                 if (dbo2.nextRecord()) {
@@ -200,7 +200,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             dbo2.dbreset();
             //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             //////sql = "select acrif from empresas where acnomciacorto like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
-            sql = "select CIRIF_CLIENTE AS acrif from MAESTRO_CLIENTES_TEBCA where NOMBRE_CORTO like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
+            sql = "select LTRIM(CIRIF_CLIENTE,'0') AS acrif from MAESTRO_CLIENTES_TEBCA where NOMBRE_CORTO like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
                 while (dbo2.nextRecord()) {
@@ -257,7 +257,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             dbo2.dbreset();
             //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             //////sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
-            sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where CIRIF_CLIENTE = '" + tarjetaAux.getIdExtEmp() + "'";
+            sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
                 if (dbo2.nextRecord()) {
@@ -348,7 +348,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         //Dbinterface dbi = ds.get("informix");
         Dbinterface dbo = ds.get("oracle");
         //String sql = "select accodcia, acnomcia, acrif,acnomciacorto  from empresas where cstatus = 'A' order by acnomciacorto asc";
-        String sql = "select COD_CLIENTE AS accodcia, NOM_CLIENTE AS acnomcia, CIRIF_CLIENTE AS acrif,NOMBRE_CORTO AS acnomciacorto  from MAESTRO_CLIENTES_TEBCA where cstatus = 'A' order by NOMBRE_CORTO asc";
+        String sql = "select COD_CLIENTE AS accodcia, NOM_CLIENTE AS acnomcia, LTRIM(CIRIF_CLIENTE,'0') AS acrif,NOMBRE_CORTO AS acnomciacorto  from MAESTRO_CLIENTES_TEBCA where cstatus = 'A' order by NOMBRE_CORTO asc";
         List<Empresa> empresas = new ArrayList<Empresa>();
         Empresa empresa = new Empresa();
         log.info("sql [" + sql + "]");
@@ -1303,7 +1303,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         }
         if (!empresas.equals("")) {
             //sql = "select acrif from empresas where acrif in (" + empresas.substring(0, empresas.length() - 1) + ")";
-            sql = "select CIRIF_CLIENTE AS acrif from MAESTRO_CLIENTES_TEBCA where CIRIF_CLIENTE in (" + empresas.substring(0, empresas.length() - 1) + ")";
+            sql = "select LTRIM(CIRIF_CLIENTE,'0') AS acrif from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') in (" + empresas.substring(0, empresas.length() - 1) + ")";
             log.info("sql [" + sql + "]");
             dbo.dbreset();
             if (dbo.executeQuery(sql) == 0) {

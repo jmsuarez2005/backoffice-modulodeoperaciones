@@ -7,10 +7,12 @@ package com.novo.actions;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.UsuarioSesion;
+import com.novo.objects.util.Utils;
 import com.novo.process.ReporteActividadDiariaProc;
 import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,12 +26,18 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
     private String cambioDolaresVE, cambioDolaresPE, cambioDolaresCO;
     private String tipoMessage = ""; //Error, manejo para el jsp
     private UsuarioSesion usuarioSesion;
+    private Properties prop;
+    private String propMigra;
+    private String pais;
 
     public CambiosMonedaAction() {
         this.cambioDolaresVE = "0.00";
         this.cambioDolaresPE = "0.00";
         this.cambioDolaresCO = "0.00";
-        usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        this.usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        this.pais = ((String) ActionContext.getContext().getSession().get("pais"));
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
     }
 
     @Override
@@ -57,6 +65,7 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
         this.cambioDolaresVE = business.getCambioBsDolar().toString();
         this.cambioDolaresPE = business.getCambioSolesDolar().toString();
         this.cambioDolaresCO = business.getCambioPesosDolar().toString();
+
         return SUCCESS;
     }
 
@@ -82,6 +91,24 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
 
         ReporteActividadDiariaProc business = new ReporteActividadDiariaProc();
 
+        if (this.cambioDolaresVE == null) {
+            this.cambioDolaresVE = "0.00";
+        } else if (this.cambioDolaresVE.equals("")) {
+            this.cambioDolaresVE = "0.00";
+        }
+
+        if (this.cambioDolaresPE == null) {
+            this.cambioDolaresPE = "0.00";
+        } else if (this.cambioDolaresPE.equals("")) {
+            this.cambioDolaresPE = "0.00";
+        }
+        
+        if (this.cambioDolaresCO == null) {
+            this.cambioDolaresCO = "0.00";
+        } else if (this.cambioDolaresCO.equals("")) {
+            this.cambioDolaresCO = "0.00";
+        }
+
         if (business.modificarCambioMoneda(ve, this.cambioDolaresVE)
                 && business.modificarCambioMoneda(pe, this.cambioDolaresPE)
                 && business.modificarCambioMoneda(co, this.cambioDolaresCO)) {
@@ -90,6 +117,7 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
             this.message = "Ocurrió un error al intentar actualizar.";
             tipoMessage = "error";
         }
+
         this.execute();
 
         return SUCCESS;

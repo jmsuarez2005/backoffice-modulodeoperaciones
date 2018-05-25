@@ -41,7 +41,7 @@ import org.apache.poi.ss.usermodel.Row;
  */
 public class AjusteTransaccionesProc implements BasicConfig {
 
-    private static Logger log = Logger.getLogger(ReporteActividadDiariaProc.class);
+    private static Logger log = Logger.getLogger(AjusteTransaccionesProc.class);
 
     private Date fecha;
     private String usuarioSesion;

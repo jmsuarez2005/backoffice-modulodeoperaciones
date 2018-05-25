@@ -8,6 +8,7 @@ import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.ReporteEmisionRecarga;
 import com.novo.model.UsuarioSesion;
+import com.novo.objects.util.Utils;
 import com.novo.process.ReporteActividadDiariaProc;
 import com.novo.util.DateUtil;
 import com.novo.util.SessionUtil;
@@ -18,10 +19,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
 
@@ -45,16 +45,22 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
     private InputStream inputStream;
     private String reportFile;
     private String tipoMessage = ""; //Error, manejo para el jsp
+    private Properties prop;
+    private String propMigra;
+    private String pais;
 
     public ReporteActividadDiariaAction() {
         this.totales = new ReporteEmisionRecarga();
         this.ingresoComedorPe = "0.00";
         this.fecha = com.novo.util.DateUtil.getYesterday();
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
+        this.pais = ((String) ActionContext.getContext().getSession().get("pais"));
     }
 
     @Override
-    public String execute() throws Exception {        
-        
+    public String execute() throws Exception {
+
         //Valido sesion
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
         if (usuario == null) {
@@ -73,7 +79,6 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
             return "out";
         }
         //Fin valida sesion
-        
         ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
         this.reporteCo = business.obtenerEmisionRecargaColombia();
@@ -89,7 +94,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
     }
 
     public String generarExcel() throws Exception {
-        
+
         //Valido sesion
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
         if (usuario == null) {
@@ -108,9 +113,10 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
             return "out";
         }
         //Fin valida sesion
-        
+
         this.message = "Llamada al método de Generar Excel. " + this.fecha.toString();
         this.execute();
+
         ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
 
         business.setReporteCo(this.reporteCo);
@@ -126,6 +132,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return EXCEL;
     }
 

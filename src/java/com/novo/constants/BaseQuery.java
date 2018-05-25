@@ -21,6 +21,6 @@ public interface BaseQuery {
 
     String actualizarClaveUsuarioQuery = "UPDATE teb_adm_usuario SET acclave='$ACCLAVE' WHERE idusuario='$IDUSUARIO'";
 
-    String actualizarFechaLoginUsuarioQuery = "UPDATE teb_adm_usuario SET dtfecha_ult_acceso = CURRENT  , app_ultimo_acceso = 'MOD_OPERACIONES' where idusuario = '$IDUSUARIO'";
+    String actualizarFechaLoginUsuarioQuery = "UPDATE teb_adm_usuario SET dtfecha_ult_acceso = SYSDATE  , app_ultimo_acceso = 'MOD_OPERACIONES' where idusuario = '$IDUSUARIO'";
     
 }

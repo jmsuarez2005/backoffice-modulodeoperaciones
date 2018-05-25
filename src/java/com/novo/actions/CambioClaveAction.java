@@ -7,32 +7,42 @@ package com.novo.actions;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.model.UsuarioSesion;
+import com.novo.objects.util.Utils;
 import com.novo.process.UsuarioProc;
+import com.novo.process.temp.UsuarioProcINF;
 import com.novo.util.SessionUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /**
  *
  * @author jorojas
  */
-public class CambioClaveAction extends ActionSupport implements BasicConfig{
+public class CambioClaveAction extends ActionSupport implements BasicConfig {
+
     private String message, successMessage, errorMessage;
-    private String claveActual,newpw,newpwcf;
+    private String claveActual, newpw, newpwcf;
     private UsuarioSesion usuarioSesion;
     private static Logger log = Logger.getLogger(CambioClaveAction.class);
-    
+    private Properties prop;
+    private String propMigra;
+    private String pais;
+
     public CambioClaveAction() {
         this.message = "";
         this.successMessage = "";
         this.errorMessage = "";
-        usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        this.usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
+        this.pais = ((String) ActionContext.getContext().getSession().get("pais"));
+        this.prop = Utils.getConfig("oracleRegEx.properties");
+        this.propMigra = prop.getProperty("paisOracle");
     }
-    
+
     @Override
     public String execute() throws Exception {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         if (usuarioSesion == null) {
@@ -50,12 +60,12 @@ public class CambioClaveAction extends ActionSupport implements BasicConfig{
             return "out";
         }
         //Fin valida sesion
-        
+
         return SUCCESS;
     }
-    
+
     public String cambiar() throws Exception {
-        
+
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
         if (usuarioSesion == null) {
@@ -73,18 +83,31 @@ public class CambioClaveAction extends ActionSupport implements BasicConfig{
             return "out";
         }
         //Fin valida sesion
-        
-        UsuarioSesion usuarioSesion = (UsuarioSesion)ActionContext.getContext().getSession().get(USUARIO_SESION);
-        UsuarioProc business = new UsuarioProc();
-        
-        if (business.cambiarClave(usuarioSesion, this.claveActual, this.newpw)){
-            this.successMessage = "Clave actualizada de forma exitosa.";
-            ActionContext.getContext().getSession().put(USUARIO_SESION, usuarioSesion);
-            return "cambioExitoso";
-        }else{
-            this.errorMessage = business.getRc().getMensaje();
+
+        UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION);
+
+        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+            UsuarioProc business = new UsuarioProc();
+
+            if (business.cambiarClave(usuarioSesion, this.claveActual, this.newpw, this.pais.toLowerCase())) {
+                this.successMessage = "Clave actualizada de forma exitosa.";
+                ActionContext.getContext().getSession().put(USUARIO_SESION, usuarioSesion);
+                return "cambioExitoso";
+            } else {
+                this.errorMessage = business.getRc().getMensaje();
+            }
+        } else {
+            UsuarioProcINF businessInf = new UsuarioProcINF();
+
+            if (businessInf.cambiarClave(usuarioSesion, this.claveActual, this.newpw, this.pais.toLowerCase())) {
+                this.successMessage = "Clave actualizada de forma exitosa.";
+                ActionContext.getContext().getSession().put(USUARIO_SESION, usuarioSesion);
+                return "cambioExitoso";
+            } else {
+                this.errorMessage = businessInf.getRc().getMensaje();
+            }
         }
-        
+
         return SUCCESS;
     }
 
@@ -135,7 +158,5 @@ public class CambioClaveAction extends ActionSupport implements BasicConfig{
     public void setNewpwcf(String newpwcf) {
         this.newpwcf = newpwcf;
     }
-    
-    
-}
 
+}

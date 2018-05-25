@@ -70,6 +70,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         //Dbinterface dbi = (Dbinterface) ds.get("informix");
         Dbinterface dbo = (Dbinterface) ds.get("oracle");
         dbo.dbreset();
+        log.info("SQL [" + sql1 + "]");
 
         if (dbo.executeQuery(sql1) == 0) {
             if (dbo.nextRecord()) {
@@ -194,7 +195,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         String filtro = "(";
         String filtroUpdate = "(";
         String sql = "";
-        String rifFiltro = "";
+        //String rifFiltro = "";
         String nroTarjeta = "";
         List<String> nroTarjetasList = new ArrayList<String>();
         List<String> nroTarjetasList1 = new ArrayList<String>();
@@ -205,9 +206,9 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             filtroUpdate = filtroUpdate + "'" + tarjeta + "',";
         }
         log.info("Pais:" + pais);
-        if(!pais.equalsIgnoreCase("VE")){
-            rifFiltro = "'000000000'||";
-        }
+//        if(!pais.equalsIgnoreCase("VE")){
+//            rifFiltro = "'000000000'||";
+//        }
         
         filtro = filtro.substring(0, filtro.length() - 1) + ")";
         filtroUpdate = filtroUpdate.substring(0, filtroUpdate.length() - 1) + ")";
@@ -215,7 +216,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
                 + "FROM MAESTRO_PLASTICO_TEBCA MPT \n"
                 + "INNER JOIN MAESTRO_CONSOLIDADO_TEBCA MCT ON (SUBSTR(MPT.NRO_CUENTA,1,18) = SUBSTR(MCT.NRO_CUENTA,1,18)) \n"
                 + "INNER JOIN CONFIG_PRODUCTOS CP ON MPT.SUBBIN  between substr(CP.NUMCUENTAI,0,8) and substr(CP.NUMCUENTAF,0,8) \n"
-                + "INNER JOIN MAESTRO_CLIENTES_TEBCA M ON M.CIRIF_CLIENTE = " + rifFiltro + "MCT.ID_EXT_EMP  \n"
+                + "INNER JOIN MAESTRO_CLIENTES_TEBCA M ON LTRIM(M.CIRIF_CLIENTE,'0') = LTRIM(MCT.ID_EXT_EMP,'0')  \n"
                 + "WHERE MPT.NRO_CUENTA IN  " + filtro + " \n"
                 + "AND MPT.CON_ESTATUS in (1,2,4) AND (SUBSTR(MCT.FEC_EXPIRA,3,4)||SUBSTR(MCT.FEC_EXPIRA,1,2)) <= to_char(sysdate,'YYMM') AND MPT.FEC_BAJA IS NULL ";
 
