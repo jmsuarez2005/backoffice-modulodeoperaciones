@@ -293,7 +293,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         //Consultar Persona Juridica US$ en BD
         juridicaUS.setProducto("Persona Jurídica US$");
         
-        if (propMigra.toLowerCase().contains(pe)) {
+        if (propMigra.toLowerCase().contains(peusd)) {
             emisionesUSDAO = new EmisionesDAO(appName,dbOracle,peusd);
             juridicaUS.setEmisionesFecha(emisionesUSDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
             juridicaUS.setEmisionesAcum(emisionesUSDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
