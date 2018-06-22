@@ -57,4 +57,23 @@ public class TextUtil {
         System.out.println(formatearDecimal(null));
         System.out.println(formatearDecimal(null));
     }
+    
+    public Boolean paisMigra (String paises, String pais){
+        Boolean res = false;
+        int c = 0;
+        
+        String[] parts = paises.split("\\|");
+        
+        for (String paisPart : parts) {
+            if (paisPart.toUpperCase().equals(pais.toUpperCase())) {
+                c = 1;
+            } 
+        }
+        
+        if(c == 1){
+            res = true; //pais se encuentra en el properties
+        }
+        
+        return res;
+    }
 }

@@ -50,6 +50,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
     private UsuarioSesion usuarioSesion;
     private BigDecimal cambioBsDolar,cambioSolesDolar,cambioPesosDolar;    
     private String propMigra;
+    private TextUtil txt;
     
     public ReporteActividadDiariaProc(Date date,UsuarioSesion user) {
         this.fecha = date;
@@ -57,6 +58,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         this.reportePe = new HashMap();
         this.reporteVe = new HashMap();
         this.propMigra = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
+        this.txt = new TextUtil();
         this.totales = new ReporteEmisionRecarga();
         this.usuarioSesion = user;
         this.cambioBsDolar = new BigDecimal(ReporteActividadDiariaProc.obtenerCambioMoneda(ve)).setScale(2,BigDecimal.ROUND_HALF_EVEN);  
@@ -66,6 +68,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
     
     public ReporteActividadDiariaProc(){
         this.propMigra = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
+        this.txt = new TextUtil();
         this.cambioBsDolar = new BigDecimal(ReporteActividadDiariaProc.obtenerCambioMoneda(ve)).setScale(2,BigDecimal.ROUND_HALF_EVEN);  
         this.cambioSolesDolar = new BigDecimal(ReporteActividadDiariaProc.obtenerCambioMoneda(pe)).setScale(2,BigDecimal.ROUND_HALF_EVEN);
         this.cambioPesosDolar = new BigDecimal(ReporteActividadDiariaProc.obtenerCambioMoneda(co)).setScale(2,BigDecimal.ROUND_HALF_EVEN);
@@ -100,7 +103,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Juridica en BD
         juridica.setProducto("Persona Jurídica");
-        if (propMigra.toLowerCase().contains(ve)) {
+        if (txt.paisMigra(propMigra, ve)) {     
             emisionesJurDAO = new EmisionesDAO(appName,dbOracle,ve);  
             juridica.setEmisionesFecha(emisionesJurDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
             juridica.setEmisionesAcum(emisionesJurDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
@@ -168,7 +171,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Juridica en BD
         juridica.setProducto("Persona Jurídica");
-        if (propMigra.toLowerCase().contains(co)) {
+        if (txt.paisMigra(propMigra, co)) {     
             emisionesJurDAO = new EmisionesDAO(appName,dbOracle,co);
             juridica.setEmisionesFecha(emisionesJurDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
             juridica.setEmisionesAcum(emisionesJurDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
@@ -264,7 +267,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         //Consultar Persona Juridica en BD
         juridica.setProducto("Persona Jurídica");
-        if (propMigra.toLowerCase().contains(pe)) {
+        if (txt.paisMigra(propMigra, pe)) {     
             emisionesJurDAO = new EmisionesDAO(appName,dbOracle,pe);
             juridica.setEmisionesFecha(emisionesJurDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
             juridica.setEmisionesAcum(emisionesJurDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
@@ -293,7 +296,7 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         //Consultar Persona Juridica US$ en BD
         juridicaUS.setProducto("Persona Jurídica US$");
         
-        if (propMigra.toLowerCase().contains(peusd)) {
+        if (txt.paisMigra(propMigra, peusd)) {     
             emisionesUSDAO = new EmisionesDAO(appName,dbOracle,peusd);
             juridicaUS.setEmisionesFecha(emisionesUSDAO.obtenerTarjEmitidasPersonaJurDia(fecha));
             juridicaUS.setEmisionesAcum(emisionesUSDAO.obtenerTarjEmitidasPersonaJurMes(fecha));
@@ -792,7 +795,8 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         
         String propMigraM = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
         ParametrosDAO parametrosDAO;
-        if (propMigraM.toLowerCase().contains(pais.toLowerCase())) {
+        //if (propMigraM.toLowerCase().contains(pais.toLowerCase())) {
+        if (paisMigra(propMigraM, pais)) {     
             parametrosDAO = new ParametrosDAO(appName,dbOracle,pais);   
         }else{
             parametrosDAO = new ParametrosDAO(appName,dbInformix,pais);   
@@ -811,7 +815,8 @@ public class ReporteActividadDiariaProc implements BasicConfig {
     public boolean modificarCambioMoneda(String pais,String valor){
         String propMigraM = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
         ParametrosDAO parametrosDAO;
-        if (propMigraM.toLowerCase().contains(pais.toLowerCase())) {
+        //if (propMigraM.toLowerCase().contains(pais.toLowerCase())) {
+        if (txt.paisMigra(propMigraM, pais)) {     
             parametrosDAO = new ParametrosDAO(appName,dbOracle,pais);            
         }else{
             parametrosDAO = new ParametrosDAO(appName,dbInformix,pais);
@@ -883,6 +888,23 @@ public class ReporteActividadDiariaProc implements BasicConfig {
         this.cambioPesosDolar = cambioPesosDolar;
     }
     
-    
+    public static Boolean paisMigra (String paises, String pais){
+        Boolean res = false;
+        int c = 0;
+        
+        String[] parts = paises.split("\\|");
+        
+        for (String paisPart : parts) {
+            if (paisPart.toUpperCase().equals(pais.toUpperCase())) {
+                c = 1;
+            } 
+        }
+        
+        if(c == 1){
+            res = true; //pais se encuentra en el properties
+        }
+        
+        return res;
+    }
     
 }

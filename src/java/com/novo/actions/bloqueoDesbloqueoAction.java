@@ -17,6 +17,7 @@ import com.novo.model.UsuarioSesion;
 import com.novo.objects.util.Utils;
 import com.novo.process.ReporteTransacciones;
 import com.novo.util.SessionUtil;
+import com.novo.util.TextUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
@@ -58,6 +59,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     private String tipoMessage = ""; //Error, manejo para el jsp
     private Properties prop;
     private String propMigra;
+    private TextUtil txt = new TextUtil();
 
     public bloqueoDesbloqueoAction() {
         //this.tipoAjustes = new ArrayList();
@@ -177,7 +179,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
         boolean procesoOk = true;
         BloqueoDesbloqueoDAO bloqueo = null;
         BloqueoDesbloqueoDAOINF bloqueoInf = null;
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             bloqueo = new BloqueoDesbloqueoDAO("operaciones", dbOracle, this.pais);
         } else {
             bloqueoInf = new BloqueoDesbloqueoDAOINF("operaciones", databases, this.pais);
@@ -257,7 +259,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                     return "success";
                 }
 
-                if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                if (txt.paisMigra(propMigra, this.pais)) {   
                     bloqueo.setBloqueo(bloquex);
                     bloqueo.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
                     this.tipoBloqueo = bloqueo.getBloqueo();

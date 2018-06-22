@@ -11,6 +11,7 @@ import com.novo.objects.util.Utils;
 import com.novo.process.UsuarioProc;
 import com.novo.process.temp.UsuarioProcINF;
 import com.novo.util.SessionUtil;
+import com.novo.util.TextUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.Properties;
@@ -29,6 +30,7 @@ public class CambioClaveAction extends ActionSupport implements BasicConfig {
     private Properties prop;
     private String propMigra;
     private String pais;
+    private TextUtil txt = new TextUtil();
 
     public CambioClaveAction() {
         this.message = "";
@@ -86,7 +88,7 @@ public class CambioClaveAction extends ActionSupport implements BasicConfig {
 
         UsuarioSesion usuarioSesion = (UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION);
 
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {               
             UsuarioProc business = new UsuarioProc();
 
             if (business.cambiarClave(usuarioSesion, this.claveActual, this.newpw, this.pais.toLowerCase())) {

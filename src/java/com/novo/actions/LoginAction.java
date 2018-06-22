@@ -8,6 +8,7 @@ import com.novo.constants.BasicConfig;
 import com.novo.constants.RCConfig;
 import com.novo.process.UsuarioProc;
 import com.novo.process.temp.UsuarioProcINF;
+import com.novo.util.TextUtil;
 import com.novo.util.Utils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -28,6 +29,7 @@ public class LoginAction extends ActionSupport implements BasicConfig, RCConfig 
     private String Pais;
     private Properties prop;
     private String propMigra;
+    private TextUtil txt = new TextUtil();
 
     public LoginAction() {
         log.info("Llamada al LoginAction");
@@ -41,7 +43,7 @@ public class LoginAction extends ActionSupport implements BasicConfig, RCConfig 
         int rc;
         ActionContext.getContext().getSession().put("pais", this.Pais);
 
-        if (propMigra.toUpperCase().contains(this.Pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.Pais)) {     
             UsuarioProc business = new UsuarioProc();
 
             business.login(this.user, this.password, this.Pais);

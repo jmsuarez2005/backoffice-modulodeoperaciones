@@ -16,6 +16,7 @@ import com.novo.model.UsuarioSesion;
 import com.novo.objects.util.Utils;
 import com.novo.process.ReporteTransacciones;
 import com.novo.util.SessionUtil;
+import com.novo.util.TextUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
@@ -56,6 +57,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     private String tipoMessage = ""; //Error, manejo para el jsp
     private Properties prop;
     private String propMigra;
+    private TextUtil txt = new TextUtil();
 
     public SobregirosAction() {
         tipoAjustes = new ArrayList<TAjuste>();
@@ -171,7 +173,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
         boolean procesoOk = true;
         SobregirosDAO sobregiros = null;
         SobregirosDAOINF sobregirosInf = null;
-        if (propMigra.toUpperCase().contains(pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             sobregiros = new SobregirosDAO(appName, dbOracle, pais);
         } else {
             sobregirosInf = new SobregirosDAOINF(appName, databases, pais);
@@ -264,7 +266,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
                     return SUCCESS;
                 }
 
-                if (propMigra.toUpperCase().contains(pais.toUpperCase())) {
+                if (txt.paisMigra(propMigra, this.pais)) {   
                     sobregiros.setAjustes(ajustes);
                     sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
                 } else {
