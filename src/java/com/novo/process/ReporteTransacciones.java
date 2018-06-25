@@ -22,6 +22,7 @@ import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionProcess;
 import com.novo.util.TextUtil;
 import com.opensymphony.xwork2.ActionContext;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -351,7 +352,7 @@ public class ReporteTransacciones implements BasicConfig {
         return codigos;
     }
 
-    public String makeUpdates(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario) {
+    public String makeUpdates(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario) throws SQLException {
         //(campos)fields already matched together, the id with the value selected by the user.
         //(tarjetas)list of cards that are going to be updated with the selected fields.
         if (txt.paisMigra(propMigra, this.pais)) {   

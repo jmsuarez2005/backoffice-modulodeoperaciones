@@ -16,6 +16,8 @@ import com.novo.model.Producto;
 import com.novo.model.TAjuste;
 import com.novo.model.Tarjeta;
 import com.novo.model.Transaccion;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -1116,7 +1118,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         return respuesta;
     }
 
-    public String makeUpdatesDAO(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario, String pais) {
+    public String makeUpdatesDAO(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario, String pais) throws SQLException {
         //Dbinterface dbi = ds.get("informix");
         Dbinterface dbo = ds.get("oracle");
         dbo.dbreset();
@@ -1178,11 +1180,12 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         if (dbo.executeQuery(sql) == 0) {
             sql = "select acidlote from teb_lote where accodusuarioc = '" + usuario + "' and ctipolote = 'A' and cestatus ='3' order by acidlote desc";
             log.info("sql [" + sql + "]:se obtiene el id del lote");
+            dbo.dbreset();
             if (dbo.executeQuery(sql) == 0) {
-                if (dbo.nextRecord()) {
-                    idLote = dbo.getFieldString("acidlote");
-                } else {
-                    return "-1";
+                ResultSet rs = dbo.getQueryResults();
+                while (rs.next()) {
+                    idLote = rs.getString("acidlote");
+                    log.info("idlote: " + idLote);
                 }
             }
         } else {
@@ -1231,6 +1234,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             camposAux = getCamposActualizacionDAO("0");
             camposAux2 = new ArrayList<CamposActualizacion>();
             log.info("sql [" + sql + "]");
+            dbo.dbreset();
             if (dbo.executeQuery(sql) != 0) {
                 return "-1";
             }
