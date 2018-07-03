@@ -12,6 +12,7 @@ import com.novo.model.UsuarioSesion;
 import com.novo.objects.util.Utils;
 import com.novo.process.ReporteTransacciones;
 import com.novo.util.SessionUtil;
+import com.novo.util.TextUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.ByteArrayInputStream;
@@ -60,6 +61,7 @@ public class ConsultaSaldoAction extends ActionSupport
     private Properties prop;
     private String propMigra;
     private String tipoMessage = ""; //Error, manejo para el jsp
+    private TextUtil txt = new TextUtil();
 
     public ConsultaSaldoAction() {
         this.tarjetas = new ArrayList();
@@ -158,7 +160,7 @@ public class ConsultaSaldoAction extends ActionSupport
         ConsultaDAOINF consultaInf = null;
         boolean procesoOk = true;
 
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {    
             consulta = new ConsultaDAO("operaciones", dbOracle, this.pais);
         } else {
             consultaInf = new ConsultaDAOINF("operaciones", databases, this.pais);
@@ -235,7 +237,7 @@ public class ConsultaSaldoAction extends ActionSupport
 
                 }
 
-                if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+                if (txt.paisMigra(propMigra, this.pais)) {    
                     consulta.RegistrarConsultaDAO(tar);
                 } else {
                     consultaInf.RegistrarConsultaDAO(tar);

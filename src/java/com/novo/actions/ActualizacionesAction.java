@@ -17,6 +17,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -258,7 +259,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         return SUCCESS;
     }
 
-    public String actualizar() {
+    public String actualizar() throws SQLException {
 
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();

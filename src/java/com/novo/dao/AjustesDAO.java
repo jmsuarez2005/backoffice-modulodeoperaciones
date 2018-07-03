@@ -16,6 +16,8 @@ import com.novo.model.Producto;
 import com.novo.model.TAjuste;
 import com.novo.model.Tarjeta;
 import com.novo.model.Transaccion;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -1116,7 +1118,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         return respuesta;
     }
 
-    public String makeUpdatesDAO(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario, String pais) {
+    public String makeUpdatesDAO(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario, String pais) throws SQLException {
         //Dbinterface dbi = ds.get("informix");
         Dbinterface dbo = ds.get("oracle");
         dbo.dbreset();
@@ -1171,18 +1173,19 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             camposAux.removeAll(camposAux2);
         }
 
-        String sql = "INSERT INTO teb_lote( accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga, acnumlote)"
+        String sql = "INSERT INTO teb_lote(ACIDLOTE, accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga, acnumlote)"
                 //+ "VALUES( '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', current, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Actualizacion', (select acprefix from teb_productos where '" + tarjetas.get(0).getNroTarjeta() + "' between acnumcuentai and acnumcuentaf and acnumcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
-                + "VALUES( '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', sysdate, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Actualizacion', (select PREFIX from CONFIG_PRODUCTOS where '" + tarjetas.get(0).getNroTarjeta() + "' between numcuentai and numcuentaf and numcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
+                + "VALUES(SEQ_ACIDLOTE_TEB_LOTE.NEXTVAL, '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', sysdate, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Actualizacion', (select PREFIX from CONFIG_PRODUCTOS where '" + tarjetas.get(0).getNroTarjeta() + "' between numcuentai and numcuentaf and numcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
         log.info("sql [" + sql + "]: makeUpdatesDAO() se inserta el lote");
         if (dbo.executeQuery(sql) == 0) {
             sql = "select acidlote from teb_lote where accodusuarioc = '" + usuario + "' and ctipolote = 'A' and cestatus ='3' order by acidlote desc";
             log.info("sql [" + sql + "]:se obtiene el id del lote");
+            dbo.dbreset();
             if (dbo.executeQuery(sql) == 0) {
-                if (dbo.nextRecord()) {
-                    idLote = dbo.getFieldString("acidlote");
-                } else {
-                    return "-1";
+                ResultSet rs = dbo.getQueryResults();
+                while (rs.next()) {
+                    idLote = rs.getString("acidlote");
+                    log.info("idlote: " + idLote);
                 }
             }
         } else {
@@ -1231,6 +1234,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             camposAux = getCamposActualizacionDAO("0");
             camposAux2 = new ArrayList<CamposActualizacion>();
             log.info("sql [" + sql + "]");
+            dbo.dbreset();
             if (dbo.executeQuery(sql) != 0) {
                 return "-1";
             }
@@ -1331,9 +1335,9 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         }
         ////////////////////////////////////////////////////////////////////
 
-        sql = "INSERT INTO teb_lote( accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga, acnumlote)"
+        sql = "INSERT INTO teb_lote( ACIDLOTE,accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga, acnumlote)"
 //                + "VALUES( '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', current, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Afiliacion', (select acprefix from teb_productos where '" + tarjetas.get(0).getNroTarjeta() + "' between acnumcuentai and acnumcuentaf and acnumcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
-                + "VALUES( '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', sysdate, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Afiliacion', (select PREFIX from CONFIG_PRODUCTOS where '" + tarjetas.get(0).getNroTarjeta() + "' between numcuentai and numcuentaf and numcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
+                + "VALUES(SEQ_ACIDLOTE_TEB_LOTE.NEXTVAL, '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', sysdate, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Afiliacion', (select PREFIX from CONFIG_PRODUCTOS where '" + tarjetas.get(0).getNroTarjeta() + "' between numcuentai and numcuentaf and numcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
         log.info("sql [" + sql + "]: makeAfiliacionDAO() se inserta el lote");
         dbo.dbreset();
         if (dbo.executeQuery(sql) == 0) {

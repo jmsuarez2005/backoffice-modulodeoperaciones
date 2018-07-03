@@ -20,7 +20,9 @@ import com.novo.model.Tarjeta;
 import com.novo.model.Transaccion;
 import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionProcess;
+import com.novo.util.TextUtil;
 import com.opensymphony.xwork2.ActionContext;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -41,6 +43,7 @@ public class ReporteTransacciones implements BasicConfig {
     private String pais = (String) ActionContext.getContext().getSession().get("pais");
     private Properties prop;
     private String propMigra;
+    private TextUtil txt = new TextUtil();
 
     /*
      * obtiene las transacciones por usuario, ya sea por la tarjeta o documento de identidad
@@ -72,7 +75,7 @@ public class ReporteTransacciones implements BasicConfig {
 
     public List<Empresa> getEmpresas() {
         List<Empresa> empresas;
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
             empresas = dao.getEmpresasDAO();
             dao.closeConection();
@@ -89,7 +92,7 @@ public class ReporteTransacciones implements BasicConfig {
      * obtiene las tarjetas pertenecientes al usuario, ya sea por la tarjeta o documento de identidad
      */
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta) {
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
             List<Tarjeta> tarjetas = null;
             if (documento != null) {
@@ -122,7 +125,7 @@ public class ReporteTransacciones implements BasicConfig {
 
     public List<Tarjeta> getTarjetasUsuario(String documento, String nroTarjeta, String prefix, String rif) {
         List<Tarjeta> tarjetas = null;
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
 
             //if (!documento.equals("") || !nroTarjeta.equals("") || !prefix.equals("") || !rif.equals("")) {
@@ -170,7 +173,7 @@ public class ReporteTransacciones implements BasicConfig {
     }
 
     public List<Tarjeta> getTarjetasUsuarioTransacciones(String documento, String nroTarjeta, String prefix, String rif, String fechaIni, String fechaFin) {
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
             List<Tarjeta> tarjetas = null;
 
@@ -240,7 +243,7 @@ public class ReporteTransacciones implements BasicConfig {
 
     public List<String> getUsuarios() {
         List<String> usuarios;
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
             usuarios = dao.getUsuariosDao();
             dao.closeConection();
@@ -349,10 +352,10 @@ public class ReporteTransacciones implements BasicConfig {
         return codigos;
     }
 
-    public String makeUpdates(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario) {
+    public String makeUpdates(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario) throws SQLException {
         //(campos)fields already matched together, the id with the value selected by the user.
         //(tarjetas)list of cards that are going to be updated with the selected fields.
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
             String respuesta = dao.makeUpdatesDAO(tarjetas, campos, usuario, pais);
 
@@ -384,7 +387,7 @@ public class ReporteTransacciones implements BasicConfig {
     public String makeAfiliacion(List<Tarjeta> tarjetas, String usuario) {
         //(campos)fields already matched together, the id with the value selected by the user.
         //(tarjetas)list of cards that are going to be updated with the selected fields.
-        if (propMigra.toUpperCase().contains(this.pais.toUpperCase())) {
+        if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
             String resp = dao.makeAfiliacionDAO(tarjetas, usuario);
             if (resp.contains("error2")) {

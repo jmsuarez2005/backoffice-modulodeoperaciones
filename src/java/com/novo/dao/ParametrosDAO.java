@@ -9,6 +9,7 @@ import com.novo.constants.ParametrosQuery;
 import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.model.Parametro;
+import com.novo.util.TextUtil;
 import com.novo.util.Utils;
 import org.apache.log4j.Logger;
 
@@ -19,6 +20,7 @@ import org.apache.log4j.Logger;
 public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuery{
     private static Logger log = Logger.getLogger(ParametrosDAO.class);
     private String pais;
+    private TextUtil txt = new TextUtil();
     
     public ParametrosDAO(String appName,String[] databases){
         super(appName,databases);
@@ -42,7 +44,7 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
         try{
             String propMigra = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
             Dbinterface dbo;
-             if (propMigra.toLowerCase().contains(pais)) {                 
+             if (txt.paisMigra(propMigra, pais)) {                
                 dbo=ds.get(ORACLE);
              }else{
                 dbo=ds.get(INFORMIX);
@@ -80,7 +82,7 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
         try{
             String propMigra = Utils.getConfig("oracleRegEx.properties").getProperty("paisOracle");
             Dbinterface dbo;
-            if (propMigra.toLowerCase().contains(pais)) {                 
+             if (txt.paisMigra(propMigra, pais)) {                       
                 dbo=ds.get(ORACLE);
                 log.info("Ejecutando ["+query+"]"+ORACLE);
              }else{
