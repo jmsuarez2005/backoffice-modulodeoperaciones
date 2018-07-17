@@ -112,7 +112,7 @@ public interface EmisionesQuery {
             + "select sum(a.ncantregs)cant_plast "
             + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             + "where a.accodcia = b.COD_CLIENTE "
-            + "and a.ctipolote = '1' "
+            + "and a.ctipolote IN ('1','3') "
             + "and a.cestatus = '4' "
             + "and EXTRACT(YEAR FROM a.dtfechorproceso) = '$YEAR' "
             + "and EXTRACT(MONTH FROM a.dtfechorproceso) = '$MONTH' "
@@ -129,7 +129,7 @@ public interface EmisionesQuery {
             + "select sum(a.ncantregs)cant_plast "
             + "from teb_lote a, MAESTRO_CLIENTES_TEBCA b "
             + "where a.accodcia = b.COD_CLIENTE "
-            + "and a.ctipolote = '1' "
+            + "and a.ctipolote IN ('1','3') "
             + "and a.cestatus = '4' "
             + "and a.dtfechorproceso between TO_DATE('$FECHAINI','YYYY-MM-DD HH24:MI') and TO_DATE('$FECHAFIN','YYYY-MM-DD HH24:MI') ";
 }
