@@ -77,7 +77,7 @@ public interface EmisionesQueryINF {
             + "select sum(a.ncantregs)cant_plast "
             + "from teb_lote a, empresas b "
             + "where a.accodcia = b.accodcia "
-            + "and a.ctipolote = '1' "
+            + "and a.ctipolote IN ('1','3') "
             + "and a.cestatus = '4' "
             + "and year(a.dtfechorproceso) = '$YEAR' "
             + "and month(a.dtfechorproceso) = '$MONTH' "
@@ -87,7 +87,7 @@ public interface EmisionesQueryINF {
             + "select sum(a.ncantregs)cant_plast "
             + "from teb_lote a, empresas b "
             + "where a.accodcia = b.accodcia "
-            + "and a.ctipolote = '1' "
+            + "and a.ctipolote IN ('1','3') "
             + "and a.cestatus = '4' "
             + "and a.dtfechorproceso between TO_DATE('$FECHAINI','%Y-%m-%d %R') and TO_DATE('$FECHAFIN','%Y-%m-%d %R') ";
 }
