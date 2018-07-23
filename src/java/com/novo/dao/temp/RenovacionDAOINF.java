@@ -63,7 +63,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
                 + "(\n"
                 + "SELECT ACVALUE AS NombreRenovacion FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_nombreRenovacion'\n"
                 + ") AS NombreRenovacion\n"
-                + " FROM informix.systables where tabid = 1";
+                + " FROM systables where tabid = 1";
 
         ValoresRen reno = new ValoresRen();
 
