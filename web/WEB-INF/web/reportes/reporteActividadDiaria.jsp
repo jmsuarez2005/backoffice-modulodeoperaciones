@@ -40,7 +40,7 @@
                                         </td>
                                         <td  style="width: 40%" align="center"> <!-- Informacion Adicional del Reporte -->
 
-                                            <span class="text-1">BsF/Dolar: </span>
+                                            <span class="text-1">BsS/Dolar: </span>
                                             <s:property value="cambioBsDolar" /> &#160;
                                             <span class="text-1">Soles/Dolar: </span>
                                             <s:property value="cambioSolesDolar" /> &#160;
