@@ -101,18 +101,33 @@ public class RecargasDAOINF extends NovoDAO implements BasicConfig,RecargasQuery
         String month=""+(fecha.getMonth()+1);
         String year=""+(fecha.getYear()+1900);
         
+        day=DateUtil.rellenarCeros(day, 2);
         month=DateUtil.rellenarCeros(month, 2);
         
         String query = "";
         
-        if (this.pais.equals(co)){
-            query = recargasPersonaJurMesCoQuery;
-        }else if(this.pais.equals(pe)){
-            query = recargasPersonaJurMesPeQuery;
-        }else if(this.pais.equals(ve)){
-            query = recargasPersonaJurMesVeQuery;
-        }else if(this.pais.equals(peusd)){
-            query = recargasPersonaJurMesPeQuery;
+        switch (this.pais) {
+            case co:
+                query = recargasPersonaJurMesCoQuery;
+                break;
+            case pe:
+                query = recargasPersonaJurMesPeQuery;
+                break;
+            case ve:
+                if(Integer.parseInt(year + month) > Integer.parseInt(ANIO_RECONVERSION_VZLA + MES_RECONVERSION_VZLA)){
+                    query = recargasPersonaJurMesVeQuery;                       
+                }else if(Integer.parseInt(year + month) == Integer.parseInt(ANIO_RECONVERSION_VZLA + MES_RECONVERSION_VZLA)){
+                    query = recargasPersonaJurMesVeReconversionUnionQuery
+                            .replace("$DAY", day);
+                }else{
+                    query = recargasPersonaJurMesVeReconversionQuery;                    
+                }
+                break;
+            case peusd:
+                query = recargasPersonaJurMesPeQuery;
+                break;
+            default:
+                break;
         }
         
         

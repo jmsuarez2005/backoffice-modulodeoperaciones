@@ -31,7 +31,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="width:50%;text-align:right;"><span class="text-1">BsF / $</span></td>
+                                    <td style="width:50%;text-align:right;"><span class="text-1">BsS / $</span></td>
                                     <td><s:textfield name="cambioDolaresVE" id="cambioVE" /></td>
                                 </tr>
                                 <tr>

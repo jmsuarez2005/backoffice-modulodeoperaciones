@@ -5,7 +5,12 @@
 package com.novo.dao;
 
 import com.novo.constants.BasicConfig;
+import static com.novo.constants.BasicConfig.ANIO_RECONVERSION_VZLA;
+import static com.novo.constants.BasicConfig.MES_RECONVERSION_VZLA;
 import com.novo.constants.RecargasQuery;
+import static com.novo.constants.temp.RecargasQueryINF.recargasPersonaJurMesVeQuery;
+import static com.novo.constants.temp.RecargasQueryINF.recargasPersonaJurMesVeReconversionQuery;
+import static com.novo.constants.temp.RecargasQueryINF.recargasPersonaJurMesVeReconversionUnionQuery;
 import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.objects.util.Utils;
@@ -52,22 +57,37 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         
         String query="";
         
-        if (this.pais.equals(co)){
-            query = "";
-        }else if(this.pais.equals(pe)){            
-            
-            Properties properties = Utils.getConfig("operaciones.properties");
-            query = recargasPersonaNatPeQuery
-                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatPe"));
-            
-        }else if(this.pais.equals(ve)){            
-            
-            Properties properties = Utils.getConfig("operaciones.properties");
-            query = recargasPersonaNatVeQuery
-                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatVe"));
-            
-        }else if(this.pais.equals(peusd)){
-            
+        switch (this.pais) {
+            case co:
+                query = "";
+                break;
+            case pe:
+                {
+                    Properties properties = Utils.getConfig("operaciones.properties");
+                    query = recargasPersonaNatPeQuery
+                            .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatPe"));
+                    break;
+                }
+            case ve:
+                {
+                    Properties properties = Utils.getConfig("operaciones.properties");
+                    if(Integer.parseInt(year + month) > Integer.parseInt(ANIO_RECONVERSION_VZLA + MES_RECONVERSION_VZLA)){
+                        query = recargasPersonaNatMesVeQuery;
+                    }else if(Integer.parseInt(year + month) == Integer.parseInt(ANIO_RECONVERSION_VZLA + MES_RECONVERSION_VZLA)){
+                        query = recargasPersonaNatMesVeReconversionUnionQuery
+                                .replace("$DAY",  day);
+                    }else{
+                        query = recargasPersonaNatMesVeReconversionQuery;
+                    }
+                    
+                    query = query.replace("$BINES$",  properties.getProperty("binesRecargaPersonaNatVe"));
+                    
+                    break;                    
+                }
+            case peusd:
+                break;
+            default:
+                break;
         }
         
         query = query.replace("$FECHAINI", "01-"+month+"-"+year+" 00:00:00");
@@ -128,8 +148,11 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         }else if(this.pais.equals(ve)){
             
             Properties properties = Utils.getConfig("operaciones.properties");
-            query = recargasPersonaNatVeQuery
-                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatVe"));
+            query = recargasPersonaNatDiaVeQuery
+                    .replace("$BINES$", properties.getProperty("binesRecargaPersonaNatVe"))
+                    .replace("$YEAR", year)
+                    .replace("$MONTH", month)
+                    .replace("$DAY", day);
             
         }else if(this.pais.equals(peusd)){
             
@@ -239,14 +262,28 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         
         String query = "";
         
-        if (this.pais.equals(co)){
-            query = recargasPersonaJurMesCoQuery;
-        }else if(this.pais.equals(pe)){
-            query = recargasPersonaJurMesPeQuery;
-        }else if(this.pais.equals(ve)){
-            query = recargasPersonaJurMesVeQuery;
-        }else if(this.pais.equals(peusd)){
-            query = recargasPersonaJurMesPeQuery;
+        switch (this.pais) {
+            case co:
+                query = recargasPersonaJurMesCoQuery;
+                break;
+            case pe:
+                query = recargasPersonaJurMesPeQuery;
+                break;
+            case ve:
+                if(Integer.parseInt(year + month) > Integer.parseInt(ANIO_RECONVERSION_VZLA + MES_RECONVERSION_VZLA)){
+                    query = recargasPersonaJurMesVeQuery;
+                }else if(Integer.parseInt(year + month) == Integer.parseInt(ANIO_RECONVERSION_VZLA + MES_RECONVERSION_VZLA)){
+                    query = recargasPersonaJurMesVeReconversionUnionQuery
+                            .replace("$DAY",  day);
+                }else{
+                    query = recargasPersonaJurMesVeReconversionQuery;
+                }
+                break;
+            case peusd:
+                query = recargasPersonaJurMesPeQuery;
+                break;
+            default:
+                break;
         }
         
         

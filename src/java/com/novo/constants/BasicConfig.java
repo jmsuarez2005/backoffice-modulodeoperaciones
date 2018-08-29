@@ -47,4 +47,10 @@ public interface BasicConfig {
     
     /** Constantes, otras **/
     String USUARIO_SESION="usuarioSesion"; //Llave en la cual es almacenada el usuario de sesion
+
+    //Valida fecha reconversion monetaria bolivar soberano (VENEZUELA)  
+    String DIA_RECONVERSION_VZLA = "19"; 
+    String MES_RECONVERSION_VZLA = "08"; 
+    String ANIO_RECONVERSION_VZLA = "2018"; 
+    
 }
