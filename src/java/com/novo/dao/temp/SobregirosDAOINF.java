@@ -96,7 +96,7 @@ public class SobregirosDAOINF extends NovoDAO implements BasicConfig, AjustesTra
                 + "(\n"
                 + "SELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n"
                 + ") AS TIMEOUT\n"
-                + " FROM systables where tabid = 1";
+                + " FROM informix.systables where tabid = 1";
 
         Dbinterface dbi = ds.get("informix");
         Dbinterface dbo = ds.get("oracle");

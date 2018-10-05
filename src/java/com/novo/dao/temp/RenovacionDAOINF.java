@@ -63,7 +63,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
                 + "(\n"
                 + "SELECT ACVALUE AS NombreRenovacion FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_nombreRenovacion'\n"
                 + ") AS NombreRenovacion\n"
-                + " FROM systables where tabid = 1";
+                + " FROM informix.systables where tabid = 1";
 
         ValoresRen reno = new ValoresRen();
 
@@ -215,7 +215,9 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
                 + "INNER JOIN CONFIG_PRODUCTOS CP ON MPT.SUBBIN  between substr(CP.NUMCUENTAI,0,8) and substr(CP.NUMCUENTAF,0,8) \n"
                 + "INNER JOIN MAESTRO_CLIENTES_TEBCA M ON M.CIRIF_CLIENTE = " + rifFiltro + "MCT.ID_EXT_EMP  \n"
                 + "WHERE MPT.NRO_CUENTA IN  " + filtro + " \n"
-                + "AND MPT.CON_ESTATUS in (1,2,4) AND (SUBSTR(MCT.FEC_EXPIRA,3,4)||SUBSTR(MCT.FEC_EXPIRA,1,2)) <= to_char(sysdate,'YYMM') AND MPT.FEC_BAJA IS NULL ";
+                + "AND MPT.CON_ESTATUS in (1,2,4) AND (SUBSTR(MCT.FEC_EXPIRA,3,4)||SUBSTR(MCT.FEC_EXPIRA,1,2)) <= to_char(sysdate,'YYMM') "
+//                + "AND TO_NUMBER(SUBSTR(MCT.FEC_EXPIRA,3,2)||SUBSTR(MCT.FEC_EXPIRA,1,2)) >= TO_NUMBER(TO_CHAR(SYSDATE,'YYMM'))"
+                + "AND MPT.FEC_BAJA IS NULL ";
 
         log.info("sql [" + sql + "]");
         dbo.dbreset();
