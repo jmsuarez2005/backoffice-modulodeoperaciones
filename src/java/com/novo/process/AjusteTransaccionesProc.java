@@ -6,34 +6,21 @@
 package com.novo.process;
 
 import com.novo.constants.BasicConfig;
-import static com.novo.constants.BasicConfig.co;
-import static com.novo.constants.BasicConfig.pe;
-import static com.novo.constants.BasicConfig.ve;
 import com.novo.model.ReporteEmisionRecarga;
 import com.novo.model.Tarjeta;
-import com.novo.model.UsuarioSesion;
 import com.novo.util.DateUtil;
 import com.novo.util.ExcelUtil;
-import static com.novo.util.ExcelUtil.setEstiloEncabezado;
 import com.novo.util.TextUtil;
-import java.io.FileOutputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  *

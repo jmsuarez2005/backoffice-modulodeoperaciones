@@ -5,7 +5,6 @@
  */
 package com.novo.actions;
 
-import static com.novo.actions.AfiliacionAction.findDuplicates;
 import com.novo.constants.BasicConfig;
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
 import com.novo.dao.RenovacionDAO;
@@ -27,15 +26,10 @@ import static com.opensymphony.xwork2.Action.SUCCESS;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -141,8 +135,8 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         Ajuste ajuste = new Ajuste();
 
         try {
-            InputStream buffer = new FileInputStream(file2.getAbsolutePath());
-            Workbook workbook = WorkbookFactory.create(buffer);
+//            InputStream buffer = new File(file2.getAbsolutePath());
+            Workbook workbook = WorkbookFactory.create(new File(file2.getAbsolutePath()));
             Sheet sheet = workbook.getSheetAt(0);
             String tarjetaString = "";
             int i = 0;

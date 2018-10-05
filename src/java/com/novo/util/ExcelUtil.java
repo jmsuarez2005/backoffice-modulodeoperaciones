@@ -11,11 +11,13 @@ import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 
 /**
  *
@@ -39,7 +41,7 @@ public class ExcelUtil {
         HSSFCell cell = row.createCell(index);
         cell.setCellValue(new HSSFRichTextString(content));
         setEstiloCelda(myWorkBook, mySheet, cell);
-        cell.getCellStyle().getFont(myWorkBook).setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        cell.getCellStyle().getFont(myWorkBook).setBold(true);
     }
     
     public static void crearCeldaEncabezado(HSSFRow row,int index,HSSFWorkbook myWorkBook,HSSFSheet mySheet,String content){
@@ -61,7 +63,7 @@ public class ExcelUtil {
         HSSFFont hSSFFont = myWorkBook.createFont();
         hSSFFont.setFontName(HSSFFont.FONT_ARIAL);
         hSSFFont.setFontHeightInPoints((short) 16);
-        hSSFFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        hSSFFont.setBold(true);
         hSSFFont.setColor(HSSFColor.DARK_BLUE.index);
         cellStyle.setFont(hSSFFont);
         cell1B.setCellStyle(cellStyle);
@@ -75,22 +77,22 @@ public class ExcelUtil {
         
         hSSFFont.setFontName(HSSFFont.FONT_ARIAL);
 //        hSSFFont.setFontHeightInPoints((short) 16);
-        hSSFFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        hSSFFont.setBold(true);
         hSSFFont.setColor(HSSFColor.WHITE.index);
 
         cellStyle.setFont(hSSFFont);
         
-        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setFillForegroundColor(IndexedColors.ROYAL_BLUE.getIndex());
-        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
         cellStyle.setWrapText(true);
         
-        cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
         
         myCell.setCellStyle(cellStyle);
     }
@@ -104,17 +106,17 @@ public class ExcelUtil {
 
         cellStyle.setFont(hSSFFont);
         
-        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
         cellStyle.setWrapText(true);
         
-        cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
         
         myCell.setCellStyle(cellStyle);
     }
@@ -129,16 +131,16 @@ public class ExcelUtil {
         cellStyle.setFont(hSSFFont);
         
         //cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
-        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         
         cellStyle.setWrapText(true);
         
-        cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
         
         myCell.setCellStyle(cellStyle);
     }
