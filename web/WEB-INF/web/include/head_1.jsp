@@ -12,6 +12,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <title>M&oacute;dulo Administrativo |Gesti&oacute;n de Operaciones - Cuentas/Tarjetas</title>
     <!-- <meta http-equiv="refresh" content="120"> -->
+    <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
     <link rel="shortcut icon" href="../recursos/icons/favicon.png" />
     <link rel="stylesheet" type="text/css" href="../recursos/css/commons.css"/>
     <link rel="stylesheet" type="text/css" href="../recursos/css/navBar.css"/>

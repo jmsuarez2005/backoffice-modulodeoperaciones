@@ -8,7 +8,7 @@
  * Designed and built with all the love in the world by @mdo and @fat.
  */
 
-.clearfix {
+/*.clearfix {
   *zoom: 1;
 }
 
@@ -29,7 +29,7 @@
   text-shadow: none;
   background-color: transparent;
   border: 0;
-}
+}*/
 
 .input-block-level {
   display: block;
@@ -39,7 +39,7 @@
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
-
+/*
 article,
 aside,
 details,
@@ -63,14 +63,14 @@ video {
 
 audio:not([controls]) {
   display: none;
-}
+}*/
 
 html {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
 }
-
+/*
 a:focus {
   outline: thin dotted #333;
   outline: 5px auto -webkit-focus-ring-color;
@@ -110,7 +110,7 @@ img {
 #map_canvas img,
 .google-maps img {
   max-width: none;
-}
+}*/
 
 button,
 input,
@@ -220,7 +220,7 @@ textarea {
     page-break-after: avoid;
   }
 }
-
+/*
 body {
   margin: 0;
    font-family: Arial,sans-serif;
@@ -1042,7 +1042,7 @@ legend small {
   font-size: 15px;
   color: #999999;
 }
-
+*/
 label,
 input,
 button,

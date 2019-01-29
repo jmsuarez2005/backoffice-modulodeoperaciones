@@ -7,12 +7,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Acceso Denegado</title>
-        <%@include file="../include/head.jsp" %>
-    </head>
-    <body>
-        <%@include file="../include/header.jsp" %>
+<%@include file="../include/head.jsp" %>
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
         <div class="container">  
                 <div class="content" id="content">
                     <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
@@ -28,6 +27,8 @@
                         
                 </div>
         </div>
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+                <%@include file="../include/footer.jsp" %>    
+        </footer>
     </body>
 </html>

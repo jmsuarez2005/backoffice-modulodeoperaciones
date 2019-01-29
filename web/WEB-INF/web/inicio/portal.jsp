@@ -5,30 +5,27 @@
 --%>
 <%@taglib uri="/struts-tags" prefix="s" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<s:bean name="com.novo.util.CountriesUtil" var="countryUtil" />
 <!DOCTYPE html>
 <html>
-    <head>
-
-        <title>Inicio</title>
-        <%@include file="../include/head.jsp" %>
-    </head>
-    <body>
-        
-            <%@include file="../include/header.jsp" %>
+    <%@include file="../include/head.jsp" %>
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
             <div class="container">
                 <div class="content" id="content">
-                    <br/><br/><br/><br/><br/>
-                    
                     <div class="info-box" style="width:50%;margin:0 auto;">
                         <h2>Portal</h2>
-                        <div class="first">
-                            <span class="text-1">Usuario: </span>
-                                <s:property value="#session.usuarioSesion.acNombre" />, <s:property value="#session.usuarioSesion.acUbicacion" />
-                        </div>
+                            <div class="first">
+                                <span class="text-1">Usuario: </span>
+                                    <s:property value="#session.usuarioSesion.acNombre" />, <s:property value="#session.usuarioSesion.acUbicacion" />
+                            </div>
                     </div>
                 </div>
             </div>
-            <%@include file="../include/footer.jsp" %>
-        
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer>   
     </body>
 </html>

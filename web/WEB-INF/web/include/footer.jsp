@@ -1,35 +1,49 @@
-<%@page import="java.util.Calendar"%>
 <%@taglib uri="/struts-tags" prefix="s" %>
 <s:bean name="com.novo.util.Version" var="version" />
-<div class="footerBG" data-module="footer">
-    <div class="footerContent">
-        <br/>
-        <table style="width:100%;border-spacing: 0;border-collapse: collapse">
-            <tbody>
-                <tr>
-                    
-                        <img src="../recursos/images/logo-novopayment.png" alt="novopayment" style="float:left; margin-right:15px;" />
-                        <s:property value="@com.novo.constants.BasicConfig@appNameExtended" />, Versión <s:property value="#version.version" /><br/>
-                         &copy;<%= Calendar.getInstance().get(Calendar.YEAR)%> NovoPayment Inc. All rights reserved.
-                         
-                    
-                    <td style="width:50%; text-align:right; vertical-align:top;">
-                        <s:if test="%{#session.usuarioSesion!=null}">
-                            <span class="user">
-                                <s:property value="#session.usuarioSesion.acNombre" />, 
-                                <s:if test="%{#session.usuarioSesion.acTipo.equalsIgnoreCase('M')}">
-                                    MASTER
-                                </s:if>
-                                <s:else>
-                                    USUARIO
-                                </s:else>
-                            </span>
-                        </s:if>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-                    
+<s:bean name="com.novo.util.CountriesUtil" var="countryUtil" />
+             
 <script type="text/javascript" src="../recursos/js/commons.js" ></script>
+
+           <div class="columns1">
+               <span class="foot_left">
+                  © 2019 NovoPayment Inc. All rights reserved.
+               </span>
+           </div>
+           <div class="columns2">
+                <span class="foot_left">
+                   M&oacute;dulo de operaciones. Versión <s:property value="#version.version" />
+                </span>
+            </div>
+           <div class="columns3">
+              <a target="_blank" href="http://novopayment.com/">
+                  <img alt="Powered-By" src="../recursos/images/logo-novopayment-powered.png" height="28px">
+              </a>
+          </div>
+                
+   <script type="text/javascript">
+   	
+	 footer = function(){ 
+     /*el alto que tiene el navegador*/
+     $alto_navegador= $(window).height();
+     /*el alto que tiene el contenido de la pagina*/
+     $alto_documento= $(document).height(); 
+     /*  aqui condicionamos si el alto del contenido 
+      *  es mayor que
+      *  el alto del navegador*/
+     if ($alto_documento>$alto_navegador)
+     {
+         /* si es mayor es que tiene un contenido mas 
+          * largo que el alto del navegador y entonces lo dejamos a relativo*/
+         $("footer").css({"position":"relative"})
+         console.log("relative");
+     }
+     else
+     {
+         /* si el alto del contenido es menor que el alto del navegador es que
+          * tenemos espacio vacio y le mandamos abajo*/
+         $("footer").css({"position":"fixed"})
+         console.log("fixed");
+     } 
+ }
+footer();
+</script>         

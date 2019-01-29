@@ -9,19 +9,18 @@
 <%@taglib uri="/struts-dojo-tags" prefix="sx" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Bloqueo</title>
-        <%@include file="../include/head.jsp" %>
-        <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
-    </head>
-    <body>
-        <%@include file="../include/header.jsp" %>
-        <jsp:include page="../include/LoadingJquery.jsp"/>
-        <div class="container">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <title>Bloqueo</title>
+     <%@include file="../include/head_1.jsp" %>
+    
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>
+            <div class="container">
             <div class="content" id="content">
-                <br/>
-                <h1>Bloqueo</h1>
+                <h1 style="margin: 0 0 0 0;">Bloqueo</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -117,7 +116,9 @@
                 </div>   
             </div>           
         </div>  
-        <%@include file="../include/footer.jsp" %>
+         <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer>
         <script>
             var contador = 1;
             document.getElementById("boton1").addEventListener("click", function (event) {

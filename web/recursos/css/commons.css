@@ -6,6 +6,28 @@
         Purpose of the stylesheet follows.
 */
 
+@font-face { 
+    font-family: "Proxima-Nova-Bold";    
+    font-style: normal;
+    font-weight: 300;
+    src: url(../fonts/ProximaNovaAlt-Extrabold.ttf); 
+    src: url(../fonts/proximanova-regular.eot);
+	src: url(../fonts/proximanova-regular.eot?#iefix) format("embedded-opentype"), url(../fonts/proximanova-regular.woff2) format("woff2"), url(../fonts/proximanova-regular.woff) format("woff"), url(../fonts/proximanova-regular.ttf) format("truetype"), url(../fonts/proximanova-regular.svg#proximanova_regular) format("svg");
+}
+
+@font-face { 
+    font-family: "Proxima-Nova";    
+    font-style: normal;
+    font-weight: 300;
+    src: url(../fonts/proximanova-semibold.eot);
+	src: url(../fonts/proximanova-semibold.eot?#iefix) format("embedded-opentype"), url(../fonts/proximanova-semibold.woff2) format("woff2"), url(../fonts/proximanova-semibold.woff) format("woff"), url(../fonts/proximanova-semibold.ttf) format("truetype"), url(../fonts/proximanova-semibold.svg#proximanova_semibold) format("svg");
+    src: url(../fonts/ProximaNovaScOsf-Thin.ttf);
+    src: url(../fonts/proximanova-regular.eot);
+	src: url(../fonts/proximanova-regular.eot?#iefix) format("embedded-opentype"), url(../fonts/proximanova-regular.woff2) format("woff2"), url(../fonts/proximanova-regular.woff) format("woff"), url(../fonts/proximanova-regular.ttf) format("truetype"), url(../fonts/proximanova-regular.svg#proximanova_regular) format("svg");
+}
+
+
+
 root { 
     display: block;
 }
@@ -79,7 +101,7 @@ img {
 
 .headerBG {
     margin: 0 auto;
-    position: fixed;
+    position: absolute;
     width: 100%;
     min-width: 800px;
     box-shadow: 0px 2px 3px 0px #CCC;
@@ -134,7 +156,7 @@ img {
     padding-top: 80px;
     width: 80%;
     margin: 0 auto;
-    min-height: 730px;
+    min-height: 100%;
     background-color: #fff;
 }
 .footerBG {	
@@ -563,3 +585,149 @@ img {
     background-size: 18px 18px;
     background-image: url('../../recursos/icons/arrow_down.png');
 }
+
+/* nuevos styles */
+
+header {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color: #0b56a3;
+    padding: 0px;
+    box-shadow: 0 2px 0 rgba(51,51,51,.15);
+    flex: initial;
+    display: flex;
+    align-items: center;
+    
+
+}
+
+header .title5 {
+    font-size: 32px;
+    color: #FFFFFF;
+    font-family: 'Proxima-Nova';
+    line-height: 90px;
+    font-weight: bold;
+    
+}
+
+.logo {
+    float: left;
+    padding: 0px 0px 0 0;
+    margin: 0px 20px 0px 25px;
+    width: auto;
+    height: 70px;
+}
+
+
+
+
+.cont {
+    background-size: cover;
+    height: auto;
+    padding: 1px 0px;
+}
+
+.cont-title {
+    padding: 20px 50em 0 0;
+    max-height: 350px;
+}
+
+.title {
+    color: #000099;
+    font-size: 12pt;
+    font-weight: bolder;
+    text-align: center;
+    background-color: #E6E6E6;
+}
+
+
+.logo {
+    float: left;
+    padding: 0px 0px 0 0;
+    margin: 0px 20px 0px 25px;
+    width: auto;
+    height: 70px;
+}
+
+
+footer {
+    width: 100%;
+    height: 75px;
+    bottom: 0;
+    background-color: #e2e3e4;
+}
+
+.columns1 {
+    font-size:11px;
+    margin: 30px 0 30px 30px; 
+    color: #555;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: left;
+}
+
+.columns2 {
+    font-size:11px;
+    margin: 30px 0 30px 30%; 
+    color: #555;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: left;
+}
+
+.columns3 {
+    font-size:11px;
+    margin: 25px 30px 0 0px;
+    color: #555;
+    float: right;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: left;
+}
+
+
+/* GestiÃ³n de Tickets */
+
+
+input.icon-user {
+    background: #fff url(../img/sprite-ui.png) 4px 0px no-repeat;
+    background-size: 25px; 
+    color: #828282;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px 8px 8px 8px;
+    border-right: 0;
+    margin: 0 8px 0 0;
+}
+
+@media (max-width: 1357px) {
+  header  { font-size: 1em; }
+  span.title5 {font-size: 3em; }
+  img.logo {height: 50px; margin: 10px 20px 0px 25px;}
+  .columns2 { margin: 30px 0 30px 20%; }
+  
+}
+
+
+@media (max-width: 1330px) {
+  header { font-size: 1em; }
+  span.title5 {font-size: 1.5em; }
+  img.logo {height: 50px; margin: 10px 20px 0px 25px;}
+  .columns2 { margin: 30px 0 30px 20%; }
+  
+}
+
+
+@media (max-width: 1003px) {
+  header { font-size: 0.8em; }
+  span.title5 {font-size: 1.5em; }
+  img.logo {height: 40px ; margin: 15px 20px 0px 25px;}
+  .columns2 {margin: 30px 0 30px 15%;  }
+}
+
+
+
+/* fin estilos nuevos para header  footer*/
+
+

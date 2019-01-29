@@ -8,21 +8,17 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-
-        <title>Cambios de Moneda</title>
-        <%@include file="../include/head.jsp" %>
-    </head>
-    <body>
-
-        <%@include file="../include/header.jsp" %>
-        <div class="container">
+    <title>Cambios de Moneda</title>
+    
+    <%@include file="../include/head.jsp" %>
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <div class="container">
             <div class="content" id="content">
+                <h1 style="margin: 0 0 0 0;">Cambios de Moneda</h1>
                 <br/>
-                <h1>Cambios de Moneda</h1>
-
-                <br/>
-
                 <s:form theme="simple" namespace="/reportes" action="CambiosMoneda">
                     <div class="panel" style="width: 770px;margin: 0 auto;">
                         <table class="table" style="width: 100%;">
@@ -42,7 +38,7 @@
                                     <td style="width:50%;text-align:right;"><span class="text-1">Pesos / $</span></td>
                                     <td><s:textfield name="cambioDolaresCO" id="cambioCO"/></td>
                                 </tr>
-                                <tr>
+                                <tr style="align:center;"> 
                                     <td colspan="2" align="center"><s:submit value="Guardar Cambios" action="updateCambiosMoneda" onclick="return confirmBox();"/></td>
                                 </tr>
                             </tbody>
@@ -62,7 +58,9 @@
 
             </div>
         </div>
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer> 
 
 
         <script>

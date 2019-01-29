@@ -8,21 +8,17 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-
-        <title>Actividad Diaria</title>
-        <%@include file="../include/head.jsp" %>
-    </head>
-    <body>
-        
-            <%@include file="../include/header.jsp" %>
+    <title>Actividad Diaria</title>
+    
+    <%@include file="../include/head.jsp" %>
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
             <div class="container">
-                <div class="content" id="content">
-                    <br/>
-                    <h1>Resumen de Actividad Diaria</h1>
-                    
-                    <br/>
-                    
+                <div class="content" id="content"> 
+                    <h1 style="margin: 0 0 0 0;">Resumen de Actividad Diaria</h1>
+                    <br/>  
                     <s:form theme="simple" namespace="/reportes" action="ActividadDiaria">
                         <div class="panel">
                             <table class="table" style="width:100%;">
@@ -476,7 +472,8 @@
                                 
                 </div>
             </div>
-            <%@include file="../include/footer.jsp" %>
-        
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer> 
     </body>
 </html>
