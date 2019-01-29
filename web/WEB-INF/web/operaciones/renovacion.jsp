@@ -10,16 +10,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Renovación</title>
-        <%@include file="../include/head.jsp" %>
-        <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
-    </head>
-    <body>
-        <%@include file="../include/header.jsp" %>
-        <jsp:include page="../include/LoadingJquery.jsp"/>
+        <%@include file="../include/head_1.jsp" %>
+    
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
-                <br/>
-                <h1>Renovación</h1>
+                <h1 style="margin: 0 0 0 0;">Renovación</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -115,7 +115,9 @@
                 </div>   
             </div>           
         </div>  
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer>
         <script>
             var contador = 1;    
             document.getElementById("boton1").addEventListener("click", function(event){

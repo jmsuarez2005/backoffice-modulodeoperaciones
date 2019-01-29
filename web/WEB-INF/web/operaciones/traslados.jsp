@@ -12,16 +12,17 @@
 <html>
   <head>
         <title>Traslado de saldos</title>
-        <%@include file="../include/head.jsp" %>
-        <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
-    </head>
-    <body id="body">
-        <%@include file="../include/header.jsp" %>
-        <jsp:include page="../include/LoadingJquery.jsp"/>   
-        <div class="container">
+        
+        <%@include file="../include/head_1.jsp" %>
+    
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>
+            <div class="container">
             <div class="content" id="content">
-                <br/>
-                <h1>Traslado de saldos</h1>
+                <h1 style="margin: 0 0 0 0;">Traslado de saldos</h1>
                 <br/> 
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -148,6 +149,8 @@
                 </s:if>
             </div>            
         </div>
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer> 
     </body>
 </html>

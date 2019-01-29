@@ -12,7 +12,7 @@ import com.novo.util.Utils;
  */
 public interface BasicConfig {
     String appName="operaciones";
-    String appNameExtended="Módulo de Operaciones";
+    String appNameExtended="Gestión de Operaciones: Cuentas/Tarjetas";
     String properties=appName+".properties";
     String version = Utils.getConfig(properties).getProperty("version","No Definida");
     String server = Utils.getConfig(properties).getProperty("server","2"); //1= Tomcat, 2=WebLogic
@@ -21,6 +21,7 @@ public interface BasicConfig {
     String[] dbInformix = {"informix"};
     String oracle="oracle";
     String informix="informix";
+    String ORACLE_MFS="oracle_mfs";
     String co="co";
     String pe="pe";
     String peusd="peusd";

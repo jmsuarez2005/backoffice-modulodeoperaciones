@@ -9,7 +9,6 @@ import com.novo.dao.EmisionesDAO;
 import com.novo.dao.ParametrosDAO;
 import com.novo.dao.RecargasDAO;
 import com.novo.dao.temp.EmisionesDAOINF;
-import com.novo.dao.temp.ParametrosDAOINF;
 import com.novo.dao.temp.RecargasDAOINF;
 import com.novo.model.Parametro;
 import com.novo.model.ReporteEmisionRecarga;
@@ -28,12 +27,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 /**
  *

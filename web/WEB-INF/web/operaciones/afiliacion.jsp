@@ -10,19 +10,17 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
         <title>Afiliacion</title>
-        <%@include file="../include/head.jsp" %>
-        <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
-    </head>
-    <body>   
-        <%@include file="../include/header.jsp" %>
-        <jsp:include page="../include/LoadingJquery.jsp"/>
-        
-        <div class="container">
+       <%@include file="../include/head_1.jsp" %>
+    
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>
+            <div class="container">
             <div class="content" id="content">
-                <br/>
-                <h1>Afiliacion</h1>
+                <h1 style="margin: 0 0 0 0;">Afiliacion</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -102,10 +100,9 @@
 
             </div>           
         </div>  
-
-
-
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer>
         <script>
            
            

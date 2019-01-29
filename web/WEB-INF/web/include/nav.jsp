@@ -1,9 +1,8 @@
 <%@taglib uri="/struts-tags" prefix="s" %>
-
+<s:bean name="com.novo.util.Version" var="version" />
+<s:bean name="com.novo.util.CountriesUtil" var="countryUtil" />
 <div class="nav" id="nav">
     <div class="navContent">
-
-
         <ul id="navBar">
             <jsp:include page="../include/LoadingJquery.jsp"/>
 
@@ -78,12 +77,27 @@
                                 </ul>
                             </li>
                 -->
-                <li style="float:right"><s:a action="perfil" namespace="/inicio"><s:property value="#session.usuarioSesion.idUsuario" /></s:a>
+                <li style="float:right">
+                    <s:a action="perfil" namespace="/inicio">
+                       Usuario: 
+                       <span class="user">
+                           <s:property value="#session.usuarioSesion.idUsuario" />,
+                            <s:if test="%{#session.usuarioSesion.acTipo.equalsIgnoreCase('M')}">
+                                MASTER
+                            </s:if>
+                            <s:else>
+                                USUARIO
+                            </s:else>
+                       </span>
+                         <span class="user">
+                             <s:property value="#countryUtil.countries.get(#session.pais).toUpperCase()" />
+                        </span> 
+                    </s:a>
                     <ul>
                         <li><s:a action="perfil" namespace="/inicio" onclick="openDialogLoading()">Ver Perfil</s:a></li>
-                    <li><s:a action="Clave" namespace="/inicio" onclick="openDialogLoading()">Cambiar Clave</s:a></li>
-                    <li><s:a action="LogoutAction" namespace="/inicio" onclick="openDialogLoading()">Salir</s:a></li>
-                </ul>   
+                        <li><s:a action="Clave" namespace="/inicio" onclick="openDialogLoading()">Cambiar Clave</s:a></li>
+                        <li><s:a action="LogoutAction" namespace="/inicio" onclick="openDialogLoading()">Salir</s:a></li>
+                    </ul>   
             </li>
         </ul>
 

@@ -5,41 +5,35 @@
 --%>
 <%@taglib uri="/struts-tags" prefix="s" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<s:bean name="com.novo.util.CountriesUtil" var="country" />
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Log in</title>
-        <%@include file="../include/head.jsp" %>
-
-    </head>
-    <body>            
-        <%@include file="../include/header.jsp" %>
-
-        <div class="container">
-            <div class="content" id="content">
-
-                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    
+     <%@include file="../include/head_login.jsp" %>
+    
+     <body>
+        <header>
+            <%@include file="../include/header_login.jsp" %>
+        </header>
+        <div class="cont">
+            <div class="form">
                 <center>
-                    <div class="shadowBox bgSilver" id="loginBox">
-                        <center>
-                            <h3>Inicio de Sesión</h3>
-                            <s:form method="post" action="LoginAction" id="formulario">
-                                <label form="Pais" Style="padding-right: 23px" class="label">País: </label><select name="Pais" Style="width:175px"><option value="pe">peSoles</option><option value="peusd">peDolares</option><option value="ve">Venezuela</option><option value="co">Colombia</option></select>
-                                <s:textfield name="user" label="Usuario" required="true" size="25" cssStyle="width:175px;" />
-                                <s:password id="password" name="password"  label="Clave" required="true" size="25" cssStyle="width:175px;" />
-                                <s:submit value="Ingresar" onclick="javascript:enviar_formularioHash();preshow()" onload="prehide()" />
-                            </s:form>
-                        </center>
-                    </div>
-                    <div style="width: 315px">        
-                        <%@include file="../include/alertMessage.jsp" %>
-                    </div>
+                    <s:form method="post" action="LoginAction" cssClass="frm" id="formulario">
+                    <s:select  name="Pais" headerKey="" headerValue="Seleccione un País" list="#country.countries" listKey="key" listValue="value" required="true" placeholder="Seleccione un País" cssClass="icon-pais"/> 
+                    <s:textfield name="user" required="true" placeholder="Usuario" cssClass="icon-user" />
+                    <s:password id="password" name="password" required="true" placeholder="Contraseña" cssClass="icon-pass" />
+                    <s:submit value="Ingresar" onclick="javascript:enviar_formularioHash();preshow()" onload="prehide()" cssClass="button" />   
+                    <!--  < s:textfield name="user" label="Usuario" required="true" size="25" cssStyle="width:175px;" />
+                        < s:password id="password" name="password"  label="Clave" required="true" size="25" cssStyle="width:175px;" />
+                        < s:select  name="country" headerKey="" headerValue="Seleccione un País" list="#country.countries" listKey="key" listValue="value" required="true" placeholder="Seleccione un País"/>    -->                         
+                    <%@include file="../include/alertMessage.jsp" %>
+                </s:form>
                 </center>
-
             </div>
         </div>
-
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer> 
     </body>
 </html>
 

@@ -7,18 +7,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-
         <title>Cambio de Clave</title>
         <%@include file="../include/head.jsp" %>
-    </head>
-    <body>
-        
-            <%@include file="../include/header.jsp" %>
-        <jsp:include page="../include/LoadingJquery.jsp"/>
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>
             <div class="container">
                 <div class="content" id="content">
-                    <br/><br/><br/><br/><br/><br/><br/><br/>
+                    <br/><br/><br/><br/>
                     
                     <div class="info-box" style="margin:0 auto;width: 770px;">
                         <h2>Cambio de Clave</h2>
@@ -69,6 +67,8 @@
                                 
                 </div>
             </div>
-            <%@include file="../include/footer.jsp" %>
+             <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer>
     </body>
 </html>

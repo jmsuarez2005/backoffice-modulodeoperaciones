@@ -8,28 +8,18 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Ajuste de Transacciones</title>
-        <%@include file="../include/head.jsp" %>
-        <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
-
-
-
-    </head>
-
-
-
-    <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Renovacion</title>
-    </head>
-    <body>
-        <%@include file="../include/header.jsp" %>
-        <jsp:include page="../include/LoadingJquery.jsp"/>
-        <div class="container">
+        <title>Ajuste de Transacciones</title>
+        <%@include file="../include/head_1.jsp" %>
+    
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>
+            <div class="container">
             <div class="content" id="content">
-                <br/>
-                <h1>Consultar lotes de renovación</h1>
+                <h1 style="margin: 0 0 0 0;">Consultar lotes de renovación</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -91,17 +81,14 @@
                                 </s:iterator>
                             </tbody>
                         </table>
-
                     </div>
-
                     <div class="panel" style="width: 900px;margin: 0 auto;">
-
-
                     </div>
-
                 </div>
             </div>
         </s:form>
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer>
     </body>
 </html>

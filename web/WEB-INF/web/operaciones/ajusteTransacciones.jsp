@@ -12,20 +12,18 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>  
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Ajuste de Transacciones</title>
-        <%@include file="../include/head.jsp" %>
-        <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
-    </head>
-    <body>     
-
-        <%@include file="../include/header.jsp" %>
-        <jsp:include page="../include/LoadingJquery.jsp"/>
+    <title>Ajuste de Transacciones</title>
+    
+    <%@include file="../include/head_1.jsp" %>
+    
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>
         <div class="container">
             <div class="content" id="content">
-                <br/>
-                <h1>Ajuste de Transacciones</h1>
-
+                <h1 style="margin: 0 0 0 0;">Ajuste de Transacciones</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -158,7 +156,9 @@
 
             </div>       
         </div>
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer> 
 
     </body>
 </html>

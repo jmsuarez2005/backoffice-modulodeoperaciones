@@ -7,27 +7,40 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Sesion Expirada</title>
-        <%@include file="../include/head.jsp" %>
-    </head>
-    <body>
-        <%@include file="../include/header.jsp" %>
-        <div class="container">  
-                <div class="content" id="content">
-                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-
-                    
-                        <div class="shadowBox" id="shadowBox" style="margin:0 auto;">
-                            <img src="../recursos/images/img-alerta.png" style="float:left;padding: 5px;">
-                            <p>La sesion ha expirado, por favor ingresar nuevamente</p>
-                            <br/>
-                            <center><s:a action="portal" namespace="/inicio">Ir al inicio</s:a></center>
-                        </div> <!-- s:a action="portal" namespace="/inicio" /s:a> -->
-                        <!-- <a href="javascript:goBack();">Volver</a> -->
-                        
+<%@include file="../include/head.jsp" %>
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+                <div class="container">  
+                    <div class="content" id="content">
+                        <div class="info-box" style="width:30%;margin: 5em 0 0 43em;">
+                        <center>
+                           <h2>Atención</h2> 
+                        </center>
+                            <div class="first">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <td style="width: 50%;">
+                                            <p>
+                                                <img src="../recursos/images/img-alerta.png" style="float:left;padding: 5px;">
+                                                <center>
+                                                    <span class="text-1">Disculpe, su sesión ha caducado, ingrese nuevamente.</span>
+                                                </center>
+                                                <br/>
+                                                <center>
+                                                    <s:a action="login" namespace="/inicio">Ingresar</s:a>
+                                                </center>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-        </div>
-        <%@include file="../include/footer.jsp" %>
+        <footer>
+                <%@include file="../include/footer.jsp" %>    
+        </footer>
     </body>
 </html>

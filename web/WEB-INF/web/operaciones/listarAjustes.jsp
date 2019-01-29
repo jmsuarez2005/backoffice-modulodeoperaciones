@@ -15,9 +15,9 @@
 <html>
     <head>
         <title>Ajuste de Transacciones</title>
-        <%@include file="../include/head.jsp" %>
-        <link rel="stylesheet" type="text/css" href="../recursos/css/bootstrap.css"/>
-
+        
+        <%@include file="../include/head_1.jsp" %>
+        
         <script>
             function Editar(fila) {
                 //window.alert(fila);
@@ -71,13 +71,14 @@
         </script>
 
     </head>
-    <body>        
-        <%@include file="../include/header.jsp" %>   
-        <jsp:include page="../include/LoadingJquery.jsp"/>     
-        <div class="container">
+        <body>
+            <header>
+                <%@include file="../include/header.jsp" %>
+            </header>
+            <jsp:include page="../include/LoadingJquery.jsp"/>    
+            <div class="container">
             <div class="content" id="content">
-                <br/>
-                <h1>Consultar Ajustes</h1>
+                <h1 style="margin: 0 0 0 0;">Consultar Ajustes</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -335,7 +336,9 @@
                 </s:form>
             </div>       
         </div>
-        <%@include file="../include/footer.jsp" %>
+         <footer>
+            <%@include file="../include/footer.jsp" %>    
+        </footer> 
         <script>
             
             var c = 0;
