@@ -1,6 +1,6 @@
 # Operaciones
 	Descripción del Proyecto Modulo de Operaciones
-**Librerias
+ **Librerias
 	- NovoDataUtils.jar
 	- log4j-1.2.13.jar  
 	- novo-exception.jar  
@@ -30,7 +30,8 @@
 	- poi-ooxml-3.13-20150929.jar
 	- poi-ooxml-schemas-3.13-20150929.jar
 	- poi-scratchpad-3.13-20150929.jar
-**Stubs
+ 
+ **Stubs
 	- FuncionesBase-stub.jar  
 	- LogAccesoBase-stub.jar  
 	- UsuarioBase-stub.jar 
