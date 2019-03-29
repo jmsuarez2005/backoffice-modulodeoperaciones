@@ -9,5 +9,6 @@
 	<prefer-application-packages>
 		<package-name>org.apache.log4j.*</package-name>
 	</prefer-application-packages>
-  </container-descriptor>  
+  </container-descriptor>
+  <context-root>/Operaciones</context-root>  
 </weblogic-web-app>
