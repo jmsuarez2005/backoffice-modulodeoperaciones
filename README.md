@@ -30,6 +30,7 @@
 	- poi-ooxml-3.13-20150929.jar
 	- poi-ooxml-schemas-3.13-20150929.jar
 	- poi-scratchpad-3.13-20150929.jar
+	- displaytag-1.0.jar
  
 # Stubs
 	- FuncionesBase-stub.jar  
