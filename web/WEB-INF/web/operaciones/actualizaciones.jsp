@@ -36,12 +36,12 @@
                     <div class="panel" style="width: 900px;margin: 0 auto;">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="4" style="text-align:center;">Busqueda de Usuario</th></tr>                                        
+                                <tr><th colspan="4" style="text-align:center;">Búsqueda de Usuario</th></tr>                                        
 
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td  style="width:50%;text-align:center;" ><span class="text-1">Numero de Tarjeta</span></td>
+                                    <td  style="width:50%;text-align:center;" ><span class="text-1">Número de Tarjeta</span></td>
                                     <td><s:textfield cssClass="search-query" name="nroTarjeta" /></td>       
                                 </tr>
                                 <tr>

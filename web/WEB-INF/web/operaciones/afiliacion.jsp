@@ -10,7 +10,7 @@
 
 <!DOCTYPE html>
 <html>
-        <title>Afiliacion</title>
+        <title>Afiliación</title>
        <%@include file="../include/head_1.jsp" %>
     
         <body>
@@ -20,7 +20,7 @@
             <jsp:include page="../include/LoadingJquery.jsp"/>
             <div class="container">
             <div class="content" id="content">
-                <h1 style="margin: 0 0 0 0;">Afiliacion</h1>
+                <h1 style="margin: 0 0 0 0;">Afiliación</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -47,7 +47,7 @@
                     <s:form action="Afiliacion" method="post" enctype="multipart/form-data" theme = "simple">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="3" style="text-align:center;">Afiliacion Masiva</th></tr>
+                                <tr><th colspan="3" style="text-align:center;">Afiliación Masiva</th></tr>
                             </thead>
                             <tbody>                                
                                 <tr>
@@ -72,7 +72,7 @@
                             <table class="table" style="width: 20%;text-align:center;" align="center">
                                 <thead>
                                     <tr>
-                                        <th style="text-align:center;">Numero de registros</th>
+                                        <th style="text-align:center;">Número de registros</th>
                                     </tr>
                                 </thead>
                                 <tbody>      

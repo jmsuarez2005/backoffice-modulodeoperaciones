@@ -66,7 +66,7 @@
                     <s:form action="bloqueo" method="post" enctype="multipart/form-data" theme = "simple">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="3" style="text-align:center;">Procesar bloqueo masivos</th></tr>
+                                <tr><th colspan="3" style="text-align:center;">Procesar Bloqueo Masivo</th></tr>
                             </thead>
                             <tbody>                                
                                 <tr>

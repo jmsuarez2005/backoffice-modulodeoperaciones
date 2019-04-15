@@ -67,7 +67,7 @@
                     <s:form action="desbloqueo" method="post" enctype="multipart/form-data" theme = "simple">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="3" style="text-align:center;">Procesar desbloqueo masivos</th></tr>
+                                <tr><th colspan="3" style="text-align:center;">Procesar Desbloqueo Masivo</th></tr>
                             </thead>
                             <tbody>                                
                                 <tr>

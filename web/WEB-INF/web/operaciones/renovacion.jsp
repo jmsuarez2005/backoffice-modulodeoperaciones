@@ -65,7 +65,7 @@
                     <s:form action="renovacion" method="post" enctype="multipart/form-data" theme = "simple">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="3" style="text-align:center;">Procesar renovación de tarjetas</th></tr>
+                                <tr><th colspan="3" style="text-align:center;">Procesar Renovación de Tarjetas</th></tr>
                             </thead>
                             <tbody>                                
                                 <tr>

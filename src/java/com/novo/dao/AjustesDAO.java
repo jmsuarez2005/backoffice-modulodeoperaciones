@@ -456,7 +456,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
 
         String a = referencia.substring(referencia.length() - 6, referencia.length());
         
-        String sql = "insert into novo_detalle_ajustes (ID_REGISTRO,FECHA,TARJETA,MONTO,STATUS,USUARIO,ID_CODIGO_AJUSTE,DTREGISTRO,AUTORIZACION,descripcion,cod_operacion,cod_moneda,cat_comercio,dtproceso) values (SEQ_ID_DETALLE_AJUSTE.NEXTVAL,sysdate,'" + tarjeta + "'," + monto + ",'" + status + "','" + usuario + "','" + codigoAjuste + "',SYSDATE,'" + a + "',(select descripcion from novo_codigo_ajustes where id_ajuste ='" + codigoAjuste + "'),(select COD_OPERACION from novo_codigo_ajustes where id_ajuste ='" + codigoAjuste + "'),'604','0000'," + dtproceso + ")";
+        String sql = "insert into novo_detalle_ajustes (ID_REGISTRO,FECHA,TARJETA,MONTO,STATUS,USUARIO,ID_CODIGO_AJUSTE,DTREGISTRO,AUTORIZACION,descripcion,cod_operacion,cod_moneda,cat_comercio,dtproceso, observacion) values (SEQ_ID_DETALLE_AJUSTE.NEXTVAL,sysdate,'" + tarjeta + "'," + monto + ",'" + status + "','" + usuario + "','" + codigoAjuste + "',SYSDATE,'" + a + "',(select descripcion from novo_codigo_ajustes where id_ajuste ='" + codigoAjuste + "'),(select COD_OPERACION from novo_codigo_ajustes where id_ajuste ='" + codigoAjuste + "'),'604','0000'," + dtproceso + ", '" + observacion + "')";
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbo.dbreset();
         log.info("sql [" + sql + "]");
