@@ -75,7 +75,7 @@ public class ParametrosDAOINF extends NovoDAO implements BasicConfig,ParametrosQ
             dbi.dbreset();
             
                 if (dbi.executeQuery(query) != 0) {
-                    log.error("modificarParametro: Error modificando parametro "+parametro.getAcname()+" [" + query + "]");
+                    log.error("modificarParametro: Error modificando parámetro "+parametro.getAcname()+" [" + query + "]");
                     modificado=false;
                 } else {
                     log.info("modificarParametro: Modificación Exitosa "+parametro.getAcname()+" [" + query + "]");

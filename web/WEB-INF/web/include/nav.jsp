@@ -38,9 +38,9 @@
                             </ul>
                         </li>
 
-                        <li><s:a action="Actualizaciones" namespace="/operaciones" onclick="openDialogLoading()">Actualizacion</s:a></li>
+                        <li><s:a action="Actualizaciones" namespace="/operaciones" onclick="openDialogLoading()">Actualización</s:a></li>
 
-                        <li><s:a action="Afiliacion" namespace="/operaciones" onclick="openDialogLoading()">Afiliacion</s:a></li>
+                        <li><s:a action="Afiliacion" namespace="/operaciones" onclick="openDialogLoading()">Afiliación</s:a></li>
 
                     </ul>
                 </li>

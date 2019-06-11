@@ -268,7 +268,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             dbo.dbClose();
             return listarenovar;
         }else{
-            log.info("TARJETAS VALIDAS PARA EL PROCESO DE RENOVACION");            
+            log.info("TARJETAS VÁLIDAS PARA EL PROCESO DE RENOVACION");            
         }
 
         if (cantidad == tarjetas.size()) {
@@ -310,7 +310,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             similar.retainAll(listTwo);
             different.removeAll(similar);
             tarjetasInexis = different.toString().substring(1, different.toString().length() - 1);
-            log.info("TARJETAS NO VALIDAS:" + tarjetasInexis);
+            log.info("TARJETAS NO VÁLIDAS:" + tarjetasInexis);
 
         }
         dbo.dbClose();

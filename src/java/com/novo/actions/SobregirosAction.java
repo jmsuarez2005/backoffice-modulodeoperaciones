@@ -21,11 +21,15 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -73,13 +77,14 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
 
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
+        this.usuarioSesion = ((UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion"));
         if (usuarioSesion == null) {
             return "out";
         }
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -114,13 +119,14 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
 
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
+        this.usuarioSesion = ((UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion"));
         if (usuarioSesion == null) {
             return "out";
         }
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -145,13 +151,14 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
 
         //Valido sesion
         SessionUtil sessionUtil = new SessionUtil();
+        this.usuarioSesion = ((UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion"));
         if (usuarioSesion == null) {
             return "out";
         }
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -162,7 +169,7 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
         //Fin valida sesion
 
         ReporteTransacciones business = new ReporteTransacciones();
-
+        tipoAjustes = business.getTipoAjustes();
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION);
         pais = ((String) ActionContext.getContext().getSession().get("pais"));
         usuario.getIdUsuario();
@@ -178,111 +185,136 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
         } else {
             sobregirosInf = new SobregirosDAOINF(appName, databases, pais);
         }
+        
         try {
-
             if (this.file == null) {
-                this.message = "Error al cargar el archivo";
+                message = "No se pudo cargar el archivo";
                 tipoMessage = "error";
                 tipoAjustes = business.getTipoAjustes();
                 return SUCCESS;
-            }
-            log.info(file.getAbsolutePath() + " " + file.getCanonicalPath());
-            File file2;
-            file2 = new File(file.getPath() + filename);
-            file.renameTo(file2);
-            InputStream buffer = new FileInputStream(file2.getAbsolutePath());
-            Workbook workbook = WorkbookFactory.create(buffer);
-            Sheet sheet = workbook.getSheetAt(0);
-            String tarjetaString = "";
-            String montoString = "";
-            double tarjetaDouble = 0;
-            double montoDouble = 0;
-            int i = 0;
-            do {
-                Row row = sheet.getRow(i);
-
-                if (row == null) {
-                    break;
-                } else if (row.getCell(0) == null) {
-                    break;
                 }
-
-                if (row.getCell(0).getCellType() == 3) {
-                    break;
-                }
-                if (row.getCell(0).getCellType() == 0) {
-                    tarjetaDouble = row.getCell(0).getNumericCellValue();
-                    tarjetaString = String.valueOf(tarjetaDouble);
-                } else {
-                    tarjetaString = row.getCell(0).getStringCellValue();
-                }
-                if (row.getCell(1).getCellType() == 0) {
-                    montoDouble = row.getCell(1).getNumericCellValue();
-                    montoString = String.valueOf(montoDouble);
-                } else {
-                    montoString = row.getCell(1).getStringCellValue();
-                }
-
-                ajuste.setTarjeta(tarjetaString);
-                ajuste.setMonto(montoString);
-
-                tar.setNroTarjeta(tarjetaString);
-                if (!tarjetaString.matches("\\d{16}")) {
-                    message = "Error con el formato de la tarjeta";
-                    tipoMessage = "error";
-                    procesoOk = false;
-                    break;
-                }
-                ajustes.add(ajuste);
-                tarjetasAct.add(tar);
-                ajuste = new Ajuste();
-                tar = new Tarjeta();
-                log.info("tarjeta [" + tarjetaString + "] ");
-
-                i++;
-                log.info("por favor" + sheet.getRow(i));
-            } while (!tarjetaString.equals("") && sheet.getRow(i) != null);
-
-            if (i > 500) {
-                message = "Numero de registros en el archivo excedido";
+            //Validar que el archivo sea excel
+            String ext = FilenameUtils.getExtension(filename);
+            if (!ext.equals("xls") && !ext.equals("xlsx")) {
+                message = "El archivo a cargar debe estar en formato Excel";
                 tipoMessage = "error";
                 tipoAjustes = business.getTipoAjustes();
                 return SUCCESS;
-            }
-            if (procesoOk) {
-
-                message = "Carga de Archivo Exitosa. " + file.getName();
-
-                String respuesta = business.checkTarjetas(ajustes);
-                if (respuesta.contains("errorT")) {
-                    message = "Error, Tarjeta(s) Inexistente(s):" + respuesta.substring(6, respuesta.length());
-                    tipoMessage = "error";
-                    tipoAjustes = business.getTipoAjustes();
-                    return SUCCESS;
-                } else if (respuesta.contains("error")) {
-                    message = "[!] Error de sistema";
+            }else{
+                log.info(file.getAbsolutePath());
+                File file2;
+                file2 = new File(file.getPath() + filename);
+                file.renameTo(file2);
+                InputStream buffer = new FileInputStream(file2.getAbsolutePath());
+                Workbook workbook = WorkbookFactory.create(buffer);
+                Sheet sheet = workbook.getSheetAt(0);
+                String tarjetaString = "";
+                String montoString = "";
+                double tarjetaDouble = 0;
+                double montoDouble = 0;
+                int i = 0;
+                if (sheet.getRow(i) == null) {
+                    message = "El archivo se encuentra vacio";
                     tipoMessage = "error";
                     tipoAjustes = business.getTipoAjustes();
                     return SUCCESS;
                 }
+                do {
+                    Row row = sheet.getRow(i);
 
-                if (txt.paisMigra(propMigra, this.pais)) {   
-                    sobregiros.setAjustes(ajustes);
-                    sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
-                } else {
-                    sobregirosInf.setAjustes(ajustes);
-                    sobregirosInf.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
+                    if (row == null) {
+                        break;
+                    } else if (row.getCell(0) == null) {
+                        break;
+                    }
 
+                    if (row.getCell(0).getCellType() == 3) {
+                        break;
+                    }
+                    if (row.getCell(0).getCellType() == 0) {
+                        tarjetaDouble = row.getCell(0).getNumericCellValue();
+                        tarjetaString = String.valueOf(tarjetaDouble);
+                    } else {
+                        tarjetaString = row.getCell(0).getStringCellValue();
+                    }
+                    if (row.getCell(1).getCellType() == 0) {
+                        montoDouble = row.getCell(1).getNumericCellValue();
+                        if (montoDouble<0){
+                            message = "El monto ingresado es negativo. Formato correcto 100.00";
+                            tipoMessage = "error";
+                            tipoAjustes = business.getTipoAjustes();
+                            procesoOk = false;
+                            break;
+                        }else{
+                            montoString = String.valueOf(montoDouble);
+                        }
+                    } else {
+                        montoString = row.getCell(1).getStringCellValue();
+                    }
+
+                    ajuste.setTarjeta(tarjetaString);
+                    ajuste.setMonto(montoString);
+
+                    tar.setNroTarjeta(tarjetaString);
+                    if (!tarjetaString.matches("\\d{16}")) {
+                        message = "Formato de la tarjeta inválido";
+                        tipoMessage = "error";
+                        procesoOk = false;
+                        break;
+                    }
+                    ajustes.add(ajuste);
+                    tarjetasAct.add(tar);
+                    ajuste = new Ajuste();
+                    tar = new Tarjeta();
+                    log.info("Tarjeta [" + tarjetaString + "] ");
+
+                    i++;
+                    //log.info("por favor" + sheet.getRow(i));
+                } while (!tarjetaString.equals("") && sheet.getRow(i) != null);
+
+
+                if (i > 500) {
+                    message = "El archivo excede el número de registros permitidos";
+                    tipoMessage = "error";
+                    tipoAjustes = business.getTipoAjustes();
+                    return SUCCESS;
                 }
-                ajustex = ajustes;
+                if (procesoOk) {
 
-                tipoAjustes = business.getTipoAjustes();
-                ActionContext.getContext().getSession().put("tarjetasAct", tarjetasAct);
+                    message = "Carga de archivo exitosa. " + file.getName();
+
+                    String respuesta = business.checkTarjetas(ajustes);
+                    if (respuesta.contains("errorT")) {
+                        message = "No existe(n) la(s) siguiente(s) tarjeta(s): " + respuesta.substring(6, respuesta.length());
+                        tipoMessage = "error";
+                        tipoAjustes = business.getTipoAjustes();
+                        return SUCCESS;
+                    } else if (respuesta.contains("error")) {
+                        message = "No se pudo realizar el sobregiros";
+                        tipoMessage = "error";
+                        tipoAjustes = business.getTipoAjustes();
+                        return SUCCESS;
+                    }
+
+                    if (txt.paisMigra(propMigra, this.pais)) {   
+                        sobregiros.setAjustes(ajustes);
+                        sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
+                    } else {
+                        sobregirosInf.setAjustes(ajustes);
+                        sobregirosInf.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
+
+                    }
+                    ajustex = ajustes;
+
+                    tipoAjustes = business.getTipoAjustes();
+                    ActionContext.getContext().getSession().put("tarjetasAct", tarjetasAct);
+                  }
             }
         } catch (Exception e) {
-            log.error("error ", e);
+            log.error("error ", e );
             tipoMessage = "error";
-            message = "[!] Error de sistema";
+            tipoAjustes = business.getTipoAjustes();
+            message = "No se pudo realizar el sobregiros";
         }
         return SUCCESS;
     }
@@ -365,5 +397,17 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
 
     public void setTipoMessage(String tipoMessage) {
         this.tipoMessage = tipoMessage;
+    }
+    
+    public void setUpload(File file) {
+        this.file = file;
+    }
+
+    public void setUploadContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setUploadFileName(String filename) {
+        this.filename = filename;
     }
 }

@@ -47,7 +47,6 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
         //log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
         try {
-            log.info("equis" + ds);
             //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
             Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
 

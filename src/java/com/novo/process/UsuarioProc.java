@@ -40,7 +40,7 @@ public class UsuarioProc implements BasicConfig, RCConfig {
 
         if (usuario == null) {
             rc.setRc(rcUsuarioNoEncontrado);
-            rc.setMensaje("Usuario No Encontrado");
+            rc.setMensaje("Usuario no encontrado");
 
             if (usuarioDAO.getRc().getRc() == rcError) {
                 rc.setMensaje(rc.getMensaje() + " " + usuarioDAO.getRc().getMensaje());

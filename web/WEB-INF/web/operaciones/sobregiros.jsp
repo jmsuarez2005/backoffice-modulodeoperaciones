@@ -70,7 +70,7 @@
                             <tbody>                                
                                 <tr>
                                     <td><label>Cargar Archivo :</label></td>
-                                    <td><s:file cssClass="btn btn-info" name="file" label="File"/></td>  
+                                    <td><s:file cssClass="btn btn-info" name="upload" label="File"/></td>  
                                     <td><select name="selectedAjuste"><s:iterator value="tipoAjustes" var="myObj1">
                                                     <s:if test="#myObj1.idCodigoAjuste==16">
                                                         <option value="<s:property value ="idCodigoAjuste"/>"> <s:property value ="descripcion"/></option>

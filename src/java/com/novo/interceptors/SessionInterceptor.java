@@ -23,11 +23,11 @@ public class SessionInterceptor implements Interceptor {
     }
 
     public void destroy() {
-        System.out.println("SessionInterceptor destroy() is called...");
+        System.out.println("SessionInterceptor destroy() es llamado...");
     }
 
     public void init() {
-        System.out.println("SessionInterceptor init() is called...");
+        System.out.println("SessionInterceptor init() es llamado...");
     }
 
     public String intercept(ActionInvocation actionInvocation) throws Exception {

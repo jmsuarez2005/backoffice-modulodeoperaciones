@@ -18,11 +18,11 @@ public class SessionCheckInterceptor implements Interceptor {
     }
     
     public void destroy() {
-        System.out.println("SessionCheckInterceptor destroy() is called...");
+        System.out.println("SessionCheckInterceptor destroy() es llamado..");
     }
     
     public void init() {
-        System.out.println("SessionCheckInterceptor init() is called...");
+        System.out.println("SessionCheckInterceptor init() es llamado..");
     }
     
     public String intercept(ActionInvocation actionInvocation) throws Exception {

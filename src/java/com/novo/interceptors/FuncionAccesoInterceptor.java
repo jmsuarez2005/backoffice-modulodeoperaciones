@@ -33,17 +33,17 @@ public class FuncionAccesoInterceptor implements Interceptor {
     
     @Override
     public void destroy() {
-        log.info(FuncionAccesoInterceptor.class.getName()+"destroy() is called...");
+        log.info(FuncionAccesoInterceptor.class.getName()+" destroy() es llamado...");
     }
     
     @Override
     public void init() {
-        log.info(FuncionAccesoInterceptor.class.getName()+"init() is called...");
+        log.info(FuncionAccesoInterceptor.class.getName()+" init() es llamado...");
     }
     
     @Override
     public String intercept(ActionInvocation actionInvocation) throws Exception {
-         log.info("Interceptando petición...");
+        log.info("Interceptando petición...");
         Map session = actionInvocation.getInvocationContext().getSession();
         UsuarioSesion usuarioSesion = (UsuarioSesion)session.get("usuarioSesion");
         

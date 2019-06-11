@@ -51,7 +51,7 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -79,7 +79,7 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -112,7 +112,7 @@ public class CambiosMonedaAction extends ActionSupport implements BasicConfig {
         if (business.modificarCambioMoneda(ve, this.cambioDolaresVE)
                 && business.modificarCambioMoneda(pe, this.cambioDolaresPE)
                 && business.modificarCambioMoneda(co, this.cambioDolaresCO)) {
-            this.message = "Cambios de Moneda actualizados.";
+            this.message = "Cambios de moneda actualizados.";
         } else {
             this.message = "Ocurrió un error al intentar actualizar.";
             tipoMessage = "error";

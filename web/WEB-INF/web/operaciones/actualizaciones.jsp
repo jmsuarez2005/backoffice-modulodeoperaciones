@@ -84,7 +84,7 @@
                     <s:form action="Actualizaciones" method="post" enctype="multipart/form-data" theme = "simple">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="3" style="text-align:center;">Actualizacion Masiva</th></tr>
+                                <tr><th colspan="3" style="text-align:center;">Actualización Masiva</th></tr>
                             </thead>
                             <tbody>                                
                                 <tr>

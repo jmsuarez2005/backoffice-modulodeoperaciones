@@ -72,7 +72,7 @@
                             <tbody>                                
                                 <tr>
                                     <td><label>Cargar Archivo :</label></td>
-                                    <td><s:file cssClass="btn btn-info" name="file" label="File"/></td>  
+                                    <td><s:file cssClass="btn btn-info" name="upload" label="File"/></td>  
                                     <td><select name="selectedBloqueo"><option value="00">Desbloquear</option>
                                             </select>
                                        </td>

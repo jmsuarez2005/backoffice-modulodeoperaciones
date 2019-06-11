@@ -71,7 +71,7 @@
                             <tbody>                                
                                 <tr>
                                     <td><label>Cargar Archivo :</label></td>
-                                    <td><s:file cssClass="btn btn-info" name="file" label="File"/></td>  
+                                    <td><s:file cssClass="btn btn-info" name="upload" label="File"/></td>  
                                     <td><select name="selectedBloqueo">
                                             <s:iterator value="tipoBloqueo" var="myObj1">
 

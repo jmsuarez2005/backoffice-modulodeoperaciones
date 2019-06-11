@@ -68,7 +68,7 @@
                             <tbody>                                
                                 <tr>
                                     <td><label>Cargar Archivo :</label></td>
-                                    <td><s:file cssClass="btn btn-info" name="file" label="File"/></td>  
+                                    <td><s:file cssClass="btn btn-info" name="upload" label="File"/></td>  
                                     
                                 </tr>
                                 

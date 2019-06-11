@@ -62,7 +62,7 @@ public class SobregirosDAOINF extends NovoDAO implements BasicConfig, AjustesTra
             } else if (respuesta.equals("existe")) {
                 ajuste.setFecha("");
                 ajuste.setStatus("7");
-                ajuste.setObservacion("La Tarjeta ya existe para hacer un sobregiro");
+                ajuste.setObservacion("La tarjeta ya existe para hacer un sobregiro");
             } else {
                 ajuste.setFecha("");
                 ajuste.setStatus("7");
@@ -133,7 +133,7 @@ public class SobregirosDAOINF extends NovoDAO implements BasicConfig, AjustesTra
             return "error";
         }
 
-        String sql5 = "select count(*) as respuesta from novo_sobregiros where nro_tarjeta=" + Tarjeta + " and estatus=3";
+        String sql5 = "select count(*) as respuesta from novo_sobregiros where nro_tarjeta=" + Tarjeta + " and status=3";
 
         boolean existe = false;
 
@@ -183,9 +183,9 @@ public class SobregirosDAOINF extends NovoDAO implements BasicConfig, AjustesTra
                     return "error";
                 }
             } else {
-                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta" + handler.getRespCode());
+                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta " + handler.getRespCode());
 
-                String Sobregiro = "insert into novo_sobregiros (ID, NRO_TARJETA, MONTO_AJUSTE,USUARIO_INGRESO,TIPO_AJUSTE,MSG) VALUES (NOVO_SOBREGIROS_SEQ.nextval, '" + Tarjeta + "'," + Monto + ",'" + idUsuario + "'," + selectedAjuste + ", 'La tarjeta no pudo ser bloqueada" + handler.getRespCode() + "')";
+                String Sobregiro = "insert into novo_sobregiros (ID, NRO_TARJETA, MONTO_AJUSTE,USUARIO_INGRESO,TIPO_AJUSTE,MSG) VALUES (NOVO_SOBREGIROS_SEQ.nextval, '" + Tarjeta + "'," + Monto + ",'" + idUsuario + "'," + selectedAjuste + ", 'La tarjeta no pudo ser bloqueada RC=" + handler.getRespCode() + "')";
                 if (dbo.executeQuery(Sobregiro) == 0) {
                     dbo.dbClose();
                     return "ok";

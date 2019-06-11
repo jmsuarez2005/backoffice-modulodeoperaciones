@@ -92,7 +92,7 @@ public class ParametrosDAO extends NovoDAO implements BasicConfig,ParametrosQuer
             dbo.dbreset();
             
                 if (dbo.executeQuery(query) != 0) {
-                    log.error("modificarParametro: Error modificando parametro "+parametro.getAcname()+" [" + query + "]");
+                    log.error("modificarParametro: Error modificando parámetro "+parametro.getAcname()+" [" + query + "]");
                     modificado=false;
                 } else {
                     log.info("modificarParametro: Modificación Exitosa "+parametro.getAcname()+" [" + query + "]");
