@@ -84,7 +84,7 @@ public class EmisionesDAOINF extends NovoDAO implements BasicConfig,EmisionesQue
             }
             //dbi.dbClose();
         } catch (Exception e) {
-            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica dia "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica del dia "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -97,7 +97,7 @@ public class EmisionesDAOINF extends NovoDAO implements BasicConfig,EmisionesQue
      * OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Informix)
      */
     public int obtenerTarjEmitidasPersonaJurMes(Date fecha) {
-        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Informix)");
+        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS (Informix)");
         int cantidad=0;
         String day=""+fecha.getDate();
         String month=""+(fecha.getMonth()+1);
@@ -139,7 +139,7 @@ public class EmisionesDAOINF extends NovoDAO implements BasicConfig,EmisionesQue
             }
             //dbi.dbClose();
         } catch (Exception e) {
-            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica mes "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica del mes "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }

@@ -29,7 +29,7 @@
                                                 </center>
                                                 <br/>
                                                 <center>
-                                                    <s:a action="login" namespace="/inicio">Ingresar</s:a>
+                                                    <s:a action="portal" namespace="/inicio">Ingresar</s:a>
                                                 </center>
                                             </p>
                                         </td>

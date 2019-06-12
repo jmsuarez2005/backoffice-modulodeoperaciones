@@ -94,7 +94,7 @@
                     <div class="panel" style="width: 1000px;margin: 0 auto;">
                         <table class="table" style="width: 100%; padding: 0px; margin: 0px; ">
                             <thead>
-                                <tr><th colspan="6" style="text-align:center;">Busqueda</th></tr>
+                                <tr><th colspan="6" style="text-align:center;">Búsqueda</th></tr>
                             </thead>
                             <tbody>
                                 <tr id="picker1" style=" padding: 0px; margin: 0px">
@@ -102,7 +102,7 @@
                                     <td colspan="2" style="padding: 0px; margin: 0px; text-align: center"><table  class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaFin" name="fechaFin" label="Fecha Fin" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>
                                 </tr>
                                 <tr>
-                                    <td  style="width: 18.8%;">Status</td>
+                                    <td  style="width: 18.8%;">Estatus</td>
                                     <td  style=""><s:select id="listaTipoAjustes" name ="selectedStatus" list = "status"/></td>
                                     <td  style="width: 16.4%;">Usuario</td>
                                     <td  style=""><s:select id="listaUsuariosBusqueda" name ="selectedUsuario" list = "listaUsuariosBusqueda"/></td>         
@@ -149,7 +149,7 @@
                                         <th>Usuario</th>
                                         <th>Tipo Ajuste</th>
                                         <th>Estatus</th>  
-                                        <th>Observacion</th>                    
+                                        <th>Observación</th>                    
                                         <th colspan="1"><input type="checkbox" onclick="checkboxes(this)"/></th>
                                     <s:if test="%{getStatusfromSelected(selectedStatus).equals(\"3\")}">
                                     <th>Editar</th>
@@ -273,7 +273,7 @@
                                         <s:property value="#attr.ajustesTable.descStatus"/>
                                     </display:column>   
 
-                                    <display:column  title="Observacion"  style="width:15%;text-align:center;" > 
+                                    <display:column  title="Observación"  style="width:15%;text-align:center;" > 
                                         <s:property value="#attr.ajustesTable.observacion"/>
                                     </display:column>  
 
@@ -313,7 +313,7 @@
                                     <s:hidden  name="filaEditar" id="idFilaEditar" />
                                     <s:if test="%{!isEditar()}">
                                         <s:if test="%{!selectedStatus.equals(\"ANULADO\") && !selectedStatus.equals(\"PROCESADO\")}">
-                                            <td style="text-align: center"><label>Cambiar Status: </label></td>
+                                            <td style="text-align: center"><label>Cambiar Estatus: </label></td>
                                             <td style="text-align: center"><s:select id="listaTipoAjustes2" name ="selectedStatus" list = "status2" /></td>
                                         </s:if>
                                     </s:if>
@@ -349,7 +349,7 @@
             
             //Para confirmar antes de accionar, colocar en el elemento class="confirmation"
             $('.confirmation').on('click', function () {
-                var data = 'Desea ajustar la transaccion?';
+                var data = '¿Desea ajustar la transacción?';
 
                 return  confirm(data);
             });

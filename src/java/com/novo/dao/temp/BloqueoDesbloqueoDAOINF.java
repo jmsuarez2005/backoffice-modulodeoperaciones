@@ -54,7 +54,7 @@ public class BloqueoDesbloqueoDAOINF extends NovoDAO implements BasicConfig, Aju
             if (respuesta.equals("ok")) {
                 ajuste.setDescripcion("Procesado");
             } else if (respuesta.equals("existe")) {
-                ajuste.setDescripcion("La Tarjeta ya existe para hacer un bloqueo");
+                ajuste.setDescripcion("La tarjeta ya existe para hacer un bloqueo");
             } else {
                 ajuste.setDescripcion("Anulado");
             }
@@ -193,26 +193,26 @@ public class BloqueoDesbloqueoDAOINF extends NovoDAO implements BasicConfig, Aju
                     if (dbo.executeQuery(uf) == 0) {
                         if (dbo.executeQuery(uf2) == 0) {
                             dbo.dbClose();
-                            log.info("La tarjeta " + Tarjeta + "fue bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
+                            log.info("La tarjeta " + Tarjeta + "fue bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
                             return "ok";
                         }
                         dbo.dbClose();
-                        log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
+                        log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
                         return "error";
                     }
 
                     dbo.dbClose();
-                    log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
+                    log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
                     return "error";
                 }
 
                 dbo.dbClose();
-                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta" + handler.getRespCode());
+                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
                 return "error";
 
             }
 
-            String sql4 = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION,CANAL) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', 'La tarjeta no pudo ser bloqueada" + handler.getRespCode() + "', 'OPE')";
+            String sql4 = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION,CANAL) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', 'La tarjeta no pudo ser bloqueada RC=" + handler.getRespCode() + "', 'OPE')";
             log.debug("sql #0 [" + uf2 + "]");
             if (dbo.executeQuery(sql4) == 0) {
                 dbo.dbClose();

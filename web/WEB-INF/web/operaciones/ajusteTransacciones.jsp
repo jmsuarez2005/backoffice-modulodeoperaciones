@@ -41,7 +41,7 @@
                     <div class="panel" style="width: 770px;margin: 0 auto;">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr class="info"><th colspan="4"  style="text-align: center;">Busqueda de Usuario</th></tr>                                
+                                <tr class="info"><th colspan="4"  style="text-align: center;">Búsqueda de Usuario</th></tr>                                
 
                             </thead>
                             <tbody>

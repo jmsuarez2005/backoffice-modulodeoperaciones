@@ -37,12 +37,12 @@ public class FuncionAfterAccesoInterceptor implements Interceptor {
 
     @Override
     public void destroy() {
-        log.info(FuncionAccesoInterceptor.class.getName() + "destroy() is called...");
+        log.info(FuncionAccesoInterceptor.class.getName() + " destroy() es llamado...");
     }
 
     @Override
     public void init() {
-        log.info(FuncionAccesoInterceptor.class.getName() + "init() is called...");
+        log.info(FuncionAccesoInterceptor.class.getName() + " init() es llamado...");
     }
 
     @Override
@@ -80,7 +80,7 @@ public class FuncionAfterAccesoInterceptor implements Interceptor {
                             invocation.setResultCode("accesodenegado");
                         }
                         if ((idModulo!=null || idFuncion!=null) && !existeModuloFuncion(usuarioSesion, idModulo, idFuncion)) {
-                            log.info("FuncionAccesoInterceptor: Acceso Denegado. El usuario no tiene acceso a Módulo[" + idModulo + "] y Función[" + idFuncion + "]");
+                            log.info("FuncionAccesoInterceptor: Acceso Denegado. El usuario no tiene acceso a módulo[" + idModulo + "] y Función[" + idFuncion + "]");
                             session.clear();
                             invocation.setResultCode("accesodenegado");
                         }

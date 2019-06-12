@@ -38,7 +38,7 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
      * OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA EN EL DIA  (Oracle)
      */
     public int obtenerTarjEmitidasPersonaJurDia(Date fecha) {
-        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA EN EL DIA  (ORACLE)");
+        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA EN EL DIA (ORACLE)");
         int cantidad=0;
         String day=""+fecha.getDate();
         String month=""+(fecha.getMonth()+1);
@@ -85,7 +85,7 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
             }
             //dbo.dbClose();
         } catch (Exception e) {
-            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica dia "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica en el dia "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -98,7 +98,7 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
      * OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Oracle)
      */
     public int obtenerTarjEmitidasPersonaJurMes(Date fecha) {
-        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS  (Oracle)");
+        log.info("OBTENER CANTIDAD TARJETAS EMITIDAS PERSONA JURIDICA ACUMULADAS (Oracle)");
         int cantidad=0;
         String day=""+fecha.getDate();
         String month=""+(fecha.getMonth()+1);
@@ -141,7 +141,7 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
             }
             //dbo.dbClose();
         } catch (Exception e) {
-            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica mes "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica en el mes "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -196,7 +196,7 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
             }
             //dbo.dbClose();
         } catch (Exception e) {
-            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural mes "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural en el mes "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -248,7 +248,7 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
             }
             //dbo.dbClose();
         } catch (Exception e) {
-            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural dia "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural en el dia "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }

@@ -82,17 +82,27 @@ public class ExcelUtil {
 
         cellStyle.setFont(hSSFFont);
         
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        /*cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setFillForegroundColor(IndexedColors.ROYAL_BLUE.getIndex());
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        */
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);         
+        cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        cellStyle.setFillForegroundColor(IndexedColors.ROYAL_BLUE.getIndex());
+        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         
         cellStyle.setWrapText(true);
         
-        cellStyle.setBorderBottom(BorderStyle.THIN);
+        /*cellStyle.setBorderBottom(BorderStyle.THIN); 
         cellStyle.setBorderTop(BorderStyle.THIN);
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
+        */
+        cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+        cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
         
         myCell.setCellStyle(cellStyle);
     }
@@ -106,17 +116,27 @@ public class ExcelUtil {
 
         cellStyle.setFont(hSSFFont);
         
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        /*cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        */
+        cellStyle.setAlignment(CellStyle.ALIGN_CENTER);         
+        cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         
         cellStyle.setWrapText(true);
         
-        cellStyle.setBorderBottom(BorderStyle.THIN);
+        /*cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBorderTop(BorderStyle.THIN);
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
+        */
+        cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+        cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
         
         myCell.setCellStyle(cellStyle);
     }
@@ -131,16 +151,25 @@ public class ExcelUtil {
         cellStyle.setFont(hSSFFont);
         
         //cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        /*cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        */
+        cellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        cellStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         
         cellStyle.setWrapText(true);
         
-        cellStyle.setBorderBottom(BorderStyle.THIN);
+        /*cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBorderTop(BorderStyle.THIN);
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
+        */
+        cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+        cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
         
         myCell.setCellStyle(cellStyle);
     }

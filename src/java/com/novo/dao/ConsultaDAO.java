@@ -86,7 +86,7 @@ public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacc
             dbo2.dbClose();
         } else {
             dbo2.dbClose();
-            Tarjeta.setSaldoDisponible("No se pudo consultar el saldo. Error BD");
+            Tarjeta.setSaldoDisponible("No se pudo consultar el saldo. No se pudo consultar la Base de Datos");
             return Tarjeta;
         }
 
@@ -100,7 +100,7 @@ public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacc
                 systrace = dbo.getFieldString("NEXTVAL");
             }
         } else {
-            Tarjeta.setSaldoDisponible("No se pudo consultar el saldo. Error BD");
+            Tarjeta.setSaldoDisponible("No se pudo consultar el saldo. No se pudo consultar la Base de Datos");
             return Tarjeta;
         }
 

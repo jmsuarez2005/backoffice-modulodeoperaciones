@@ -70,7 +70,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -107,7 +107,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -126,19 +126,21 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
         try {
 
             if (this.file == null) {
-                this.message = "Error al cargar el archivo";
+                this.message = "No se pudo cargar el archivo";
                 tipoMessage = "error";
                 tarjetasAct.clear();
-                return SUCCESS;
+                return "success";
             }
 
             //Validar que el archivo sea excel
             String ext = FilenameUtils.getExtension(filename);
             if (!ext.equals("xls") && !ext.equals("xlsx")) {
-                message = "Error, el archivo a cargar debe ser Excel";
+                message = "El archivo a cargar debe estar en formato Excel";
                 tipoMessage = "error";
+                tarjetasAct.clear();
+                return "success";
             } else {
-                log.info(file.getAbsolutePath() + " " + file.getCanonicalPath());
+                log.info(file.getAbsolutePath());
                 File file2;
                 file2 = new File(file.getPath() + filename);
                 file.renameTo(file2);
@@ -156,7 +158,12 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                 String nombre;
                 String apellido;
                 String codcia;
-
+                if (sheet.getRow(i) == null) {
+                    message = "El archivo se encuentra vacio";
+                    tipoMessage = "error";
+                    tarjetasAct.clear();
+                    return "success";
+                }
                 do {
                     Row row = sheet.getRow(i);
                     //System.out.println("CELDA:" + row.getCell(0).getCellType());
@@ -164,7 +171,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
 
                     //La hoja excel debe contener mas de una tarjeta para el proceso masivo
                     if (size == 1) {
-                        message = "Error, debe haber mas de un registro para ejecutar afiliacion masiva";
+                        message = "Debe haber más de un registro para ejecutar afiliación masiva";
                         procesoOk = false;
                         tipoMessage = "error";
                         tarjetasAct.clear();
@@ -181,7 +188,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                             } else {
                                 dni = row.getCell(1).getStringCellValue();
                             }
-                            message = "Error, el archivo debe contener el numero de tarjeta del DNI [" + dni + "]";
+                            message = "El archivo debe contener el número de tarjeta del DNI [" + dni + "]";
                             procesoOk = false;
                             tipoMessage = "error";
                             tarjetasAct.clear();
@@ -203,7 +210,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
 
                     //CEDULA
                     if (row.getCell(1) == null) {
-                        message = "Error, el archivo debe contener la identificacion de la persona por cada tarjeta en afiliar.";
+                        message = "El archivo debe contener la identificación de la persona por cada tarjeta ha afiliar.";
                         procesoOk = false;
                         tipoMessage = "error";
                         tarjetasAct.clear();
@@ -257,7 +264,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                     } else {
                         if (!tarjetaString.equals("")) {
                             if (!bin.equals(tarjetaString.substring(0, 8))) {
-                                message = "Error, el archivo solo puede contener tarjetas de un mismo bin.";
+                                message = "El archivo solo puede contener tarjetas de un mismo bin.";
                                 procesoOk = false;
                                 tipoMessage = "error";
                                 tarjetasAct.clear();
@@ -271,7 +278,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                     tar.setIdExtPer(dni);
                     if (!tarjetaString.equals("")) {
                         if (!tarjetaString.matches("\\d{16}")) {
-                            message = "Error con el formato de la tarjeta";
+                            message = "Formato incorrecto de la tarjeta";
                             tipoMessage = "error";
                             tarjetasAct.clear();
                             procesoOk = false;
@@ -286,13 +293,13 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                     i++;
                 } while (/*tarjeta!=0*/!tarjetaString.equals(""));
                 if (i > 500) {
-                    message = "Numero de registros en el archivo excedido";
+                    message = "El archivo excede el número de registros permitidos";
                     tarjetasAct.clear();
                     return SUCCESS;
                 }
                 //NO DEBE EXISTIR DOS O MAS REGISTROS CON LA MISMA IDENTIDAD
                 if (!findDuplicates(tarjetasAct).isEmpty()) {
-                    message = "Error, en el archivo no debe registrar dos o mas tarjetas con la misma identidad";
+                    message = "El archivo no debe registrar dos o más tarjetas con la misma identidad";
                     tipoMessage = "error";
                     tarjetasAct.clear();
                     procesoOk = false;
@@ -300,16 +307,16 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
                 }
 
                 if (procesoOk) {
-                    message = "Carga de Archivo Exitosa. " + file.getName();
+                    message = "Carga de archivo exitosa. " + file.getName();
                     cantidadTarjetas = i;
                     String respuesta = business.checkTarjetas(ajustes);
                     if (respuesta.contains("errorT")) {
-                        message = "Error, Tarjeta(s) Inexistente(s):" + respuesta.substring(6, respuesta.length());
+                        message = "No existe(n) la(s) siguiente(s) tarjeta(s): " + respuesta.substring(6, respuesta.length());
                         tipoMessage = "error";
                         tarjetasAct.clear();
                         return SUCCESS;
                     } else if (respuesta.contains("error")) {
-                        message = "[!] Error de sistema";
+                        message = "No se pudo realizar la afiliación";
                         tipoMessage = "error";
                         tarjetasAct.clear();
                         return SUCCESS;
@@ -320,7 +327,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
             }
         } catch (Exception e) {
             log.error("error ", e);
-            message = "[!] Error de sistema";
+            message = "No se pudo realizar la afiliación";
             tarjetasAct.clear();
             tipoMessage = "error";
         }
@@ -350,7 +357,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -364,35 +371,35 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
         tarjetasAct = (List<Tarjeta>) ActionContext.getContext().getSession().get("tarjetasAct");
         String resp = business.makeAfiliacion(tarjetasAct, usuarioSesion.getIdUsuario());
         if (resp.contains("error2")) { //error al momento de insertar en tarjetahabiente ya existente
-            message = "Error en el registro del tarjetahabiente, dni existente [" + resp.substring(6, resp.length()) + "]";
+            message = "Registro del tarjetahabiente inválido, dni existente [" + resp.substring(6, resp.length()) + "]";
             tipoMessage = "error";
             selectedCampoValue = "";
             selectedCampo = "";
             tarjetasAct = new ArrayList<Tarjeta>();
             return SUCCESS;
         } else if (resp.contains("error3")) { //error al momento de actualizar en tarjetahabiente, ya existe
-            message = "Error al actualizar tarjetahabiente, dni repetido [" + resp.substring(6, resp.length()) + "]";
+            message = "Actualización del tarjetahabiente inválido, dni repetido [" + resp.substring(6, resp.length()) + "]";
             tipoMessage = "error";
             selectedCampoValue = "";
             selectedCampo = "";
             tarjetasAct = new ArrayList<Tarjeta>();
             return SUCCESS;
         } else if (resp.contains("error4")) { //error al momento de validar el formato id empresa
-            message = "Error, el formato de la empresa del registro en afiliar no es valida para la(s) tarjeta(s) [" + resp.substring(6, resp.length() - 1) + "]";
+            message = "El formato de la empresa del registro ha afiliar no es válida para la(s) tarjeta(s) [" + resp.substring(6, resp.length() - 1) + "]";
             tipoMessage = "error";
             selectedCampoValue = "";
             selectedCampo = "";
             tarjetasAct = new ArrayList<Tarjeta>();
             return SUCCESS;
         } else if (resp.contains("error5")) { //error al momento de validar existencia del id empresa
-            message = "Error, empresa(s) de los registros en afiliar [" + resp.substring(6, resp.length()) + "] no existe(n)";
+            message = "La(s) empresa(s) de los registros ha afiliar [" + resp.substring(6, resp.length()) + "] no existe(n)";
             tipoMessage = "error";
             selectedCampoValue = "";
             selectedCampo = "";
             tarjetasAct = new ArrayList<Tarjeta>();
             return SUCCESS;
         } else if (!resp.equals("0")) {
-            message = "Error Cargando lote de Afiliacion en Base de datos";
+            message = "No se pudo cargar lote de afiliación en Base de Datos";
             tipoMessage = "error";
             selectedCampoValue = "";
             selectedCampo = "";
@@ -402,7 +409,7 @@ public class AfiliacionAction extends ActionSupport implements BasicConfig {
         selectedCampoValue = "";
         selectedCampo = "";
         tarjetasAct = new ArrayList<Tarjeta>();
-        message = "El lote de Afiliacion ha sido cargado exitosamente.";
+        message = "El lote de afiliación ha sido cargado exitosamente.";
         //call business method that register the updates for the car.
         return SUCCESS;
     }

@@ -58,7 +58,7 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -83,7 +83,7 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -234,7 +234,7 @@ public class TrasladosAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");

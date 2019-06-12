@@ -39,7 +39,7 @@
                     <div class="panel" style="width: 900px;margin: 0 auto;">
                         <table class="table" style="width: 1076px;">
                             <thead>
-                                <tr><th colspan="4" style="text-align:center;">Busqueda de Usuario</th></tr>                                        
+                                <tr><th colspan="4" style="text-align:center;">Búsqueda de Usuario</th></tr>                                       
                      
                             </thead>
                             <tbody>
@@ -56,9 +56,9 @@
                             </tbody>
                         </table>
                     </div>
-                                </s:form>
-                    <s:if test="%{getTarjetas().size()>0}">
-                        <div class="panel" style="width: 1200px;margin: 0 auto;">
+                 </s:form>
+                  <s:if test="%{getTarjetas().size()>0}">
+                        <div class="panel" style="width: 900px;margin: 0 auto;">
                             <table class="table" style="width: 1076px;">
                                 <thead>
                                     <tr><th colspan="9" style="text-align:center;">Tarjetas</th></tr>
@@ -68,7 +68,7 @@
                                         <th>Producto</th>
                                         <th>Nombre</th>
                                         <th>Monto Ajuste</th>
-                                        <th>Fecha Ajuste</th>
+                                        <!--<th>Fecha Ajuste</th> -->
                                         <th>Tipo Ajuste</th>
                                         <th>Observación</th>
                                         <th>Realizar Ajuste</th>
@@ -80,9 +80,7 @@
                                         <s:form theme="simple" namespace="/operaciones" action="AjusteTransacciones">
                                         <tr><s:hidden value="%{nroTarjeta}" name="nroTarjeta" />
                                             <s:hidden value="registrarAjuste" name="opcion" />
-                                            <td style="width:25%;text-align:center;" colspan="1">                                                
-                                                <s:property value ="mascara"/>
-                                            </td>    
+                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value ="mascara"/></td>    
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="idExtPer"/></td>                                            
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="cardProgram"/></td>                                            
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="nombreCliente"/></td>                                            
@@ -113,7 +111,7 @@
                                     <td> <s:select id="listaTipoAjustes" name="selectedAjuste" headerValue="Tipo de Ajuste" list = "tipoAjustes" listKey = "idCodigoAjuste"  listValue="descripcion" label="Tipo de Ajuste"/></td>                                    
                                 </tr>                                                                                                                              
                                 <tr>
-                                     <td><label>Observacion :</label></td>
+                                     <td><label>Observación :</label></td>
                                      <td><s:textfield cssClass="search-query" name="observacion" id="observacion"/></td>
                                      <td colspan="2" style="text-align:center"  ><s:submit cssClass="btn btn-primary" value="Enviar Archivo" position="center" onclick="openDialogLoading()"/></td>
                                 </tr>

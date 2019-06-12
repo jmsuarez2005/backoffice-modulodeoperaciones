@@ -32,7 +32,7 @@ public class SessionUtil {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        log.info("Validando sesion [" + fechaSession + "]");
+        log.info("Validando sesión [" + fechaSession + "]");
         log.info("Actual [" + dateFormat.format(date) + "]");
 
         long diffMinutos = getMinutos(fechaSession, dateFormat.format(date));
@@ -67,7 +67,7 @@ public class SessionUtil {
 
         } catch (ParseException e) {
 
-            System.out.println("Se ha producido un error en el parseo de fecha session");
+            System.out.println("Se ha producido un error en el parseo de fecha sesión");
         }
 
         //INSTANCIA DEL CALENDARIO GREGORIANO

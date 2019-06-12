@@ -70,7 +70,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         String sessionDate = usuario.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuario)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -104,7 +104,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         String sessionDate = usuario.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuario)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada  del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -114,7 +114,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         }
         //Fin valida sesion
 
-        this.message = "Llamada al método de Generar Excel. " + this.fecha.toString();
+        this.message = "Llamada al método de generar excel. " + this.fecha.toString();
         this.execute();
 
         ReporteActividadDiariaProc business = new ReporteActividadDiariaProc(fecha, (UsuarioSesion) this.session.get("usuarioSesion"));
@@ -149,7 +149,7 @@ public class ReporteActividadDiariaAction extends ActionSupport implements Basic
         try {
             business.enviarCorreo();
         } catch (Exception ex) {
-            this.message = "No se pudo enviar: " + ex.toString();
+            this.message = "No se pudo enviar correo: " + ex.toString();
             tipoMessage = "error";
         }
 

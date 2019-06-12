@@ -71,13 +71,13 @@ public class TransactionHandler {
             msg = sResp;
         } else if (!sResp.substring(0, 4).equalsIgnoreCase("0000")) {
             rc = -4;
-            msg = "TEBCATRAN ERROR. Operaci�n no realizada";
+            msg = "TEBCATRAN ERROR. Operación no realizada";
         } else {
             String responseCode = sResp.substring(11, 13);
             setRespCode(responseCode);
             if (!responseCode.equals("00")) {
                 rc = -5;
-                msg = "ATENCION RESPONSE[" + responseCode + "]. Operacion no realizada";
+                msg = "ATENCION RESPONSE[" + responseCode + "]. Operación no realizada";
                 setRespCode(responseCode);
             } else {
                 rc = 0;
@@ -117,7 +117,7 @@ public class TransactionHandler {
             setMsgText(msg);
         } else if (!sResp.substring(0, 4).equalsIgnoreCase("0000")) {
             rc = -4; // "TEBCATRAN ERROR. Operaci�n no realizada";
-            msg = "TEBCATRAN ERROR. Operaci�n no realizada";
+            msg = "TEBCATRAN ERROR. Operación no realizada";
             setMsgText(msg);
         } else {
             setRespCode(sResp.substring(11, 13));
@@ -125,7 +125,7 @@ public class TransactionHandler {
             if (!respCode.equals("00")) {
                 rc = -5; // "ATENCION RESPONSE["+respCode+"] NOT ZERO.
                 // Operacion no realizada";
-                msg = "ATENCION RESPONSE[" + respCode + "] NOT ZERO. Operacion no realizada";
+                msg = "ATENCION RESPONSE[" + respCode + "] NOT ZERO. Operación no realizada";
             } else {
                 rc = 0; // "Transaccion Realizada";
                 msg = "Transaccion Realizada";
@@ -376,7 +376,7 @@ public class TransactionHandler {
         String sResp = cl.sendReceive(sSendBuff);
 
         if (cl.getERRORTCP()) {
-            log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operacion. Se envia reverso automaticamente");
+            log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operación. Se envia reverso automaticamente");
         }
 
         rc = setResponse("108" + idCanal, sResp);
@@ -559,7 +559,7 @@ public class TransactionHandler {
         }
         if (update && cl.getERRORTCP()) {
             Client clRev = new Client(ip, port, timeout);
-            log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operacion. Se envia reverso automaticamente");
+            log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operación. Se envia reverso automaticamente");
             String sSendRevBuff = mkSendBuff("1040", sTerminal, notarjeta, makeMonto(monto), fechahora, systrace);
             log.error("TRY REVERSO: sSendRevBuff[" + sSendRevBuff + "]");
             String sRevResp = clRev.sendReceive(sSendRevBuff);
@@ -645,7 +645,7 @@ public class TransactionHandler {
         String sResp = cl.sendReceive(sSendBuff);
 
         if (cl.getERRORTCP()) {
-            log.error("execUpdateCard: ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operacion. sResp[" + sResp + "]");
+            log.error("execUpdateCard: ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operación. sResp[" + sResp + "]");
         }
 
         if (sResp == null) {
@@ -696,7 +696,7 @@ public class TransactionHandler {
         String sResp = cl.sendReceive(sSendBuff);
 
         if (cl.getERRORTCP()) {
-            log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operacion. Se envia reverso automaticamente");
+            log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operación. Se envia reverso automaticamente");
         }
 
         rc = setResponse("460" + idCanal, sResp);

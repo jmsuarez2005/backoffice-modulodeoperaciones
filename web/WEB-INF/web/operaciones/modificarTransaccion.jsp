@@ -44,9 +44,9 @@
                                         <th>Referencia</th>
                                         <th>Monto</th>
                                         <th>Fecha Transacción</th>
-                                        <th>MontoAjuste</th>
-                                        <th>Descripcion</th>
-                                        <th>tipo ajustes</th>
+                                        <th>Monto Ajuste</th>
+                                        <th>Descripción</th>
+                                        <th>Tipo Ajuste</th>
                                         <th>Confirmar Ajuste</th>
                                     </tr>
                                 </thead>

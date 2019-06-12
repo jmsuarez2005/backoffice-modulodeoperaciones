@@ -19,7 +19,7 @@
             <jsp:include page="../include/LoadingJquery.jsp"/>
             <div class="container">
             <div class="content" id="content">
-                <h1 style="margin: 0 0 0 0;">Consultar lotes de renovación</h1>
+                <h1 style="margin: 0 0 0 0;">Consultar Lotes de Renovación</h1>
                 <br/>
                 <s:if test="%{tipoMessage.equals(\"error\")}">
                     <div class="alert alert-error">
@@ -35,7 +35,7 @@
                     <div class="panel" style="width: 1000px;margin: 0 auto;">
                         <table class="table" style="width: 100%; padding: 0px; margin: 0px; ">
                             <thead>
-                                <tr><th colspan="6" style="text-align:center;">Busqueda</th></tr>
+                                <tr><th colspan="6" style="text-align:center;">Búsqueda</th></tr>
                             </thead>
                             <tbody>
                                 <tr id="picker1" style=" padding: 0px; margin: 0px">
@@ -59,10 +59,10 @@
                         <br>
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="10" style="text-align:center;">Renovacion</th></tr>
+                                <tr><th colspan="10" style="text-align:center;">Renovación</th></tr>
                                 <tr>
                                     <th style="text-align:center;">DNI</th>
-                                    <th style="text-align:center;">Nro_Cuenta</th>  
+                                    <th style="text-align:center;">Nro de Cuenta</th>  
                                     <th style="text-align:center;">Nombre</th>
                                     <th style="text-align:center;">Cliente</th>
 

@@ -69,7 +69,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -94,7 +94,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -125,7 +125,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -144,7 +144,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         try {
 
             if (this.file == null) {
-                this.message = "Error al cargar el archivo";
+                this.message = "No se pudo cargar el archivo";
                 tipoMessage = "error";
                 return SUCCESS;
             }
@@ -152,11 +152,12 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
             //Validar que el archivo sea excel
             String ext = FilenameUtils.getExtension(filename);
             if (!ext.equals("xls") && !ext.equals("xlsx")) {
-                message = "Error, el archivo a cargar debe ser Excel";
+                message = "El archivo a cargar debe estar en formato Excel";
                 tipoMessage = "error";
+                return SUCCESS;
             } else {
 
-                log.info(file.getAbsolutePath() + " " + file.getCanonicalPath());
+                log.info(file.getAbsolutePath());
                 File file2;
                 file2 = new File(file.getPath() + filename);
                 file.renameTo(file2);
@@ -166,6 +167,11 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
                 String tarjetaString = "";
                 double tarjetaDouble = 0;
                 int i = 0;
+                if (sheet.getRow(i) == null) {
+                    this.message = "El archivo se encuentra vacio";
+                    tipoMessage = "error";
+                    return SUCCESS;
+                }
                 int size = sheet.getPhysicalNumberOfRows();
                 String bin = "";
 
@@ -176,7 +182,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
 
                     //La hoja excel debe contener mas de una tarjeta para el proceso masivo
                     if (size == 1) {
-                        message = "Error, debe haber mas de un registro para ejecutar actualizacion masiva";
+                        message = "Debe existir más de un registro para ejecutar actualización masiva";
                         tipoMessage = "error";
                         tarjetasAct.clear();
                         procesoOk = false;
@@ -203,7 +209,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
                         bin = tarjetaString.substring(0, 8);
                     } else {
                         if (!bin.equals(tarjetaString.substring(0, 8))) {
-                            message = "Error, el archivo solo puede contener tarjetas de un mismo bin.";
+                            message = "El archivo solo puede contener tarjetas de un mismo bin.";
                             tipoMessage = "error";
                             procesoOk = false;
                             tarjetasAct.clear();
@@ -214,7 +220,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
                     ajuste.setTarjeta(tarjetaString);
                     tar.setNroTarjeta(tarjetaString);
                     if (!tarjetaString.matches("\\d{16}")) {
-                        message = "Error con el formato de la tarjeta";
+                        message = "Formato incorrecto de la tarjeta";
                         tipoMessage = "error";
                         tarjetasAct.clear();
                         procesoOk = false;
@@ -228,21 +234,21 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
                     i++;
                 } while (/*tarjeta!=0*/!tarjetaString.equals(""));
                 if (i > 500) {
-                    message = "Numero de registros en el archivo excedido";
+                    message = "Número de registros en el archivo excedido";
                     tarjetasAct.clear();
                     return SUCCESS;
                 }
                 if (procesoOk) {
-                    message = "Carga de Archivo Exitosa. " + file.getName();
+                    message = "Carga de archivo exitosa. " + file.getName();
                     String respuesta = business.checkTarjetas(ajustes);
                     if (respuesta.contains("errorT")) {
                         //message = "Error, tarjeta inexistente";
-                        message = "Error, Tarjeta(s) Inexistente(s):" + respuesta.substring(6, respuesta.length());
+                        message = "No existe(n) la(s) siguiente(s) tarjeta(s):" + respuesta.substring(6, respuesta.length());
                         tipoMessage = "error";
                         tarjetasAct.clear();
                         return SUCCESS;
                     } else if (respuesta.contains("error")) {
-                        message = "[!] Error de sistema";
+                        message = "No se pudo realizar la actualización";
                         tipoMessage = "error";
                         tarjetasAct.clear();
                         return SUCCESS;
@@ -254,7 +260,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         } catch (Exception e) {
             log.error("error ", e);
             tipoMessage = "error";
-            message = "[!] Error de sistema";
+            message = "No se pudo realizar la actualización";
         }
         return SUCCESS;
     }
@@ -269,7 +275,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -283,13 +289,13 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         tarjetasAct = (List<Tarjeta>) ActionContext.getContext().getSession().get("tarjetasAct");
         campos = business.getCampos();
         List<CamposActualizacion> campos2;
-        log.info("campos seleccionados [" + selectedCampo + "]");
+        log.info("Campos seleccionados [" + selectedCampo + "]");
         log.info("Valor de los campos [" + selectedCampoValue + "]");
         //call method that matches idfields with the values selected by the user.
         campos2 = matchFields(selectedCampo, selectedCampoValue);
 
         if (campos2.get(0).getValor().equals("errorIdPersona")) {
-            message = "El valor de [id persona] en actualizar es invalido";
+            message = "El valor de [id persona] ha actualizar es inválido";
             tipoMessage = "error";
             selectedCampoValue = "";
             selectedCampo = "";
@@ -309,7 +315,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
 
         String respuesta = business.makeUpdates(tarjetasAct, campos2, usuarioSesion.getIdUsuario());
         if (respuesta.contains("-3")) {
-            message = "Error, la cedula [" + respuesta.substring(2, respuesta.lastIndexOf(":")) + "] en actualizar ya existe en otro registro a nombre de "
+            message = "La cedula [" + respuesta.substring(2, respuesta.lastIndexOf(":")) + "] ha actualizar ya existe en otro registro a nombre de "
                     + "[" + respuesta.substring(respuesta.lastIndexOf(":") + 1, respuesta.length()) + "]";
             tipoMessage = "error";
             selectedCampoValue = "";
@@ -318,7 +324,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
             return SUCCESS;
 
         } else if (!respuesta.equals("0")) {
-            message = "Error Cargando lote de Actualizacion en Base de datos";
+            message = "No se pudo cargar el lote de actualización en Base de Datos";
             tipoMessage = "error";
             selectedCampoValue = "";
             selectedCampo = "";
@@ -328,7 +334,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
         selectedCampoValue = "";
         selectedCampo = "";
         tarjetasAct = new ArrayList<Tarjeta>();
-        message = "El lote de Actualizacion ha sido cargado exitosamente.";
+        message = "El lote de actualización ha sido cargado exitosamente.";
         //call business method that register the updates for the car.
         return SUCCESS;
     }
@@ -438,7 +444,7 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
                     matchedFields.clear();
                     campos.setValor("errorIdPersona");
                     matchedFields.add(campos);
-                    log.error("El id persona [" + vecCampoValue[i].trim() + "] debe ser numerico");
+                    log.error("El id persona [" + vecCampoValue[i].trim() + "] debe ser númerico");
                     return matchedFields;
                 }
             }

@@ -427,7 +427,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
 
         log.info(monto);
         if (!monto.matches("\\d{1,15}.\\d{1,2}")) {
-            log.info("Error formato de monto no válido");
+            log.info("Formato de monto inválido");
             return "error";
         }
 
@@ -500,19 +500,19 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
                 ajuste.setNomCliente(dbo.getFieldString("NOM_CLIENTE"));
                 ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_PER"));
                 if (ajuste.getStatus().equals("2")) {
-                    ajuste.setDescStatus("PROCESADO");
+                    ajuste.setDescStatus("Proceso");
                 }
                 if (ajuste.getStatus().equals("3")) {
-                    ajuste.setDescStatus("PENDIENTE");
+                    ajuste.setDescStatus("Pendiente");
                 }
                 if (ajuste.getStatus().equals("0")) {
-                    ajuste.setDescStatus("AUTORIZADO");
+                    ajuste.setDescStatus("Autorizado");
                 }
                 if (ajuste.getStatus().equals("7")) {
-                    ajuste.setDescStatus("ANULADO");
+                    ajuste.setDescStatus("Anulado");
                 }
                 if (ajuste.getStatus().equals("1")) {
-                    ajuste.setDescStatus("EN PROCESO");
+                    ajuste.setDescStatus("En Proceso");
                 }
                 ajuste.setUsuario(dbo.getFieldString("USUARIO"));
                 ajuste.setDescripcion(dbo.getFieldString("DESCRIPCION2"));
@@ -550,11 +550,11 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
             sql = sql + aux;
         }
 
-        if (!status.equals("TODOS")) {
+        if (!status.equals("Todos")) {
             sql = sql + " and status = '" + status + "'";
         }
 
-        if (!usuario.equals("TODOS")) {
+        if (!usuario.equals("Todos")) {
             sql = sql + " and usuario = '" + usuario + "'";
         }
 
@@ -578,7 +578,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
             sql = sql + "NCA.DESCRIPCION";
         }else if (filtro.equals("Estatus")){
             sql = sql + "nda.STATUS";
-        }else if (filtro.equals("Observacion")){
+        }else if (filtro.equals("Observación")){
             sql = sql + "nda.OBSERVACION";
         }
 
@@ -599,19 +599,19 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
                 ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_PER"));
                 ajuste.setIdExtEmp(dbo.getFieldString("ID_EXT_EMP"));
                 if (ajuste.getStatus().equals("2")) {
-                    ajuste.setDescStatus("PROCESADO");
+                    ajuste.setDescStatus("Procesado");
                 }
                 if (ajuste.getStatus().equals("3")) {
-                    ajuste.setDescStatus("PENDIENTE");
+                    ajuste.setDescStatus("Pendiente");
                 }
                 if (ajuste.getStatus().equals("0")) {
-                    ajuste.setDescStatus("AUTORIZADO");
+                    ajuste.setDescStatus("Autorizado");
                 }
                 if (ajuste.getStatus().equals("7")) {
-                    ajuste.setDescStatus("ANULADO");
+                    ajuste.setDescStatus("Anulado");
                 }
                 if (ajuste.getStatus().equals("1")) {
-                    ajuste.setDescStatus("EN PROCESO");
+                    ajuste.setDescStatus("En Proceso");
                 }
                 ajuste.setUsuario(dbo.getFieldString("USUARIO"));
                 ajuste.setDescripcion(dbo.getFieldString("DESCRIPCION2"));
@@ -673,7 +673,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
             }
         } else {
             dbo.dbClose();
-            log.error("error actualizando el status de los ajustes");
+            log.error("Error actualizando el estatus de los ajustes");
             return "error";
         }
 
@@ -938,7 +938,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
             return "ok";
         }
         dbo.dbClose();
-        log.info("error actualizando el status de los ajustes");
+        log.info("error actualizando el estatus de los ajustes");
         return "error";
     }
 
@@ -970,11 +970,11 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         dbo.dbreset();
         if (dbo.executeQuery(filtro) == 0) {
             dbo.dbClose();
-            log.info("query ejecutado con exito");
+            log.info("Query ejecutado con exito");
             return "ok";
         } else {
             dbo.dbClose();
-            log.error("error ejecutando query");
+            log.error("Error ejecutando query");
             return "error";
         }
     }
@@ -1096,7 +1096,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
             }
 
         } else {
-            log.info("No se pudo consultar el numero de lote");
+            log.info("No se pudo consultar el número de lote");
         }
 
         return respuesta;

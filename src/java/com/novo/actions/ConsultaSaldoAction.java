@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -82,7 +83,7 @@ public class ConsultaSaldoAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -138,7 +139,7 @@ public class ConsultaSaldoAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -168,29 +169,44 @@ public class ConsultaSaldoAction extends ActionSupport
         try {
 
             if (this.file == null) {
-                this.message = "Error al cargar el archivo";
+                this.message = "No se pudo cargar el archivo";
                 tipoMessage = "error";
                 this.tipoBloqueo = business.getTipoBloqueo();
                 return "success";
             }
+              
+            //Validar que el archivo sea excel
+            String ext = FilenameUtils.getExtension(filename);
+            if (!ext.equals("xls") && !ext.equals("xlsx")) {
+                message = "El archivo a cargar debe estar en formato Excel";
+                tipoMessage = "error";
+                tipoBloqueo = business.getTipoBloqueo();
+                return "success";
+            } else {
 
-            log.info(this.file.getAbsolutePath() + " " + this.file.getCanonicalPath());
+                log.info(this.file.getAbsolutePath());
 
-            File file2 = new File(this.file.getPath() + this.filename);
-            this.file.renameTo(file2);
-            InputStream buffer = new FileInputStream(file2.getAbsolutePath());
+                File file2 = new File(this.file.getPath() + this.filename);
+                this.file.renameTo(file2);
+                InputStream buffer = new FileInputStream(file2.getAbsolutePath());
 
-            Workbook workbook = WorkbookFactory.create(buffer);
-            HSSFWorkbook workbook1 = new HSSFWorkbook();
-            workbook.write(new FileOutputStream(this.file));
+                Workbook workbook = WorkbookFactory.create(buffer);
+                HSSFWorkbook workbook1 = new HSSFWorkbook();
+                workbook.write(new FileOutputStream(this.file));
 
-            Sheet sheet = workbook.getSheetAt(0);
-            Sheet sheet1 = workbook1.createSheet();
-            String tarjetaString = "";
-            String montoString = "";
-            double tarjetaDouble = 0.0D;
-            double montoDouble = 0.0D;
-            int i = 0;
+                Sheet sheet = workbook.getSheetAt(0);
+                Sheet sheet1 = workbook1.createSheet();
+                String tarjetaString = "";
+                String montoString = "";
+                double tarjetaDouble = 0.0D;
+                double montoDouble = 0.0D;
+                int i = 0;
+                if (sheet.getRow(i) == null) {
+                    this.message = "El archivo se encuentra vacio";
+                    tipoMessage = "error";
+                    tipoBloqueo = business.getTipoBloqueo();
+                    return "success";
+                }
             do {
                 Row row = sheet.getRow(i);
                 Row row1 = sheet1.createRow(i);
@@ -211,7 +227,7 @@ public class ConsultaSaldoAction extends ActionSupport
 
                 tar.setNroTarjeta(tarjetaString);
                 if (!tarjetaString.matches("\\d{16}")) {
-                    this.message = "Error con el formato de la tarjeta";
+                    this.message = "Formato de la tarjeta inválido";
                     tipoMessage = "error";
                     procesoOk = false;
                     break;
@@ -220,7 +236,7 @@ public class ConsultaSaldoAction extends ActionSupport
                 this.ajustex.add(ajusteB);
 
                 if (business.checkTarjetas(this.ajustex).compareToIgnoreCase("error") == 0) {
-                    this.message = "Error, Tarjeta Inexistente.";
+                    this.message = "Tarjeta inexistente.";
                     tipoMessage = "error";
                     return "success";
                 } else {
@@ -251,11 +267,11 @@ public class ConsultaSaldoAction extends ActionSupport
                 log.info("tarjeta [" + tarjetaString + "] ");
 
                 i++;
-                log.info("por favor" + sheet.getRow(i));
+                //log.info("por favor" + sheet.getRow(i));
             } while ((!tarjetaString.equals("")) && (sheet.getRow(i) != null));
 
             if (i > 500) {
-                this.message = "Numero de registros en el archivo excedido";
+                this.message = "El archivo excede el número de registros permitidos";
                 tipoMessage = "error";
                 return "success";
             }
@@ -274,10 +290,11 @@ public class ConsultaSaldoAction extends ActionSupport
 //
 //        ActionContext.getContext().getSession().put("tarjetasAct", this.tarjetasAct);
 //      }
+            }
         } catch (Exception e) {
             log.error("error ", e);
             tipoMessage = "error";
-            this.message = "[!] Error de sistema";
+            this.message = "No se pudo consultar saldo";
         }
 
         return "success";
@@ -401,5 +418,17 @@ public class ConsultaSaldoAction extends ActionSupport
 
     public void setTipoMessage(String tipoMessage) {
         this.tipoMessage = tipoMessage;
+    }
+    
+    public void setUpload(File file) {
+        this.file = file;
+    }
+
+    public void setUploadContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setUploadFileName(String filename) {
+        this.filename = filename;
     }
 }

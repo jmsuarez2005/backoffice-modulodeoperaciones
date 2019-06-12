@@ -113,7 +113,7 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
             }
             //////dbo.dbClose();
         } catch (Exception e){
-            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural mes "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural del mes "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -181,7 +181,7 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
             }
             //////dbo.dbClose();
         } catch (Exception e){
-            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural dia "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural del dia "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -239,7 +239,7 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
             }
             //dbo.dbClose();
         } catch (Exception e){
-            log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica dia "+this.pais);
+            log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica del dia "+this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -372,7 +372,7 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                 }
             }
         } catch (Exception e){
-            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural dia " + this.pais);
+            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural del dia " + this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }
@@ -434,7 +434,7 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                 }
             }
         } catch (Exception e){
-            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural mes " + this.pais);
+            log.error("Se capturó una excepción al intentar obtener monto recargas persona natural del mes " + this.pais);
             log.error("Causa: "+e);
             e.printStackTrace();
         }

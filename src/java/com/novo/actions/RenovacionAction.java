@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -66,6 +67,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     private Properties prop;
     private String propMigra;
     private TextUtil txt = new TextUtil();
+    private String contentType;
 
     public RenovacionAction() {
         this.prop = Utils.getConfig("oracleRegEx.properties");
@@ -84,7 +86,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuario.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuario)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -95,7 +97,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         //Fin valida sesion
 
         if (this.file == null) {
-            this.message = "Error al cargar el archivo";
+            this.message = "No se pudo cargar el archivo";
             tipoMessage = "error";
             return SUCCESS;
         }
@@ -115,13 +117,21 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
             renoAction = renInf.ValoresCarga();
             businessInf = new RenovacionProcINF();
         }
-
+        
+        //Validar que el archivo sea excel
+        String ext = FilenameUtils.getExtension(filename);
+        if (!ext.equals("xls") && !ext.equals("xlsx")) {
+            message = "El archivo a cargar debe estar en formato Excel";
+            tipoMessage = "error";
+            return SUCCESS;
+        }else{
+        
         String rutaOrigen = renoAction.getRutaOrigen();
         String rutaDestino = renoAction.getRutaDestino();
         String nombreRenovacion = renoAction.getNombreRenovacion();
         String host = renoAction.getHost();
         String usuarioR = renoAction.getUsuario();
-
+        
         File file2 = new File(rutaOrigen + "/" + nombreRenovacion);
         this.file.renameTo(file2);
         this.file.createNewFile();
@@ -133,13 +143,18 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
 
         List<Ajuste> ajustes = new ArrayList<Ajuste>();
         Ajuste ajuste = new Ajuste();
-
         try {
-//            InputStream buffer = new File(file2.getAbsolutePath());
+//          InputStream buffer = new File(file2.getAbsolutePath());
+
             Workbook workbook = WorkbookFactory.create(new File(file2.getAbsolutePath()));
             Sheet sheet = workbook.getSheetAt(0);
             String tarjetaString = "";
             int i = 0;
+            if (sheet.getRow(i) == null) {
+                this.message = "El archivo se encuentra vacio";
+                tipoMessage = "error";
+                return SUCCESS;
+            }
 
             do {
                 Row row = sheet.getRow(i);
@@ -158,7 +173,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
 
                 if (!tarjetaString.equals("")) {
                     if (!tarjetaString.matches("\\d{16}")) {
-                        this.message = "Error con el formato de la tarjeta";
+                        this.message = "Formato de la tarjeta inválido";
                         tipoMessage = "error";
                         procesoOk = false;
                         break;
@@ -167,7 +182,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                     ajuste.setTarjeta(tarjetaString);
                     ajustes.add(ajuste);
                     ajuste = new Ajuste();
-                    log.info("tarjeta [" + tarjetaString + "] ");
+                    log.info("Tarjeta [" + tarjetaString + "] ");
                 }
 
                 i++;
@@ -185,11 +200,11 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                 String respuesta = listaRenovacion.get(listaRenovacion.size() - 1).getRespuesta();
 
                 if (respuesta.contains("errorT")) {
-                    message = "Error, Tarjeta(s) no son validos para renovar: [" + respuesta.substring(6, respuesta.length()) + "]";
+                    message = "Tarjeta(s) inválida(s) para renovar: [" + respuesta.substring(6, respuesta.length()) + "]";
                     tipoMessage = "error";
                     return SUCCESS;
                 } else if (respuesta.contains("error")) {
-                    message = "[!] Error de sistema";
+                    message = "No se pudo realizar la renovación";
                     tipoMessage = "error";
                     return SUCCESS;
                 } else if (respuesta.contains("ok")) {
@@ -214,20 +229,20 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                             renInf.InsertarRenovacion(nombreRenovacion, rutaDestino, "", usuario.getIdUsuario(), "", "", "", "", null);
                         }
                     } else {
-                        message = "[!] Error al registrar la instruccion para renovacion";
+                        message = "No se pudo registrar la instrucción para renovación";
                         tipoMessage = "error";
                         return SUCCESS;
                     }
                 }
 
             }
-
         } catch (Exception e) {
             log.error("error ", e);
-            this.message = "[!] Error de sistema";
+            this.message = "No se pudo realizar la renovación";
             tipoMessage = "error";
             return "success";
         }
+      }
 
         return "success";
     }
@@ -242,7 +257,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuario.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuario)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -281,7 +296,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuario.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuario)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -314,7 +329,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         String sessionDate = usuario.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuario)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -430,5 +445,16 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     public void setTipoMessage(String tipoMessage) {
         this.tipoMessage = tipoMessage;
     }
+        
+    public void setUpload(File file) {
+        this.file = file;
+    }
 
+    public void setUploadContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setUploadFileName(String filename) {
+        this.filename = filename;
+    }
 }

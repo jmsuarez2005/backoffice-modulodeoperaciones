@@ -30,7 +30,7 @@
                                     <br/><s:password name="claveActual" size="45" /><br/><br/><br/>
                                     <b class="text-1">Clave Nueva: </b>
                                     <br/><s:password name="newpw" size="45" /><br/><br/><br/>
-                                    <b class="text-1">Confirmación de clave nueva: </b>
+                                    <b class="text-1">Confirmación de Clave Nueva: </b>
                                     <br/><s:password name="newpwcf" size="45" /><br/><br/><br/>
                                     <center><s:submit value="Cambiar Clave" action="cambiarClave" onclick="return validarCambioClave(this.form,event);openDialogLoading()" /> <s:reset value="Reset" /></center>
                                 </div>

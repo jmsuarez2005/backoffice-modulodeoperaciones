@@ -65,12 +65,12 @@
                     <s:form action="Sobregiros" method="post" enctype="multipart/form-data" theme = "simple">
                         <table class="table" style="width: 100%;">
                             <thead>
-                                <tr><th colspan="3" style="text-align:center;">Procesar sobregiros masivos</th></tr>
+                                <tr><th colspan="3" style="text-align:center;">Procesar Sobregiros Masivos</th></tr>
                             </thead>
                             <tbody>                                
                                 <tr>
                                     <td><label>Cargar Archivo :</label></td>
-                                    <td><s:file cssClass="btn btn-info" name="file" label="File"/></td>  
+                                    <td><s:file cssClass="btn btn-info" name="upload" label="File"/></td>  
                                     <td><select name="selectedAjuste"><s:iterator value="tipoAjustes" var="myObj1">
                                                     <s:if test="#myObj1.idCodigoAjuste==16">
                                                         <option value="<s:property value ="idCodigoAjuste"/>"> <s:property value ="descripcion"/></option>

@@ -27,7 +27,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -104,15 +107,15 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.registrosPorPagina = new ArrayList();
         this.listaProductos = new ArrayList();
         this.listaEmpresas = new ArrayList();
-        this.status.add("TODOS");
-        this.status.add("PENDIENTE");
-        this.status.add("EN PROCESO");
-        this.status.add("AUTORIZADO");
-        this.status.add("ANULADO");
-        this.status.add("PROCESADO");
-        this.status2.add("AUTORIZADO");
-        this.status2.add("AUTORIZAR TODOS");
-        this.status2.add("ANULADO");
+        this.status.add("Todos");
+        this.status.add("Pendiente");
+        this.status.add("En Proceso");
+        this.status.add("Autorizado");
+        this.status.add("Anulado");
+        this.status.add("Procesado");
+        this.status2.add("Autorizado");
+        this.status2.add("Autorizar Todos");
+        this.status2.add("Anulado");
         this.filtro.add("Fecha");
         this.filtro.add("Tarjeta");
         this.filtro.add("Monto");
@@ -122,12 +125,12 @@ public class AjusteTransaccionesAction extends ActionSupport
         this.filtro.add("Usuario");
         this.filtro.add("Tipo Ajuste");
         this.filtro.add("Estatus");
-        this.filtro.add("Observacion");
-        this.registrosPorPagina.add("TODOS");
-        this.registrosPorPagina.add("15 REGISTROS POR PAG.");
-        this.registrosPorPagina.add("30 REGISTROS POR PAG.");
-        this.registrosPorPagina.add("50 REGISTROS POR PAG.");
-        this.registrosPorPagina.add("100 REGISTROS POR PAG.");
+        this.filtro.add("Observación");
+        this.registrosPorPagina.add("Todos");
+        this.registrosPorPagina.add("15 Registros por pág.");
+        this.registrosPorPagina.add("30 Registros por pág");
+        this.registrosPorPagina.add("50 Registros por pág");
+        this.registrosPorPagina.add("100 Registros por pág");
     }
 
     public String execute() {
@@ -140,7 +143,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -163,9 +166,9 @@ public class AjusteTransaccionesAction extends ActionSupport
             log.info("registrarajuste tarjeta [" + this.nroTarjeta + "] referencia [" + this.systrace + "] montoajuste [" + this.montoAjuste + "] codigoajuste[" + this.selectedAjuste + "]");
             result = business.RegistrarAjuste(this.nroTarjeta, this.montoAjuste, this.selectedAjuste, this.systrace, this.usuarioSesion.getIdUsuario(), this.observacion, false);
             if (result.equals("ok")) {
-                this.message = "Registro de Ajuste realizado satisfactoriamente.";
+                this.message = "Registro de ajuste realizado satisfactoriamente.";
             } else {
-                this.message = "Su Ajuste no pudo ser registrado.";
+                this.message = "Su ajuste no pudo ser registrado.";
             }
             if (this.systrace == null) {
                 return "ajustetarjeta";
@@ -174,7 +177,7 @@ public class AjusteTransaccionesAction extends ActionSupport
             return "success";
         }
         if (this.opcion.equals("buscarAjustes")) {
-            log.info("status selected [" + this.selectedStatus + "] ---- usuario selected [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ");
+            log.info("estatus seleccionado [" + this.selectedStatus + "] ---- usuario seleccionado [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ");
 
             this.listaUsuariosBusqueda = business.getUsuarios();
             this.ajustes = business.getAjustes(getStatusfromSelected(this.selectedStatus), this.selectedUsuario, this.fechaIni, this.fechaFin);
@@ -186,7 +189,7 @@ public class AjusteTransaccionesAction extends ActionSupport
             try {
                 idAjustes = this.selectedAjuste.split(",");
             } catch (Exception e) {
-                this.message = "El Ajuste no se pudo actualizar en este momento.";
+                this.message = "El ajuste no se pudo actualizar en este momento.";
                 return "listar";
             }
             String idstatus = getStatusfromSelected(this.selectedStatus);
@@ -195,7 +198,7 @@ public class AjusteTransaccionesAction extends ActionSupport
             if (result.equals("ok")) {
                 this.message = " Ajuste actualizado satisfactoriamente.";
             } else {
-                this.message = "El Ajuste no se pudo actualizar en este momento.";
+                this.message = "El ajuste no se pudo actualizar en este momento.";
             }
             return "listar";
         }
@@ -223,7 +226,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -234,7 +237,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         //Fin valida sesion
 
         if (this.opcion.equals("HEditar")) {
-            log.info("************** Edicion de ajuste ***************");
+            log.info("************** Edición de ajuste ***************");
             actualizarEdicion();
         } else {
             String result = "";
@@ -244,7 +247,7 @@ public class AjusteTransaccionesAction extends ActionSupport
             String[] idAjustes;
             try {
                 if (this.selectedAjuste == null) {
-                    this.message = "Error, seleccione un status a cambiar.";
+                    this.message = "Debe seleccionar un estatus a cambiar.";
                     tipoMessage = "error";
                     return "listar";
                 }
@@ -257,9 +260,9 @@ public class AjusteTransaccionesAction extends ActionSupport
             result = business.updateAjuste(idAjustes, idstatus);
 
             if (result.equals("ok")) {
-                this.message = " Ajuste actualizado satisfactoriamente.";
+                this.message = "Ajuste actualizado satisfactoriamente.";
             } else {
-                this.message = "El Ajuste no se pudo actualizar en este momento.";
+                this.message = "No se pudo actualizar el ajuste en este momento.";
             }
 
         }
@@ -277,7 +280,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -288,11 +291,10 @@ public class AjusteTransaccionesAction extends ActionSupport
         //Fin valida sesion
 
         String[] status = this.selectedStatus.split(", ");
-        log.info("status selected [" + status[0] + "] [" + status[1] + "]---- usuario selected [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ");
+        log.info("Estatus seleccionado [" + status[0] + "] [" + status[1] + "]---- usuario seleccionado [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ");
 
         if (this.opcion.equals("HEditar")) {
             actualizarEdicion();
-            System.out.println("hola entre");
         } else {
             String result = "";
             ReporteTransacciones business = new ReporteTransacciones();
@@ -301,14 +303,14 @@ public class AjusteTransaccionesAction extends ActionSupport
             String[] idAjustes;
             String idstatus;
             try {
-                if (this.selectedAjuste == null && !status[1].equals("AUTORIZAR TODOS")) {
-                    this.message = "Error al cambiar el status.";
+                if (this.selectedAjuste == null && !status[1].equals("Autorizar Todos")) {
+                    this.message = "No se pudo cambiar el estatus.";
                     tipoMessage = "error";
                     return "listar";
                 }
-                if (status[1].equals("AUTORIZAR TODOS")) {
+                if (status[1].equals("Autorizar Todos")) {
                     this.ajustes = business.getAjustes(getStatusfromSelected(status[0]), this.selectedUsuario, this.fechaIni, this.fechaFin);
-                    log.info("LISTAAA " + this.ajustes.size());
+                    log.info("Lista: " + this.ajustes.size());
                     this.selectedAjuste = "";
                     for (int i = 0; i < this.ajustes.size(); i++) {
                         this.selectedAjuste = this.selectedAjuste + this.ajustes.get(i).getIdDetalleAjuste() + ",";
@@ -334,7 +336,7 @@ public class AjusteTransaccionesAction extends ActionSupport
                     tipoMessage = "error";
                     return "listar";
                 default:
-                    this.message = "El Ajuste no se pudo actualizar en este momento.";
+                    this.message = "El ajuste no se pudo actualizar.";
                     break;
             }
 
@@ -358,7 +360,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         try {
             idAjustes = this.filaEditar.split(",");
         } catch (Exception e) {
-            this.message = "El Ajuste no se pudo actualizar en este momento.";
+            this.message = "El ajuste no se pudo actualizar en este momento.";
             return "listar";
         }
 
@@ -375,9 +377,9 @@ public class AjusteTransaccionesAction extends ActionSupport
         result = business.updateEdicion(idAjustes, monto, this.selectedtipoAjuste, this.AjusteDesc);
 
         if (result.equals("ok")) {
-            this.message = " Ajuste actualizado satisfactoriamente.";
+            this.message = "Ajuste actualizado satisfactoriamente.";
         } else {
-            this.message = "El Ajuste no se pudo actualizar en este momento.";
+            this.message = "El ajuste no se pudo actualizar en este momento";
         }
 
         this.listaUsuariosBusqueda = business.getUsuarios();
@@ -405,7 +407,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -415,18 +417,18 @@ public class AjusteTransaccionesAction extends ActionSupport
         }
         //Fin valida sesion
 
-        log.info("status selected [" + this.selectedStatus + "] ---- usuario selected [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ---- filtro[" + this.selectedFiltro + "] ");
+        log.info("Estatus seleccionado [" + this.selectedStatus + "] ---- usuario seleccionado [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ---- filtro [" + this.selectedFiltro + "] ");
 
         //validos el listado de registros por pagina
-        if (this.selectedPages.equals("TODOS")) {
+        if (this.selectedPages.equals("Todos")) {
             this.setSelectedPages("0");
-        } else if (this.selectedPages.equals("15 REGISTROS POR PAG.")) {
+        } else if (this.selectedPages.equals("15 Registros por pág.")) {
             this.setSelectedPages("15");
-        } else if (this.selectedPages.equals("30 REGISTROS POR PAG.")) {
+        } else if (this.selectedPages.equals("30 Registros por pág.")) {
             this.setSelectedPages("30");
-        } else if (this.selectedPages.equals("50 REGISTROS POR PAG.")) {
+        } else if (this.selectedPages.equals("50 Registros por pág.")) {
             this.setSelectedPages("50");
-        } else if (this.selectedPages.equals("100 REGISTROS POR PAG.")) {
+        } else if (this.selectedPages.equals("100 Registros por pág.")) {
             this.setSelectedPages("100");
         }
 
@@ -438,17 +440,17 @@ public class AjusteTransaccionesAction extends ActionSupport
         if ((this.fechaIni == null && this.fechaFin == null)
                 || (this.fechaIni == null && this.fechaFin != null)
                 || (this.fechaIni != null && this.fechaFin == null)) {
-            this.message = "Error, ingresar un rango de fecha.";
+            this.message = "Debe ingresar un rango de fecha.";
             tipoMessage = "error";
             this.listaUsuariosBusqueda = business.getUsuarios();
             return "listar";
         } else if (Integer.parseInt(df.format(this.fechaIni)) > Integer.parseInt(df.format(this.fechaFin))) {
-            this.message = "Error, fecha inicio no debe ser mayor a fecha fin.";
+            this.message = "La fecha inicio no debe ser mayor a fecha fin.";
             tipoMessage = "error";
             this.listaUsuariosBusqueda = business.getUsuarios();
             return "listar";
         } else if (Integer.parseInt(df.format(this.fechaFin)) < Integer.parseInt(df.format(this.fechaIni))) {
-            this.message = "Error, fecha fin no debe ser menor a fecha inicio.";
+            this.message = "La fecha fin no debe ser menor a fecha inicio.";
             tipoMessage = "error";
             this.listaUsuariosBusqueda = business.getUsuarios();
             return "listar";
@@ -469,7 +471,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -511,7 +513,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -522,7 +524,6 @@ public class AjusteTransaccionesAction extends ActionSupport
         //Fin valida sesion
 
         ReporteTransacciones business = new ReporteTransacciones();
-        String usuario = "prueba busqueda usuario 123";
 
         log.info("------------------------------");
         log.info("DNI:" + documentoIdentidad);
@@ -538,17 +539,17 @@ public class AjusteTransaccionesAction extends ActionSupport
             if ((this.fechaIni == null && this.fechaFin == null)
                     || (this.fechaIni == null && this.fechaFin != null)
                     || (this.fechaIni != null && this.fechaFin == null)) {
-                this.message = "Error, ingresar un rango de fecha.";
+                this.message = "Debe ingresar un rango de fecha.";
                 tipoMessage = "error";
                 this.listaProductos = business.getProductos();
                 return "success";
             } else if (Integer.parseInt(df.format(this.fechaIni)) > Integer.parseInt(df.format(this.fechaFin))) {
-                this.message = "Error, fecha inicio no debe ser mayor a fecha fin.";
+                this.message = "La fecha inicio no debe ser mayor a fecha fin.";
                 tipoMessage = "error";
                 this.listaProductos = business.getProductos();
                 return "success";
             } else if (Integer.parseInt(df.format(this.fechaFin)) < Integer.parseInt(df.format(this.fechaIni))) {
-                this.message = "Error, fecha fin no debe ser menor a fecha inicio.";
+                this.message = "La fecha fin no debe ser menor a fecha inicio.";
                 tipoMessage = "error";
                 this.listaProductos = business.getProductos();
                 return "success";
@@ -559,13 +560,13 @@ public class AjusteTransaccionesAction extends ActionSupport
         if (this.opcion.equals("buscarProductosEmpresas")) {
             if (this.nroTarjeta.equals("") && this.documentoIdentidad.equals("")
                     && this.selectedEmpresa.equals("")) {
-                this.message = "Error, ingresar al menos un filtro mas.";
+                this.message = "Debe ingresar al menos un filtro más.";
                 tipoMessage = "error";
                 this.listaProductos = business.getProductos();
                 return "success";
             } else if (this.selectedProducto.equals("") && this.documentoIdentidad.equals("")
                     && this.nroTarjeta.equals("")) {
-                this.message = "Error, ingresar al menos un filtro mas.";
+                this.message = "Debe ingresar al menos un filtro más.";
                 tipoMessage = "error";
                 this.listaProductos = business.getProductos();
                 return "success";
@@ -591,7 +592,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         if ((this.opcion != null) && (this.opcion.equals("buscarUsuario2"))) {
             this.tipoAjustes = business.getTipoAjustes();
 
-            if ((this.tarjetas == null) || (this.tarjetas.size() == 0)) {
+            if ((this.tarjetas == null) || (this.tarjetas.size()==0)) {
                 this.message = "No se encontraron registros de tarjetas para este usuario";
             }
             return "ajustetarjeta";
@@ -599,7 +600,6 @@ public class AjusteTransaccionesAction extends ActionSupport
 
         this.listaProductos = business.getProductos();
         //this.listaEmpresas = business.getEmpresas();
-        log.info(usuario);
 
 //    if ((this.tarjetas == null) || (this.tarjetas.isEmpty())) {
 //      this.message = "No se encontraron registros de tarjetas para este usuario";
@@ -617,7 +617,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -647,7 +647,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -662,9 +662,9 @@ public class AjusteTransaccionesAction extends ActionSupport
         log.info("registrarajuste tarjeta [" + this.nroTarjeta + "] referencia [" + this.systrace + "] montoajuste [" + this.montoAjuste + "] codigoajuste[" + this.selectedAjuste + "]");
         result = business.RegistrarAjuste(this.nroTarjeta, this.montoAjuste, this.selectedAjuste, this.systrace, this.usuarioSesion.getIdUsuario(), this.observacion, false);
         if (result.equals("ok")) {
-            this.message = "Registro de Ajuste realizado satisfactoriamente.";
+            this.message = "Registro de ajuste realizado satisfactoriamente.";
         } else {
-            this.message = "Su Ajuste no pudo ser registrado.";
+            this.message = "Su ajuste no pudo ser registrado.";
         }
         if (this.systrace == null) {
             return "ajustetarjeta";
@@ -684,7 +684,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -831,26 +831,26 @@ public class AjusteTransaccionesAction extends ActionSupport
     }
 
     public String getStatusfromSelected(String status) {
-        if (status.equals("PROCESADO")) {
+        if (status.equals("Procesado")) {
             return "2";
         }
-        if (status.equals("PENDIENTE")) {
+        if (status.equals("Pendiente")) {
             return "3";
         }
-        if (status.equals("AUTORIZADO")) {
+        if (status.equals("Autorizado")) {
             return "0";
         }
-        if (status.equals("AUTORIZAR TODOS")) {
+        if (status.equals("Autorizar Todos")) {
             return "0";
         }
-        if (status.equals("ANULADO")) {
+        if (status.equals("Anulado")) {
             return "7";
         }
-        if (status.equals("EN PROCESO")) {
+        if (status.equals("En Proceso")) {
             return "1";
         }
-        if (status.equals("TODOS")) {
-            return "TODOS";
+        if (status.equals("Todos")) {
+            return "Todos";
         }
         return null;
     }
@@ -890,7 +890,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         String sessionDate = usuarioSesion.getSessionDate();
         if (!sessionUtil.validateSession(sessionDate, usuarioSesion)) {
             try {
-                log.info("Sesion expira del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
+                log.info("Sesión expirada del usuario " + ((UsuarioSesion) ActionContext.getContext().getSession().get(USUARIO_SESION)).getIdUsuario());
                 ActionContext.getContext().getSession().clear();
             } catch (Exception e) {
                 log.info("Es posible que la sesión para este usuario ya haya sido cerrada previamente a la llamada del LogoutAction.");
@@ -906,14 +906,22 @@ public class AjusteTransaccionesAction extends ActionSupport
         Ajuste ajuste = new Ajuste();
         boolean procesoOk = true;
         try {
-
             if (this.file == null) {
-                this.message = "Error al cargar el archivo";
+                this.message = "No se pudo cargar el archivo";
                 tipoMessage = "error";
+                this.tipoAjustes = business.getTipoAjustes();
                 return "ajustetarjeta";
             }
+            
+            //Validar que el archivo sea excel
+            String ext = FilenameUtils.getExtension(filename);
+            if (!ext.equals("xls") && !ext.equals("xlsx")) {
+                message = "El archivo a cargar debe estar en formato Excel";
+                tipoMessage = "error";
+                return "ajustetarjeta";
+            } else {
 
-            log.info(this.file.getAbsolutePath() + " " + this.file.getCanonicalPath());
+            log.info(this.file.getAbsolutePath());
 
             File file2 = new File(this.file.getPath() + this.filename);
             this.file.renameTo(file2);
@@ -925,6 +933,12 @@ public class AjusteTransaccionesAction extends ActionSupport
             double montoDouble = 0.0D;
             double tarjetaDouble = 0.0D;
             int i = 0;
+            if (sheet.getRow(i) == null) {
+                this.message = "El archivo se encuentra vacio";
+                tipoMessage = "error";
+                this.tipoAjustes = business.getTipoAjustes();
+                return "ajustetarjeta";
+            }
             do {
                 Row row = sheet.getRow(i);
 
@@ -953,17 +967,17 @@ public class AjusteTransaccionesAction extends ActionSupport
 
                 ajuste.setTarjeta(tarjetaString.trim());
                 ajuste.setMonto(montoString.trim());
-                log.info("tarjeta [" + ajuste.getTarjeta() + "] Monto[" + ajuste.getMonto() + "] ");
+                log.info("Tarjeta [" + ajuste.getTarjeta() + "] Monto[" + ajuste.getMonto() + "] ");
 
                 if (!ajuste.getTarjeta().trim().matches("^[0-9]{16}$")) {
-                    this.message = "Error en formato. Algunas tarjetas no son de 16 dígitos.";
+                    this.message = "Formato incorrecto. Algunas tarjetas no son de 16 dígitos.";
                     tipoMessage = "error";
                     procesoOk = false;
                     break;
                 }
 
                 if (!ajuste.getMonto().matches("\\d{1,8}.\\d{1,2}")) {
-                    this.message = "Error en formato. Algunos montos presentan errores en su formato. Ejemplo de formato correcto [100.00]";
+                    this.message = "Formato incorrecto. Algunos montos presentan un formato incorrecto. Los montos debe estar en formato 100.00";
                     tipoMessage = "error";
                     procesoOk = false;
                     break;
@@ -974,41 +988,43 @@ public class AjusteTransaccionesAction extends ActionSupport
                 i++;
             } while ((!tarjetaString.equals("")) && (sheet.getRow(i) != null));
             if (i > 500) {
-                this.message = "Numero de registros en el archivo excedido";
+                this.message = "El archivo excede el número de registros permitidos";
                 tipoMessage = "error";
                 return "ajustetarjeta";
             }
             if (procesoOk) {
-                this.message = "exitoso";
+                this.message = "Exitoso";
                 String respuesta = business.checkTarjetas(ajustes);
                 if (respuesta.contains("errorT")) {
-                    message = "Error, Tarjeta(s) Inexistente(s):" + respuesta.substring(6, respuesta.length());
+                    message = "No existe(n) la(s) siguiente(s) tarjeta(s): " + respuesta.substring(6, respuesta.length());
                     tipoMessage = "error";
                     return "ajustetarjeta";
                 } else if (respuesta.contains("error")) {
-                    message = "[!] Error de sistema";
+                    message = "No se pudo realizar el ajuste";
                     tipoMessage = "error";
                     return "ajustetarjeta";
                 }
 
                 if (business.doAjusteMasivo(ajustes, this.selectedAjuste, this.usuarioSesion.getIdUsuario(), this.observacion).compareToIgnoreCase("error") == 0) {
-                    this.message = "Error registrando los ajustes";
+                    this.message = "No se puedo registrar los ajustes";
                     tipoMessage = "error";
                     return "ajustetarjeta";
                 }
+                }
             }
         } catch (Exception e) {
-            log.error("error ", e);
+            log.error("Error: " + e.getMessage());
             tipoMessage = "error";
-            this.message = "[!] Error de sistema";
+            this.message = "No se pudo realizar el ajuste";
         }
+        
         log.info("Message: " + this.message);
         return "ajustetarjeta";
     }
 
     public String generarExcel() throws Exception {
 
-        this.message = "Llamada al método de Generar Excel. ";
+        this.message = "Llamada al método de generar excel. ";
 
         this.buscarUsuario();
 

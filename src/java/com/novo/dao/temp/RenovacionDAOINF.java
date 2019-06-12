@@ -265,7 +265,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
             dbo.dbClose();
             return listarenovar;
         }else{
-            log.info("TARJETAS VALIDAS PARA EL PROCESO DE RENOVACION");            
+            log.info("TARJETAS VALIDAS PARA EL PROCESO DE RENOVACIÓN");            
         }
 
         if (cantidad == tarjetas.size()) {

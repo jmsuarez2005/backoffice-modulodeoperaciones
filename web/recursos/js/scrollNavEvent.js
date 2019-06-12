@@ -14,7 +14,7 @@ $(window).bind('scroll', function() {
     var docElement = $(document)[0].documentElement;
     var winElement = $(window)[0];
          
-    if($(window).scrollTop() == 0 || $(window).scrollTop() == $(document).height()- $(window).height()) {
+    if($(window).scrollTop() === 0 || $(window).scrollTop() === $(document).height()- $(window).height()) {
         // do something
         displayNav();
     } 
@@ -22,7 +22,7 @@ $(window).bind('scroll', function() {
         hideNav();
     }
     
-    if ((docElement.scrollHeight - winElement.innerHeight) == winElement.pageYOffset) {
+    if ((docElement.scrollHeight - winElement.innerHeight) === winElement.pageYOffset) {
         hideNav();
     }
 });
@@ -40,7 +40,7 @@ function displayNav(){
  */
 function hideNav(){
 
-    if ($(window).scrollTop() == 0 )
+    if ($(window).scrollTop() === 0 )
         displayNav();
     else
         document.getElementById('nav').setAttribute('style', 'display:none;');
