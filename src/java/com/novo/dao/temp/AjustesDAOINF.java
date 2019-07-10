@@ -474,11 +474,11 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
             sql = sql + aux;
         }
 
-        if (!status.equals("TODOS")) {
+        if (!status.equals("Todos")) {
             sql = sql + " and status = '" + status + "'";
         }
 
-        if (!usuario.equals("TODOS")) {
+        if (!usuario.equals("Todos")) {
             sql = sql + " and usuario = '" + usuario + "'";
         }
 
@@ -636,7 +636,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         dbi.dbreset();
         log.info("sql [" + sql + "]");
         if (dbi.executeQuery(sql) == 0) {
-            usuarios.add("TODOS");
+            usuarios.add("Todos");
             while (dbi.nextRecord()) {
                 usuarios.add(dbi.getFieldString("idusuario").trim());
             }

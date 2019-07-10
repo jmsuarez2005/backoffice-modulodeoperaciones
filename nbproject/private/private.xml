@@ -31,8 +31,6 @@
             <file>file:/C:/Users/rgomez/Desktop/ModuloOperaciones/NovoModuloOperaciones/web/WEB-INF/web/operaciones/renovacion.jsp</file>
             <file>file:/C:/Users/rgomez/Desktop/ModuloOperaciones/NovoModuloOperaciones/src/java/com/novo/actions/AjusteTransaccionesAction.java</file>
         </group>
-        <group name="Default">
-            <file>file:/C:/Users/mpulido/Documents/GitHub/backoffice-modulodeoperaciones/src/java/com/novo/actions/SobregirosAction.java</file>
-        </group>
+        <group name="Default"/>
     </open-files>
 </project-private>

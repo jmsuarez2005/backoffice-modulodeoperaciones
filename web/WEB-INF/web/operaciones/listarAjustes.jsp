@@ -46,9 +46,9 @@
 
             $(document).ready(function () {
                 $("#listaTipoAjustes2").prepend("<option selected>Seleccione...</option selected>");
-                //$("#listaUsuariosBusqueda").prepend("<option selected>TODOS</option selected>");
-                //$("#listaTipoAjustes").prepend("<option selected>TODOS</option selected>");
-                $("#listaUsuariosBusqueda2").prepend("<option selected>TODOS</option selected>");
+                //$("#listaUsuariosBusqueda").prepend("<option selected>Todos</option selected>");
+                //$("#listaTipoAjustes").prepend("<option selected>Todos</option selected>");
+                $("#listaUsuariosBusqueda2").prepend("<option selected>Todos</option selected>");
                 //$("#listaFiltroAjustes").prepend("<option selected>Fecha</option selected>");
 
                 $("#listaTipoAjustes2").on('change', function () {
@@ -446,7 +446,7 @@
                 var sel = document.getElementById('listaTipoAjustes2');
                 var inputs = document.getElementsByTagName('input');
                 
-                if(sel.options[sel.selectedIndex].text == "AUTORIZAR TODOS"){
+                if(sel.options[sel.selectedIndex].text == "Autorizar Todos"){
                     
                     //CANTIDAD DE REGISTRO Y MONTO TOTAL
                     z = 0;
