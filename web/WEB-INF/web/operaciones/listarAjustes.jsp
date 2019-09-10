@@ -35,8 +35,12 @@
 
                 $("#fechaIni2").val($("input[name=fechaIni]").val());
                 $("#fechaFin2").val($("input[name=fechaFin]").val());
+                
+                 if ($("#tipoAjustesdic").lenght > 0){
+                     $("#ConfirmarStatus").style.visibility = "hidden";
+                     $("#ConfirmarEdicion").style.visibility = "visible";
+                }
                 document.example.submit();
-
             }
 
             /*$("#listaUsuariosBusqueda").change(function () {
@@ -98,8 +102,8 @@
                             </thead>
                             <tbody>
                                 <tr id="picker1" style=" padding: 0px; margin: 0px">
-                                    <td colspan="2" style="padding: 0px; margin: 0px; text-align: center"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaIni" name="fechaIni" label="Fecha Inicio" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>                                                                
-                                    <td colspan="2" style="padding: 0px; margin: 0px; text-align: center"><table  class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaFin" name="fechaFin" label="Fecha Fin" displayFormat="dd-MMM-yyyy" value="%{'today'}"/></tbody></table></td>
+                                    <td colspan="2" style="padding: 0px; margin: 0px; text-align: center"><table class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaIni" name="fechaIni" label="Fecha Inicio" displayFormat="dd-MMM-yyyy"/></tbody></table></td>                                                                
+                                    <td colspan="2" style="padding: 0px; margin: 0px; text-align: center"><table  class=""  style="width: 100%;padding: 0px; margin: 0px;"><tbody><sx:datetimepicker cssClass="search-query" id="fechaFin" name="fechaFin" label="Fecha Fin" displayFormat="dd-MMM-yyyy"/></tbody></table></td>
                                 </tr>
                                 <tr>
                                     <td  style="width: 18.8%;">Estatus</td>
@@ -146,6 +150,7 @@
                                         <th>Fecha</th>
                                         <th>DNI</th>
                                         <th>Nombre</th>
+                                        <th>Empresa</th>
                                         <th>Usuario</th>
                                         <th>Tipo Ajuste</th>
                                         <th>Estatus</th>  
@@ -179,6 +184,7 @@
                                     <td style="width:10%;text-align:center;"><s:property value="fecha"/></td>
                                     <td style="width:10%;text-align:center;"><s:property value="idExtPer"/></td>                                            
                                     <td style="width:10%;text-align:center;"><s:property value="nomCliente"/></td>
+                                    <td style="width:10%;text-align:center;"><s:property value="idExtEmp"/></td>  
                                     <td style="width:16%;text-align:center;"><s:property value="usuario"/></td>
                                     <td style="width:16%;text-align:center;">
                                         <s:if test="%{!isEditar()}">
@@ -257,41 +263,42 @@
                                                 </s:if>
                                                 <s:else>
                                                     <s:if test="%{filaEditar.equals(#attr.ajustesTable.getIdDetalleAjuste())}">
-                                                <select name="selectedtipoAjuste"  id="tipoAjustesdic">
-                                                    <s:iterator value="tipoAjustes" var="myObj1">
-                                                        <option value="<s:property value ="idCodigoAjuste"/>"> <s:property value ="descripcion"/></option>
-                                                    </s:iterator>
-                                                </select>
+                                                        <select name="selectedtipoAjuste"  id="tipoAjustesdic">
+                                                            <s:iterator value="tipoAjustes" var="myObj1">
+                                                                <option value="<s:property value ="idCodigoAjuste"/>"> <s:property value ="descripcion"/></option>
+                                                            </s:iterator>
+                                                        </select>
+                                                    </s:if>
+                                                    <s:else>                                                        
+                                                        <s:property value="#attr.ajustesTable.descripcion"/>
+                                                    </s:else>                                                                          
+                                                </s:else></td>
+                                            </display:column>
+
+                                            <display:column  title="Estatus"  style="width:15%;text-align:center;" >  
+                                                <s:property value="#attr.ajustesTable.descStatus"/>
+                                            </display:column>   
+
+                                            <display:column  title="Observación"  style="width:15%;text-align:center;" > 
+                                                <s:property value="#attr.ajustesTable.observacion"/>
+                                            </display:column>  
+
+                                            <display:column title="<input type='checkbox' name='selectedAjusteAll' onclick='checkboxes(this)'/>">
+                                                <s:if test="%{!#attr.ajustesTable.getStatus().equals(\"7\") && !#attr.ajustesTable.getStatus().equals(\"2\")}">
+                                                    <input type="checkbox" name="selectedAjuste" onclick="checkbox(this,${ajustesTable.getMonto()})" value=${ajustesTable.getIdDetalleAjuste()} />                     
+                                                </s:if>
+                                            </display:column>         
+                                            <s:if test="%{getStatusfromSelected(selectedStatus).equals(\"3\")}">
+                                                <display:column title="Editar"> 
+                                                    <img width="25px" src="../recursos/images/editarOperaciones.png" alt="editar" action="actualizarAjustesAjusteTransacciones" onclick="Editar(<s:property value="#attr.ajustesTable.getIdDetalleAjuste()"/>);"/>
+                                                </display:column>
                                             </s:if>
-                                            <s:else>                                                        
-                                                <s:property value="#attr.ajustesTable.descripcion"/>
-                                            </s:else>                                                                          
-                                        </s:else></td>
-                                    </display:column>
-
-                                    <display:column  title="Estatus"  style="width:15%;text-align:center;" >  
-                                        <s:property value="#attr.ajustesTable.descStatus"/>
-                                    </display:column>   
-
-                                    <display:column  title="Observación"  style="width:15%;text-align:center;" > 
-                                        <s:property value="#attr.ajustesTable.observacion"/>
-                                    </display:column>  
-
-                                    <display:column title="<input type='checkbox' name='selectedAjusteAll' onclick='checkboxes(this)'/>">
-                                        <s:if test="%{!#attr.ajustesTable.getStatus().equals(\"7\") && !#attr.ajustesTable.getStatus().equals(\"2\")}">
-                                            <input type="checkbox" name="selectedAjuste" onclick="checkbox(this,${ajustesTable.getMonto()})" value=${ajustesTable.getIdDetalleAjuste()} />                     
-                                        </s:if>
-                                    </display:column>         
-
-                                    <s:if test="%{getStatusfromSelected(selectedStatus).equals(\"3\")}">
-                                        <display:column title="Editar"> 
-                                            <img width="25px" src="../recursos/images/editarOperaciones.png" alt="editar" onclick="Editar(<s:property value="#attr.ajustesTable.getIdDetalleAjuste()"/>);"/>
-                                        </display:column>
-                                    </s:if>
-
-
 
                                     </tr> 
+                                    
+                                    
+                                    </tr> 
+                                    
 
                                     <display:setProperty name="paging.banner.placement" value="bottom"/>
 
@@ -318,7 +325,9 @@
                                         </s:if>
                                     </s:if>
                                     <s:if test="%{!selectedStatus.equals(\"ANULADO\") && !selectedStatus.equals(\"PROCESADO\")}">
-                                        <td style="text-align: center"><s:submit cssClass="btn btn-primary" value= "Confirmar" action= "actualizarStatusAjustesAjusteTransacciones" onclick="return confirmBox(selectedStatus);"/></td>
+                                        <td style="text-align: center"><s:submit cssClass="btn btn-primary" id="ConfirmarStatus" value= "Confirmar" action= "actualizarStatusAjustesAjusteTransacciones" onclick="return confirmBox(selectedStatus);" /></td>
+                                        <td style="text-align: center; visibility: hidden"><s:submit cssClass="btn btn-primary" id="ConfirmarEdicion" value= "Confirmar Edic" action= "actualizarEdicionAjusteTransacciones" onclick="return confirmBox(selectedStatus);" /></td>
+
                                     </s:if>
                                     <!--
                                     <td style="width:50%;text-align:right;" ><span class="text-1">Pagina</span></td>

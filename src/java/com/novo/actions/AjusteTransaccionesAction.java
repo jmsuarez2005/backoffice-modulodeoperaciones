@@ -572,8 +572,11 @@ public class AjusteTransaccionesAction extends ActionSupport
                 return "success";
             }
         }
-
-        if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals("")) && !this.opcion.equals("buscarProductosEmpresas")) {
+        if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals("")) && (this.documentoIdentidad != null) && (!this.documentoIdentidad.equals("")) && !this.opcion.equals("buscarProductosEmpresas")) {
+            log.info("tarjeta = " + this.nroTarjeta);
+            this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, this.nroTarjeta);
+        }else{
+            if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals("")) && !this.opcion.equals("buscarProductosEmpresas")) {
             log.info("tarjeta = " + this.nroTarjeta);
             this.tarjetas = business.getTarjetasUsuario(null, this.nroTarjeta);
         }
@@ -582,7 +585,8 @@ public class AjusteTransaccionesAction extends ActionSupport
             //this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, null, this.selectedProducto.trim(), this.selectedEmpresa.trim());
             this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, null);
 
-        }
+        }}
+        
 
         if (this.opcion.equals("buscarProductosEmpresas")) {
             DateFormat df2 = new SimpleDateFormat("ddMMyyyy");

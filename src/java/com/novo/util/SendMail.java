@@ -4,18 +4,20 @@
  */
 package com.novo.util;
 
+import com.novo.process.ReporteActividadDiariaProc;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author emayorga
  */
 public class SendMail {
-    
+    private static Logger log = Logger.getLogger(SendMail.class);
     
     public SendMail()
     {
@@ -48,7 +50,7 @@ public class SendMail {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.info("Excepción: "+ e.getMessage(), e);
         }
     }
 
@@ -57,9 +59,16 @@ public class SendMail {
         boolean debug = true;
         try
         {
+            log.info("" + smtpServ + " \n" + from+ " \n" +user+ " \n" + password+ " \n"+ rutaImg);
             Properties props = new Properties();
             props.put("mail.smtp.host", smtpServ);
-            Session session = Session.getDefaultInstance(props, null);
+            props.put("mail.smtp.auth", "true");
+            //Session session = Session.getDefaultInstance(props, null);
+            Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(user, password);
+                }
+            });
             session.setDebug(debug);
             Message msg = new MimeMessage(session);
             InternetAddress addressFrom = new InternetAddress(from);
@@ -79,16 +88,17 @@ public class SendMail {
                 messageBodyPart.setHeader("Content-ID", "<image>");
                 multipart.addBodyPart(messageBodyPart);
                 msg.setContent(multipart);
-                Transport tr = session.getTransport("smtp");
-                tr.connect(smtpServ, user, password);
-                Transport _tmp = tr;
+//              Transport tr = session.getTransport("smtp");
+//              tr.connect(smtpServ, user, password);
+//              tr.send(msg);
+//              Transport _tmp = tr;
                 Transport.send(msg);
             }
 
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.info("Excepción: "+ e.getMessage(), e);
         }
     }    
 }

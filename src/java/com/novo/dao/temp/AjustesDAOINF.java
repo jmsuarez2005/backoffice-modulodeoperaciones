@@ -269,10 +269,11 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         String sql = "";
         Dbinterface dbo = ds.get("oracle");
         Dbinterface dbi = ds.get("informix");
+        sql ="select * from MAESTRO_PLASTICO_TEBCA where ";
         if (banderaFiltro == false) {
-            sql = "select * from MAESTRO_PLASTICO_TEBCA where nro_cuenta = '0000" + filtro + "'";
+            sql = sql + "nro_cuenta = '0000" + filtro + "'";
         } else {
-            sql = "select * from MAESTRO_PLASTICO_TEBCA where id_ext_per = '" + filtro + "'";
+            sql = sql + "id_ext_per = '" + filtro + "'";
         }
         dbo.dbreset();
         log.info("sql [" + sql + "]");
@@ -286,6 +287,9 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
                 tarjetas.add(tarjeta);
                 tarjeta = new Tarjeta();
             }
+        } else {
+          log.error("No fue posible obtener una tarjeta válida");  
+          
         }
         dbi.dbreset();
 
@@ -312,7 +316,54 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         dbi.dbClose();
         return tarjetas;
     }
+        public List<Tarjeta> getTarjetasDAOF(String filtro1, String filtro2) {
+        Tarjeta tarjeta = new Tarjeta();
+        List<Tarjeta> tarjetas = new ArrayList<Tarjeta>();
+        String sql = "";
+        Dbinterface dbo = ds.get("oracle");
+        Dbinterface dbi = ds.get("informix");
+        sql ="select * from MAESTRO_PLASTICO_TEBCA where nro_cuenta = '0000" + filtro2 + "' and id_ext_per = '" + filtro1 + "'";
+        dbo.dbreset();
+        log.info("sql [" + sql + "]");
+        if (dbo.executeQuery(sql) == 0) {
+            while (dbo.nextRecord()) {
+                tarjeta.setNroTarjeta(dbo.getFieldString("nro_cuenta").substring(4));
+                tarjeta.setIdExtPer(dbo.getFieldString("id_ext_per"));
+                tarjeta.setIdExtEmp(dbo.getFieldString("id_ext_emp"));
+                tarjeta.setNombreCliente(dbo.getFieldString("nom_cliente"));
+                tarjeta.setMascara(tarjeta.getNroTarjeta().substring(0, 6) + "******" + tarjeta.getNroTarjeta().substring(12));
+                tarjetas.add(tarjeta);
+                tarjeta = new Tarjeta();
+            }
+        } else {
+          log.error("No fue posible obtener una tarjeta válida");  
+          
+        }
+        dbi.dbreset();
 
+        for (Tarjeta tarjetaAux : tarjetas) {
+            dbo.dbreset();
+            sql = "select nombre from config_productos where SUBSTR(numcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0, 8) + "'";
+            log.info("sql [" + sql + "]");
+            if (dbo.executeQuery(sql) == 0) {
+                if (dbo.nextRecord()) {
+                    tarjetaAux.setCardProgram(dbo.getFieldString("nombre"));
+                }
+                String sql1 = "select NOMBRE_CORTO from MAESTRO_CLIENTES_TEBCA where CIRIF_CLIENTE like '%" + tarjetaAux.getIdExtEmp() + "'";
+                log.info("sql [" + sql1 + "]");
+                if (dbo.executeQuery(sql1) == 0) {
+                    if (dbo.nextRecord()) {
+                        tarjetaAux.setNombreEmpresa(dbo.getFieldString("NOMBRE_CORTO"));
+                    }
+                }
+
+            }
+
+        }
+        dbo.dbClose();
+        dbi.dbClose();
+        return tarjetas;
+    }
     /**
      * obtiene la lista de productos disponibles.
      */
@@ -466,7 +517,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.US);
         otherSymbols.setDecimalSeparator('.');
         NumberFormat doublef = new DecimalFormat("#0.00", otherSymbols);
-        String sql = "select nda.*,NCA.DESCRIPCION AS DESCRIPCION2,NCA.ID_AJUSTE,mpt.NOM_CLIENTE,mpt.ID_EXT_PER  from novo_detalle_ajustes nda join novo_codigo_ajustes nca on (nda.ID_CODIGO_AJUSTE =nca.ID_AJUSTE) join maestro_plastico_tebca mpt on (nda.tarjeta=0000+mpt.NRO_CUENTA) where ";
+        String sql = "select nda.*,NCA.DESCRIPCION AS DESCRIPCION2,NCA.ID_AJUSTE,mpt.NOM_CLIENTE,mpt.ID_EXT_PER, mpt.ID_EXT_EMP from novo_detalle_ajustes nda join novo_codigo_ajustes nca on (nda.ID_CODIGO_AJUSTE =nca.ID_AJUSTE) join maestro_plastico_tebca mpt on (nda.tarjeta=0000+mpt.NRO_CUENTA) where ";
 
         if (fechaIni != null && fechaFin != null) {
             DateFormat df = new SimpleDateFormat("ddMMyyyy");
@@ -499,6 +550,7 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
                 ajuste.setMascara(ajuste.getTarjeta().substring(0, 6) + "******" + ajuste.getTarjeta().substring(12));
                 ajuste.setNomCliente(dbo.getFieldString("NOM_CLIENTE"));
                 ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_PER"));
+                ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_EMP"));
                 if (ajuste.getStatus().equals("2")) {
                     ajuste.setDescStatus("Proceso");
                 }

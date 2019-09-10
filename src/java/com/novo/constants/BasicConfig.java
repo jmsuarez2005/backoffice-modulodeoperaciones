@@ -32,9 +32,9 @@ public interface BasicConfig {
     String PEUSD="PEUSD";
     String VE="VE";
     String GLOBAL="GLOBAL";
-    String COLOMBIA="COLOMBIA";
-    String PERU="PERU";
-    String VENEZUELA="VENEZUELA";
+    String COLOMBIA="Colombia";
+    String PERU="Peru";
+    String VENEZUELA="Venezuela";
     
     /** Para opciones de Actions **/
     String SESSION="session";
