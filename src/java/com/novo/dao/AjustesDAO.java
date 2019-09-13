@@ -561,7 +561,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                 ajuste.setMascara(ajuste.getTarjeta().substring(0, 6) + "******" + ajuste.getTarjeta().substring(12));
                 ajuste.setNomCliente(dbo.getFieldString("NOM_CLIENTE"));
                 ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_PER"));
-                ajuste.setIdExtPer(dbo.getFieldString("ID_EXT_EMP"));
+                ajuste.setIdExtEmp(dbo.getFieldString("ID_EXT_EMP"));
                 if (ajuste.getStatus().equals("2")) {
                     ajuste.setDescStatus("Procesado");
                 }
