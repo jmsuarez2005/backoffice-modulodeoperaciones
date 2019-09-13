@@ -160,7 +160,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
 
         }
 
-        String sql = "select c.id_ext_per, c.nro_cuenta, b.nombre, a.nom_cliente, d.fecha_reg  from MAESTRO_CLIENTES_TEBCA a, CONFIG_PRODUCTOS b, MAESTRO_PLASTICO_TEBCA c, NOVO_RENOVACION d where LTRIM(c.nro_cuenta,0) between b.NUMCUENTAI and b.NUMCUENTAF and LPAD(c.id_ext_emp,20,0)=a.cirif_cliente and LPAD(d.tarjeta,20,0)=c.nro_cuenta " + filtro;
+        String sql = "select c.id_ext_per, c.nro_cuenta, b.nombre, a.nom_cliente, d.fecha_reg from MAESTRO_CLIENTES_TEBCA a, CONFIG_PRODUCTOS b, MAESTRO_PLASTICO_TEBCA c, NOVO_RENOVACION d where LTRIM(c.nro_cuenta,0) between b.NUMCUENTAI and b.NUMCUENTAF and id_ext_emp=a.cirif_cliente and LPAD(d.tarjeta,20,0)=c.nro_cuenta " + filtro;
 
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbo.dbreset();

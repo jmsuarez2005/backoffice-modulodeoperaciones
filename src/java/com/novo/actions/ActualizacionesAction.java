@@ -103,16 +103,26 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
             return "out";
         }
         //Fin valida sesion
-
-        ReporteTransacciones business = new ReporteTransacciones();
-        if (nroTarjeta != null && !nroTarjeta.equals("")) {
-            log.info("tarjeta = " + nroTarjeta);
-            tarjetas = business.getTarjetasUsuario(null, nroTarjeta);
-        }
+        if (nroTarjeta == null || nroTarjeta.equals("")) { 
+            message = "Debe introducir un número de tarjeta válido";
+            tipoMessage = "error";
+            return SUCCESS;
+        } else{
+            ReporteTransacciones business = new ReporteTransacciones();
+            if (nroTarjeta != null && !nroTarjeta.equals("")) {
+                log.info("Tarjeta consultada: " + nroTarjeta);
+                tarjetas = business.getTarjetasUsuario(null, nroTarjeta);
+                if (tarjetas.isEmpty()){
+                    this.message = "No se pudo obtener la tarjeta solicitada. Intente nuevamente";
+                    tipoMessage = "error";
+                    return SUCCESS;
+                }
+            }
         tarjetasAct = tarjetas;
         ActionContext.getContext().getSession().put("tarjetasAct", tarjetasAct);
         campos = business.getCampos();
         return SUCCESS;
+        }
     }
 
     public String Upload() {
@@ -177,8 +187,6 @@ public class ActualizacionesAction extends ActionSupport implements BasicConfig 
 
                 do {
                     Row row = sheet.getRow(i);
-                    //System.out.println("CELDA:" + row.getCell(0).getCellType());
-                    //System.out.println("holaaaaaaaaaaa" + row.getCell(0));
 
                     //La hoja excel debe contener mas de una tarjeta para el proceso masivo
                     if (size == 1) {
