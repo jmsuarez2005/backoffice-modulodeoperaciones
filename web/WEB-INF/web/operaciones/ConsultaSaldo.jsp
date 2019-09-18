@@ -117,10 +117,11 @@
         <footer>
             <%@include file="../include/footer.jsp" %>    
         </footer>
+        <!--
         <script>
             var contador = 1;    
             document.getElementById("boton1").addEventListener("click", function(event){
-                event.preventDefault()
+                event.preventDefault();
                 despliegue();
             });
             function despliegue(){                
@@ -128,5 +129,6 @@
                 
             }                        
         </script>
+        -->
     </body>
 </html>

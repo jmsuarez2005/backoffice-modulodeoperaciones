@@ -107,15 +107,14 @@
            
            
 
-            var contador = 1;
-            document.getElementById("boton1").addEventListener("click", function (event) {
-                event.preventDefault()
-                despliegue();
-            });
-            function despliegue() {
-                document.getElementById("listaCampos" + contador++).style.display = "table-row";
-
-            }
+            //var contador = 1;
+            //document.getElementById("boton1").addEventListener("click", function (event) {
+            //    event.preventDefault();
+            //    despliegue();
+            //});
+            //function despliegue() {
+            //    document.getElementById("listaCampos" + contador++).style.display = "table-row";
+            //}
 
             function move() {
                 var elem = document.getElementById("myBar");

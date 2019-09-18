@@ -56,7 +56,7 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
             } else if (respuesta.equals("existe")) {
                 ajuste.setDescripcion("La tarjeta ya existe para hacer un bloqueo");
             } else {
-                ajuste.setDescripcion("Anulado");
+                ajuste.setDescripcion("Anulado, Codigo de Respuesta: " + respuesta);
             }
 
             ajuste.setFec_reg(annoying);
@@ -114,6 +114,7 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
         String uf = "";
         String uf2 = "";
         String trn = "";
+        String res="";
 //        String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM systables where tabid = 1";
         String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM DUAL where ROWNUM = 1";
 
@@ -195,30 +196,34 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
                     if (dbo.executeQuery(uf) == 0) {
                         if (dbo.executeQuery(uf2) == 0) {
                             dbo.dbClose();
-                            log.info("La tarjeta " + Tarjeta + "fue bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
+                            log.info("La tarjeta " + Tarjeta + " fue bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
                             return "ok";
                         }
                         dbo.dbClose();
-                        log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
-                        return "error";
+                        log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
+                        return handler.getRespCode();
                     }
 
                     dbo.dbClose();
-                    log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
-                    return "error";
+                    log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
+                    return handler.getRespCode();
                 }
 
                 dbo.dbClose();
-                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
-                return "error";
+                log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
+                return handler.getRespCode();
 
+            }else{
+                dbo.dbClose();
+                log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
+                
             }
 
             String sql4 = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION,CANAL) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', 'La tarjeta no pudo ser bloqueada RC=" + handler.getRespCode() + "', 'OPE')";
-            log.debug("sql #0 [" + uf2 + "]");
+            log.debug("sql #0 [" + sql4 + "]");
             if (dbo.executeQuery(sql4) == 0) {
                 dbo.dbClose();
-                return "ok";
+                return handler.getRespCode();
             }
             dbo.dbClose();
             return "error";

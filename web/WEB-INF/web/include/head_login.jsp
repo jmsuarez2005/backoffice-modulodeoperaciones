@@ -19,8 +19,8 @@
 <script type="text/javascript" src="../recursos/js/commons.js" ></script>
 <script type="text/javascript" src="../recursos/js/md5Hash.js" ></script>     
 <script type="text/javascript" src="../recursos/js/waitFunction.js" ></script>
- <script type="text/javascript" src="../recursos/js/jquery-1.7.1.min.js" ></script>
-<!-- <script type="text/javascript" src="../recursos/js/jquery-3.4.1.min.js" ></script> --> 
+<!--script type="text/javascript" src="../recursos/js/jquery-1.7.1.min.js" ></script> -->
+<script type="text/javascript" src="../recursos/js/jquery-1.12.4.min.js" ></script>
 <script type="text/javascript" src="../recursos/js/scrollNavEvent.js" ></script> 
 </head>
 <s:head/>

@@ -51,6 +51,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     private List<TAjuste> tipoAjustes;
     private List<Ajuste> ajustex;
     private List<TBloqueo> tipoBloqueo;
+    private List <TBloqueo> listbloquex;
     private String tipoMessage = ""; //Error, manejo para el jsp
     private Properties prop;
     private String propMigra;
@@ -254,7 +255,7 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                 return "success";
             }
             if (procesoOk) {
-                this.message = ("Carga de Archivo Exitosa. " + this.file.getName());
+                this.message = ("Carga de archivo exitosa. " + this.file.getName());
                 String respuesta = business.checkTarjetas(ajustes);
                 if (respuesta.contains("errorT")) {
                     message = "No existe(n) la(s) siguiente(s) tarjeta(s): " + respuesta.substring(6, respuesta.length());
@@ -271,11 +272,11 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                 if (txt.paisMigra(propMigra, this.pais)) {   
                     bloqueo.setBloqueo(bloquex);
                     bloqueo.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
-                    this.tipoBloqueo = bloqueo.getBloqueo();
+                    this.listbloquex = bloqueo.getBloqueo();
                 } else {
                     bloqueoInf.setBloqueo(bloquex);
                     bloqueoInf.ProcesarBloqueoDAO(usuario.getIdUsuario(), this.selectedBloqueo);
-                    this.tipoBloqueo = bloqueoInf.getBloqueo();
+                    this.listbloquex = bloqueoInf.getBloqueo();
                 }
                 this.tipoBloqueo = business.getTipoBloqueo();
 
@@ -397,4 +398,13 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
     public void setUploadFileName(String filename) {
         this.filename = filename;
     }
+
+    public List<TBloqueo> getListbloquex() {
+        return listbloquex;
+    }
+
+    public void setListbloquex(List<TBloqueo> listbloquex) {
+        this.listbloquex = listbloquex;
+    }
+    
 }
