@@ -59,7 +59,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     private String tipo_archivo;
     private List<String> listaUsuariosBusqueda;
     private Object nroTarjeta;
-    private List<Tarjeta> tarjetas;
+    private List<Renovacion> listReno;
     private String documentoIdentidad;
     private String fechaIni;
     private String fechaFin;
@@ -68,10 +68,11 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     private String propMigra;
     private TextUtil txt = new TextUtil();
     private String contentType;
-
+    
     public RenovacionAction() {
         this.prop = Utils.getConfig("oracleRegEx.properties");
         this.propMigra = prop.getProperty("paisOracle");
+        
     }
 
     public String carga() throws IOException {
@@ -126,23 +127,25 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
             return SUCCESS;
         }else{
         
-        String rutaOrigen = renoAction.getRutaOrigen();
-        String rutaDestino = renoAction.getRutaDestino();
-        String nombreRenovacion = renoAction.getNombreRenovacion();
-        String host = renoAction.getHost();
-        String usuarioR = renoAction.getUsuario();
-        
-        File file2 = new File(rutaOrigen + "/" + nombreRenovacion);
-        this.file.renameTo(file2);
-        this.file.createNewFile();
-        this.message = "Carga de archivo exitosa";
-        log.info("iniciando conexion");
-        log.info(this.file.getAbsolutePath() + nombreRenovacion);
-        double tarjetaDouble = 0;
-        boolean procesoOk = true;
+            String rutaOrigen = renoAction.getRutaOrigen();
+            String rutaDestino = renoAction.getRutaDestino();
+            String nombreRenovacion = renoAction.getNombreRenovacion();
+            String host = renoAction.getHost();
+            String usuarioR = renoAction.getUsuario();
 
-        List<Ajuste> ajustes = new ArrayList<Ajuste>();
-        Ajuste ajuste = new Ajuste();
+            File file2 = new File(rutaOrigen + "/" + nombreRenovacion);
+            this.file.renameTo(file2);
+            this.file.createNewFile();
+            this.message = "Carga de archivo exitosa";
+            log.info("Iniciando conexión");
+            log.info(this.file.getAbsolutePath() + nombreRenovacion);
+            log.info(rutaOrigen + "/" + nombreRenovacion);
+            
+            double tarjetaDouble = 0;
+            boolean procesoOk = true;
+
+            List<Ajuste> ajustes = new ArrayList<Ajuste>();
+            Ajuste ajuste = new Ajuste();
         try {
 //          InputStream buffer = new File(file2.getAbsolutePath());
 
@@ -193,8 +196,12 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                 List<Renovacion> listaRenovacion;
                 if (txt.paisMigra(propMigra, this.pais)) {    
                     listaRenovacion = business.checkTarjetasARenovar(ajustes);
+                    ren.setRenovar(listaRenovacion);
+                    listReno=ren.getRenovar();
                 } else {
                     listaRenovacion = businessInf.checkTarjetasARenovar(ajustes);
+                    renInf.setRenovar(listaRenovacion);
+                    listReno=renInf.getRenovar();
 
                 }
                 String respuesta = listaRenovacion.get(listaRenovacion.size() - 1).getRespuesta();
@@ -207,15 +214,15 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                     message = "No se pudo realizar la renovación";
                     tipoMessage = "error";
                     return SUCCESS;
-                } else if (respuesta.contains("ok")) {
+                } else if (respuesta.contains("Ok")) {
                     //SE PROCEDE A INSERTAR EN NOVO_RENOVACION
                     if (txt.paisMigra(propMigra, this.pais)) {    
                         respuesta = business.insertarRenovacion(listaRenovacion);
                     } else {
                         respuesta = businessInf.insertarRenovacion(listaRenovacion);
-
+                        
                     }
-                    if (respuesta.equals("ok")) {
+                    if (respuesta.equals("Ok")) {
 
                         if (txt.paisMigra(propMigra, this.pais)) {    
                             business.addFile(rutaOrigen + "/" + nombreRenovacion, rutaDestino, host, usuarioR);
@@ -248,6 +255,8 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     }
 
     public String consultar() {
+        
+        this.pais = ((String) ActionContext.getContext().getSession().get("pais"));
         //Valido sesion
         UsuarioSesion usuario = (UsuarioSesion) ActionContext.getContext().getSession().get("usuarioSesion");
         SessionUtil sessionUtil = new SessionUtil();
@@ -266,6 +275,15 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
             return "out";
         }
         //Fin valida sesion
+        RenovacionDAO ren = null;
+        RenovacionDAOINF renInf = null;
+        if (txt.paisMigra(propMigra, this.pais)) {    
+            ren = new RenovacionDAO("operaciones", dbOracle, this.pais);
+            this.renovar = ren.QueryRenovacion(this.selectedEmpresa, this.selectedProducto, this.documentoIdentidad, this.fechaIni, this.fechaFin);
+        } else {
+            renInf = new RenovacionDAOINF("operaciones", databases, this.pais);
+            this.renovar = renInf.QueryRenovacion(this.selectedEmpresa, this.selectedProducto, this.documentoIdentidad, this.fechaIni, this.fechaFin);
+        }
 
         this.listaProductos = new ArrayList();
         this.listaEmpresas = new ArrayList();
@@ -316,7 +334,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         }
         listar();
 
-        return "consultar";
+        return "buscar";
     }
 
     public String execute() {
@@ -457,4 +475,13 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     public void setUploadFileName(String filename) {
         this.filename = filename;
     }
+
+    public List<Renovacion> getListReno() {
+        return listReno;
+    }
+
+    public void setListReno(List<Renovacion> listReno) {
+        this.listReno = listReno;
+    }
+    
 }

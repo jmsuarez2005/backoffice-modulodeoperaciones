@@ -104,12 +104,10 @@
                                 </tr>
                             </thead>
                             <tbody>                                      
-                                <s:iterator value="ajustex" var="myObj">
+                                <s:iterator value="listSobregiros" var="myObj">
                                   
                                         <tr>
-                                            <td style="width:25%;text-align:center;" colspan="1">                                                
-                                                <s:property value ="fecha"/>
-                                            </td>    
+                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value="fecha"/></td>    
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="tarjeta"/></td>                                            
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="monto"/></td>                                            
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="status"/></td>

@@ -11,7 +11,9 @@ import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.Renovacion;
+import com.novo.model.Tarjeta;
 import com.novo.model.ValoresRen;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -26,8 +28,9 @@ import org.apache.log4j.Logger;
 public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransacciones {
 
     private static Logger log = Logger.getLogger(RenovacionDAO.class);
+    private List<Renovacion> renovar;
     List<Ajuste> ajustes;
-
+   
     public List<Ajuste> getAjustes() {
         return this.ajustes;
     }
@@ -49,20 +52,11 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         String nombreRenovacion = "";
 
         String sql1 = "SELECT (\n"
-                + "SELECT ACVALUE AS rutaOrigen FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaOrigen'\n"
-                + ") AS rutaOrigen,\n"
-                + "(\n"
-                + "SELECT  ACVALUE AS rutaDestino FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaDestino'\n"
-                + ") AS rutaDestino,\n"
-                + "(\n"
-                + "SELECT ACVALUE AS host FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_host'\n"
-                + ") AS host,\n"
-                + "(\n"
-                + "SELECT ACVALUE AS Usuario FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_usuario'\n"
-                + ") AS Usuario,\n"
-                + "(\n"
-                + "SELECT ACVALUE AS NombreRenovacion FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_nombreRenovacion'\n"
-                + ") AS NombreRenovacion\n"
+                + "SELECT ACVALUE AS rutaOrigen FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaOrigen') AS rutaOrigen,\n"
+                + "(SELECT  ACVALUE AS rutaDestino FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaDestino') AS rutaDestino,\n"
+                + "(SELECT ACVALUE AS host FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_host') AS host,\n"
+                + "(SELECT ACVALUE AS Usuario FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_usuario') AS Usuario,\n"
+                + "(SELECT ACVALUE AS NombreRenovacion FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_nombreRenovacion') AS NombreRenovacion\n"
                 + " FROM DUAL where ROWNUM = 1";
 
         ValoresRen reno = new ValoresRen();
@@ -106,7 +100,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         log.info("sql [" + sql + "]");
         if (dbo.executeQuery(sql) == 0) {
             dbo.dbClose();
-            return "ok";
+            return "Ok";
         }
         dbo.dbClose();
         return "error";
@@ -191,10 +185,11 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         Dbinterface dbo2 = ds.get("oracle");
         Renovacion renovacion = new Renovacion();
         List<Renovacion> listarenovar = new ArrayList();
-        List<Renovacion> listarenovar1 = new ArrayList();
         String filtro = "(";
         String filtroUpdate = "(";
         String sql = "";
+        Date fecha = new Date();
+        SimpleDateFormat dia = new SimpleDateFormat("dd/MM/yyyy");
         //String rifFiltro = "";
         String nroTarjeta = "";
         List<String> nroTarjetasList = new ArrayList<String>();
@@ -234,6 +229,8 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
                 renovacion.setNro_tarjeta(nroTarjeta);
                 renovacion.setCod_cliente(dbo.getFieldString("COD_CLIENTE"));
                 renovacion.setPrefix(dbo.getFieldString("PREFIX"));
+                renovacion.setFec_reg(dia.format(fecha));;
+                renovacion.setRespuesta("Ok");
                 listarenovar.add(renovacion);
                 renovacion = new Renovacion();
 
@@ -260,7 +257,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         }
         if(c > 0){            
             tarjetasInexis = tarjetasInexis.substring(0, tarjetasInexis.length() - 1);
-            log.info("TARJETAS NO VALIDAS:" + tarjetasInexis);
+            log.info("TARJETAS NO VÁLIDAS:" + tarjetasInexis);
             renovacion = new Renovacion();
             renovacion.setRespuesta("errorT" + tarjetasInexis);
             listarenovar.clear();
@@ -268,7 +265,8 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             dbo.dbClose();
             return listarenovar;
         }else{
-            log.info("TARJETAS VÁLIDAS PARA EL PROCESO DE RENOVACION");            
+            log.info("TARJETAS VÁLIDAS PARA EL PROCESO DE RENOVACIÓN");
+            
         }
 
         if (cantidad == tarjetas.size()) {
@@ -282,7 +280,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             log.info("SQL:" + sql);
             dbo2.dbreset();
             if (dbo2.executeQuery(sql) == 0) {
-                log.info("Oracle - total de reposiciones anulados = " + dbo2.rowsCount);
+                log.info("Oracle - Total de reposiciones anuladas = " + dbo2.rowsCount);
             } else {
                 dbo2.dbClose();
                 renovacion = new Renovacion();
@@ -293,8 +291,8 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             }
 
             dbo2.dbClose();
-            renovacion.setRespuesta("ok");
-            listarenovar.add(renovacion);
+            renovacion.setRespuesta("Ok");
+            //listarenovar.add(renovacion);
             return listarenovar;
         } else {
             //TARJETAS INEXISTENTES Y/O NO VALIDAS PARA RENOVACION
@@ -333,7 +331,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
     public String insertarNovoRenovacion(List<Renovacion> listaRenovacion) {
 
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
-        String sql = "INSERT ALL ";
+        String sql = "INSERT ALL\n ";
 
         for (Renovacion ajuste : listaRenovacion) {
             if (ajuste.getNro_tarjeta() != null && !ajuste.getNro_tarjeta().equals("")) {
@@ -345,9 +343,9 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         dbo.dbreset();
         log.info("sql [" + sql + "]");
         if (dbo.executeQuery(sql) == 0) {
-            log.info("Oracle - total de reposiciones insertados = " + dbo.rowsCount);
+            log.info("Oracle - Total de renovaciones insertadas = " + dbo.rowsCount);
             dbo.dbClose();
-            return "ok";
+            return "Ok";
         }
         dbo.dbClose();
         return "error";
@@ -359,4 +357,11 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         this.shutdownDatabases();
     }
 
+    public List<Renovacion> getRenovar() {
+        return renovar;
+    }
+
+    public void setRenovar(List<Renovacion> renovar) {
+        this.renovar = renovar;
+    }
 }

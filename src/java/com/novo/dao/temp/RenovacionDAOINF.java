@@ -11,6 +11,7 @@ import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.Renovacion;
+import com.novo.model.Tarjeta;
 import com.novo.model.ValoresRen;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +28,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
 
     private static Logger log = Logger.getLogger(RenovacionDAOINF.class);
     List<Ajuste> ajustes;
+    List<Renovacion> renovar;
 
     public List<Ajuste> getAjustes() {
         return this.ajustes;
@@ -49,20 +51,11 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         String nombreRenovacion = "";
 
         String sql1 = "SELECT (\n"
-                + "SELECT ACVALUE AS rutaOrigen FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaOrigen'\n"
-                + ") AS rutaOrigen,\n"
-                + "(\n"
-                + "SELECT  ACVALUE AS rutaDestino FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaDestino'\n"
-                + ") AS rutaDestino,\n"
-                + "(\n"
-                + "SELECT ACVALUE AS host FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_host'\n"
-                + ") AS host,\n"
-                + "(\n"
-                + "SELECT ACVALUE AS Usuario FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_usuario'\n"
-                + ") AS Usuario,\n"
-                + "(\n"
-                + "SELECT ACVALUE AS NombreRenovacion FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_nombreRenovacion'\n"
-                + ") AS NombreRenovacion\n"
+                + "SELECT ACVALUE AS rutaOrigen FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaOrigen') AS rutaOrigen,\n"
+                + "(SELECT  ACVALUE AS rutaDestino FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_rutaDestino') AS rutaDestino,\n"
+                + "(SELECT ACVALUE AS host FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_host') AS host,\n"
+                + "(SELECT ACVALUE AS Usuario FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_usuario') AS Usuario,\n"
+                + "(SELECT ACVALUE AS NombreRenovacion FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustesRen_nombreRenovacion') AS NombreRenovacion\n"
                 + " FROM informix.systables where tabid = 1";
 
         ValoresRen reno = new ValoresRen();
@@ -356,4 +349,11 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         this.shutdownDatabases();
     }
 
+    public List<Renovacion> getRenovar() {
+        return renovar;
+    }
+
+    public void setRenovar(List<Renovacion> renovar) {
+        this.renovar = renovar;
+    }
 }

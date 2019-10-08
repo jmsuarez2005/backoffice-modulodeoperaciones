@@ -71,14 +71,6 @@
                                 <tr>
                                     <td><label>Cargar Archivo :</label></td>
                                     <td><s:file cssClass="btn btn-info" name="upload" label="File"/></td>  
-                                   <!-- <td><select name="selectedBloqueo"><option value="00">Desbloquear</option>
-                                            <s:iterator value="tipoBloqueo" var="myObj1">
-                                                    
-                                                        <option value="<s:property value ="codigo"/>"> <s:property value ="tipo_bloque"/></option>
-                                                        
-                                                        
-                                                           </s:iterator></select>-->
-                                       </td>
                                 </tr>
                                 
                                 <tr>                                    
@@ -100,12 +92,12 @@
                                 </tr>
                             </thead>
                             <tbody>                                      
-                                <s:iterator value="tipoBloqueo" var="myObj">
+                                <s:iterator value="listReno" var="myObj">
                                   
                                         <tr>
-                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value ="fec_reg"/></td>    
+                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value="fec_reg"/></td>    
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="nro_tarjeta"/></td>                                            
-                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value="descripcion"/></td>
+                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value="respuesta"/></td>
                                         </tr>
                                     
                                 </s:iterator>
