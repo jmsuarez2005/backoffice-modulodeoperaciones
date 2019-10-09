@@ -206,8 +206,8 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                 }
                 String respuesta = listaRenovacion.get(listaRenovacion.size() - 1).getRespuesta();
 
-                if (respuesta.contains("errorT")) {
-                    message = "Tarjeta(s) inválida(s) para renovar: [" + respuesta.substring(6, respuesta.length()) + "]";
+                if (respuesta.contains("Tarjeta ya en Renovación")) {
+                    message = "Tarjeta(s) inválida(s) para renovar:";
                     tipoMessage = "error";
                     return SUCCESS;
                 } else if (respuesta.contains("error")) {
@@ -247,11 +247,11 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
             log.error("error ", e);
             this.message = "No se pudo realizar la renovación";
             tipoMessage = "error";
-            return "success";
+            return SUCCESS;
         }
       }
 
-        return "success";
+        return SUCCESS;
     }
 
     public String consultar() {

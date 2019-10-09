@@ -13,6 +13,7 @@ import com.novo.model.Ajuste;
 import com.novo.model.Renovacion;
 import com.novo.model.Tarjeta;
 import com.novo.model.ValoresRen;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -97,7 +98,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         log.info("sql [" + sql + "]");
         if (dbo.executeQuery(sql) == 0) {
             dbo.dbClose();
-            return "ok";
+            return "Ok";
         }
         dbo.dbClose();
         return "error";
@@ -185,6 +186,8 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         String filtro = "(";
         String filtroUpdate = "(";
         String sql = "";
+        Date fecha = new Date();
+        SimpleDateFormat dia = new SimpleDateFormat("dd/MM/yyyy");
         String rifFiltro = "";
         String nroTarjeta = "";
         List<String> nroTarjetasList = new ArrayList<String>();
@@ -210,7 +213,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
                 + "WHERE MPT.NRO_CUENTA IN  " + filtro + " \n"
                 + "AND MPT.CON_ESTATUS in (1,2,4) AND (SUBSTR(MCT.FEC_EXPIRA,3,4)||SUBSTR(MCT.FEC_EXPIRA,1,2)) <= to_char(sysdate,'YYMM') "
 //                + "AND TO_NUMBER(SUBSTR(MCT.FEC_EXPIRA,3,2)||SUBSTR(MCT.FEC_EXPIRA,1,2)) >= TO_NUMBER(TO_CHAR(SYSDATE,'YYMM'))"
-                + "AND MPT.FEC_BAJA IS NULL ";
+                + "AND MPT.FEC_BAJA IS NULL";
 
         log.info("sql [" + sql + "]");
         dbo.dbreset();
@@ -220,21 +223,24 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
                 nroTarjetasList.add(nroTarjeta.substring(4, nroTarjeta.length()));
                 cantidad++;
 
+                renovacion = new Renovacion();
                 renovacion.setNro_cuenta(dbo.getFieldString("NRO_CUENTA"));
                 renovacion.setNro_tarjeta(nroTarjeta);
                 renovacion.setCod_cliente(dbo.getFieldString("COD_CLIENTE"));
                 renovacion.setPrefix(dbo.getFieldString("PREFIX"));
+                renovacion.setFec_reg(dia.format(fecha));
+                renovacion.setRespuesta("Ok");
                 listarenovar.add(renovacion);
-                renovacion = new Renovacion();
 
             }
         } else {
             dbo.dbClose();
+            log.info("No se pudo realizar la renovación");
             renovacion = new Renovacion();
             renovacion.setRespuesta("error");
-            listarenovar.clear();
-            listarenovar.add(renovacion);
-            return listarenovar;
+            listarenovar1.clear();
+            listarenovar1.add(renovacion);
+            return listarenovar1;
         }
 
         //VALIDA TARJETAS EN RENOVACION
@@ -245,20 +251,25 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         if (dbo.executeQuery(sql) == 0) {
             while (dbo.nextRecord()) {
                 tarjetasInexis = tarjetasInexis + dbo.getFieldString("TARJETA").substring(4, dbo.getFieldString("TARJETA").length()) + ",";
+                renovacion = new Renovacion();
+                renovacion.setFec_reg(dia.format(fecha));
+                renovacion.setNro_tarjeta(dbo.getFieldString("TARJETA").substring(4, dbo.getFieldString("TARJETA").length()));
+                renovacion.setRespuesta("Tarjeta ya en Renovación");
+                listarenovar1.add(renovacion);
                 c++;
             }
         }
         if(c > 0){            
             tarjetasInexis = tarjetasInexis.substring(0, tarjetasInexis.length() - 1);
-            log.info("TARJETAS NO VALIDAS:" + tarjetasInexis);
-            renovacion = new Renovacion();
-            renovacion.setRespuesta("errorT" + tarjetasInexis);
-            listarenovar.clear();
-            listarenovar.add(renovacion);
+            log.info("TARJETAS NO VÁLIDAS:" + tarjetasInexis);
+//            renovacion = new Renovacion();
+//            renovacion.setRespuesta("errorT" + tarjetasInexis);
+//            listarenovar.clear();
+//            listarenovar.add(renovacion);
             dbo.dbClose();
-            return listarenovar;
+            return listarenovar1;
         }else{
-            log.info("TARJETAS VALIDAS PARA EL PROCESO DE RENOVACIÓN");            
+            log.info("TARJETAS VÁLIDAS PARA EL PROCESO DE RENOVACIÓN");            
         }
 
         if (cantidad == tarjetas.size()) {
@@ -272,19 +283,19 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
             log.info("SQL:" + sql);
             dbi.dbreset();
             if (dbi.executeQuery(sql) == 0) {
-                log.info("Informix - total de reposiciones anulados = " + dbi.rowsCount);
+                log.info("Informix - Total de reposiciones anulados = " + dbi.rowsCount);
             } else {
                 dbi.dbClose();
                 renovacion = new Renovacion();
                 renovacion.setRespuesta("error");
                 listarenovar.clear();
                 listarenovar.add(renovacion);
-                return listarenovar;
+                return listarenovar1;
             }
 
             dbi.dbClose();
-            renovacion.setRespuesta("ok");
-            listarenovar.add(renovacion);
+            //renovacion.setRespuesta("ok");
+            //listarenovar.add(renovacion);
             return listarenovar;
         } else {
             //TARJETAS INEXISTENTES Y/O NO VALIDAS PARA RENOVACION
@@ -300,7 +311,7 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
             similar.retainAll(listTwo);
             different.removeAll(similar);
             tarjetasInexis = different.toString().substring(1, different.toString().length() - 1);
-            log.info("TARJETAS NO VALIDAS:" + tarjetasInexis);
+            log.info("TARJETAS NO VÁLIDAS:" + tarjetasInexis);
 
         }
         dbo.dbClose();
@@ -308,15 +319,15 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         if (tarjetasInexis.equals("")) {
             renovacion = new Renovacion();
             renovacion.setRespuesta("error");
-            listarenovar.clear();
-            listarenovar.add(renovacion);
-            return listarenovar;
+            listarenovar1.clear();
+            listarenovar1.add(renovacion);
+            return listarenovar1;
         } else {
-            renovacion = new Renovacion();
-            renovacion.setRespuesta("errorT" + tarjetasInexis);
-            listarenovar.clear();
-            listarenovar.add(renovacion);
-            return listarenovar;
+//            renovacion = new Renovacion();
+//            renovacion.setRespuesta("errorT" + tarjetasInexis);
+//            listarenovar.clear();
+//            listarenovar.add(renovacion);
+            return listarenovar1;
         }
     }
 
@@ -335,9 +346,9 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         dbo.dbreset();
         log.info("sql [" + sql + "]");
         if (dbo.executeQuery(sql) == 0) {
-            log.info("Oracle - total de reposiciones insertados = " + dbo.rowsCount);
+            log.info("Oracle - Total de renovaciones insertadas = " + dbo.rowsCount);
             dbo.dbClose();
-            return "ok";
+            return "Ok";
         }
         dbo.dbClose();
         return "error";
