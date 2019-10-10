@@ -214,6 +214,10 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
                     message = "No se pudo realizar la renovación";
                     tipoMessage = "error";
                     return SUCCESS;
+                } else if (respuesta.contains("Tarjeta no apta")) {
+                    message = "Esta(s) tarjeta(s) no se puede(n) ser renovada(s) porque no cumplen las condiciones";
+                    tipoMessage = "error";
+                    return SUCCESS;    
                 } else if (respuesta.contains("Ok")) {
                     //SE PROCEDE A INSERTAR EN NOVO_RENOVACION
                     if (txt.paisMigra(propMigra, this.pais)) {    

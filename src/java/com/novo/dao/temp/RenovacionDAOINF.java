@@ -218,20 +218,32 @@ public class RenovacionDAOINF extends NovoDAO implements BasicConfig, AjustesTra
         log.info("sql [" + sql + "]");
         dbo.dbreset();
         if (dbo.executeQuery(sql) == 0) {
-            while (dbo.nextRecord()) {
-                nroTarjeta = dbo.getFieldString("NRO_TARJETA");
-                nroTarjetasList.add(nroTarjeta.substring(4, nroTarjeta.length()));
-                cantidad++;
+            if(dbo.nextRecord()){
+                do{
+                    nroTarjeta = dbo.getFieldString("NRO_TARJETA");
+                    nroTarjetasList.add(nroTarjeta.substring(4, nroTarjeta.length()));
+                    cantidad++;
 
-                renovacion = new Renovacion();
-                renovacion.setNro_cuenta(dbo.getFieldString("NRO_CUENTA"));
-                renovacion.setNro_tarjeta(nroTarjeta);
-                renovacion.setCod_cliente(dbo.getFieldString("COD_CLIENTE"));
-                renovacion.setPrefix(dbo.getFieldString("PREFIX"));
-                renovacion.setFec_reg(dia.format(fecha));
-                renovacion.setRespuesta("Ok");
-                listarenovar.add(renovacion);
+                    renovacion = new Renovacion();
+                    renovacion.setNro_cuenta(dbo.getFieldString("NRO_CUENTA"));
+                    renovacion.setNro_tarjeta(nroTarjeta);
+                    renovacion.setCod_cliente(dbo.getFieldString("COD_CLIENTE"));
+                    renovacion.setPrefix(dbo.getFieldString("PREFIX"));
+                    renovacion.setFec_reg(dia.format(fecha));
+                    renovacion.setRespuesta("Ok");
+                    listarenovar.add(renovacion);
 
+                }while (dbo.nextRecord());
+            }else{
+                log.info("Esta(s) tarjeta(s) no se pueden ser renovadas");
+                for (String tarjeta : tarjetas) {
+                    renovacion = new Renovacion();
+                    renovacion.setRespuesta("Tarjeta no apta");
+                    renovacion.setNro_tarjeta(tarjeta);
+                    renovacion.setFec_reg(dia.format(fecha));
+                    listarenovar1.add(renovacion);
+                }
+                return listarenovar1;
             }
         } else {
             dbo.dbClose();
