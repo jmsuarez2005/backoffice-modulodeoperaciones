@@ -56,7 +56,7 @@ public class BloqueoDesbloqueoDAOINF extends NovoDAO implements BasicConfig, Aju
             } else if (respuesta.equals("existe")) {
                 ajuste.setDescripcion("La tarjeta ya existe para hacer un bloqueo");
             } else {
-                ajuste.setDescripcion("Anulado");
+                ajuste.setDescripcion("Anulado, Codigo de Respuesta: " + respuesta);
             }
 
             ajuste.setFec_reg(annoying);
@@ -198,25 +198,29 @@ public class BloqueoDesbloqueoDAOINF extends NovoDAO implements BasicConfig, Aju
                         }
                         dbo.dbClose();
                         log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
-                        return "error";
+                        return handler.getRespCode();
                     }
 
                     dbo.dbClose();
                     log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
-                    return "error";
+                    return handler.getRespCode();
                 }
 
                 dbo.dbClose();
                 log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
-                return "error";
+                return handler.getRespCode();
 
+            }else{
+                dbo.dbClose();
+                log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada o desbloqueada, código respuesta " + handler.getRespCode());
+                
             }
 
             String sql4 = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION,CANAL) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', 'La tarjeta no pudo ser bloqueada RC=" + handler.getRespCode() + "', 'OPE')";
-            log.debug("sql #0 [" + uf2 + "]");
+            log.debug("sql #0 [" + sql4 + "]");
             if (dbo.executeQuery(sql4) == 0) {
                 dbo.dbClose();
-                return "ok";
+                return handler.getRespCode();
             }
             dbo.dbClose();
             return "error";

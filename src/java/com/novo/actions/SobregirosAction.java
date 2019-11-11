@@ -53,7 +53,8 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     private UsuarioSesion usuarioSesion;
     private List<TAjuste> tipoAjustes;
     private List<Ajuste> ajustex;
-
+    private List<Ajuste> listSobregiros;
+    
     private File file;
     private String contentType;
     private String filename;
@@ -267,7 +268,6 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
                     ajuste = new Ajuste();
                     tar = new Tarjeta();
                     log.info("Tarjeta [" + tarjetaString + "] ");
-
                     i++;
                     //log.info("por favor" + sheet.getRow(i));
                 } while (!tarjetaString.equals("") && sheet.getRow(i) != null);
@@ -299,19 +299,20 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
                     if (txt.paisMigra(propMigra, this.pais)) {   
                         sobregiros.setAjustes(ajustes);
                         sobregiros.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
+                        this.listSobregiros=sobregiros.getAjustes();
                     } else {
                         sobregirosInf.setAjustes(ajustes);
                         sobregirosInf.ProcesarSobregirosDAO(usuario.getIdUsuario(), selectedAjuste);
-
+                        this.listSobregiros=sobregirosInf.getAjustes();
                     }
-                    ajustex = ajustes;
+                    this.ajustex = ajustes;
 
                     tipoAjustes = business.getTipoAjustes();
                     ActionContext.getContext().getSession().put("tarjetasAct", tarjetasAct);
                   }
             }
         } catch (Exception e) {
-            log.error("error ", e );
+            log.error("Error " + e.getMessage() );
             tipoMessage = "error";
             tipoAjustes = business.getTipoAjustes();
             message = "No se pudo realizar el sobregiros";
@@ -410,4 +411,13 @@ public class SobregirosAction extends ActionSupport implements BasicConfig {
     public void setUploadFileName(String filename) {
         this.filename = filename;
     }
+
+    public List<Ajuste> getListSobregiros() {
+        return listSobregiros;
+    }
+
+    public void setListSobregiros(List<Ajuste> listSobregiros) {
+        this.listSobregiros = listSobregiros;
+    }
+    
 }

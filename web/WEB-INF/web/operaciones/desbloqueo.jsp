@@ -97,7 +97,7 @@
                                 </tr>
                             </thead>
                             <tbody>                                      
-                                <s:iterator value="tipoBloqueo" var="myObj">
+                                <s:iterator value="listbloquex" var="myObj">
                                   
                                         <tr>
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value ="fec_reg"/></td>    
@@ -115,10 +115,11 @@
        <footer>
             <%@include file="../include/footer.jsp" %>    
         </footer>
+        <!--
         <script>
             var contador = 1;    
             document.getElementById("boton1").addEventListener("click", function(event){
-                event.preventDefault()
+                event.preventDefault();
                 despliegue();
             });
             function despliegue(){                
@@ -126,5 +127,6 @@
                 
             }                        
         </script>
+        -->
     </body>
 </html>

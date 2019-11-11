@@ -76,7 +76,28 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
 
         return cont1;
     }
+    
+        public String Nro_Organizacion() {
+            String organizacion = "";
 
+            if (this.pais.equals("pe")) {
+                organizacion = "717";
+            }
+
+            if (this.pais.equals("peusd")) {
+                organizacion = "716";
+            }
+
+            if (this.pais.equals("ve")) {
+                organizacion = "719";
+            }
+            if (this.pais.equals("co")) {
+                organizacion = "713";
+            }
+
+            return organizacion;
+        }
+    
     public String RegistrarSobregirosDAO(String Tarjeta, String Monto, String idUsuario, String selectedAjuste) {
 
         String sql2 = "Select NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA";
@@ -148,13 +169,14 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
 
             String systrace = "";
             String SecuenciaTrama = "select tebcp_cpsystrace.nextval from dual ";
+            dbo.dbreset();
             if (dbo.executeQuery(SecuenciaTrama) == 0) {
                 if (dbo.nextRecord()) {
                     systrace = dbo.getFieldString("NEXTVAL");
                 }
             }
 
-            handler.execBloqueo("0", systrace, Tarjeta, Terminal, "SERVICIO DE ACTIVACION", "nro_cliente", "717", "PB", exptarjeta);
+            handler.execBloqueo("0", systrace, Tarjeta, Terminal, "SERVICIO DE BLOQUEO", "nro_cliente", Nro_Organizacion(), "PB", exptarjeta);
 
             if (handler.getRespCode().equals("00")) {
 
@@ -168,24 +190,26 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
                     if (dbo.executeQuery(ActualizaPlastico) == 0) {
                         if (dbo.executeQuery(ActualizaConsolidado) == 0) {
                             dbo.dbClose();
+                            log.info("La tarjeta " + Tarjeta + " fue bloqueada, código respuesta " + handler.getRespCode());
                             return "ok";
                         } else {
                             dbo.dbClose();
+                            log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada, código respuesta " + handler.getRespCode());
                             return "error";
                         }
-
                     } else {
                         dbo.dbClose();
+                        log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada, código respuesta " + handler.getRespCode());
                         return "error";
                     }
-
                 } else {
                     dbo.dbClose();
+                    log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada, código respuesta " + handler.getRespCode());
                     return "error";
                 }
             } else {
-                log.info("La tarjeta " + Tarjeta + "no pudo ser bloqueada, código respuesta " + handler.getRespCode());
-
+                log.info("La tarjeta " + Tarjeta + " no pudo ser bloqueada, código respuesta " + handler.getRespCode());
+            
                 String Sobregiro = "insert into novo_sobregiros (ID, NRO_TARJETA, MONTO_AJUSTE,USUARIO_INGRESO,TIPO_AJUSTE,MSG) VALUES (NOVO_SOBREGIROS_SEQ.nextval, '" + Tarjeta + "'," + Monto + ",'" + idUsuario + "'," + selectedAjuste + ", 'La tarjeta no pudo ser bloqueada RC=" + handler.getRespCode() + "')";
                 if (dbo.executeQuery(Sobregiro) == 0) {
                     dbo.dbClose();
