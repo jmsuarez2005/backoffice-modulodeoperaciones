@@ -1,9 +1,10 @@
 <%-- 
-    Document   : SessionExpirada.jsp
+    Document   : SessionExpirada
     Created on : 07/07/2017, 12:42:23 PM
     Author     : etabban
 --%>
 <%@taglib uri="/struts-tags" prefix="s" %>
+<%@taglib uri="/struts-dojo-tags" prefix="sx" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,7 +15,7 @@
             </header>
                 <div class="container">  
                     <div class="content" id="content">
-                        <div class="info-box" style="width:30%;margin: 5em 0 0 43em;">
+                        <div class="info-box" style="width:30%;margin: 5em 0 0 43em;position: inherit">
                         <center>
                            <h2>Atención</h2> 
                         </center>
@@ -39,7 +40,7 @@
                         </div>
                     </div>
                 </div>
-        <footer>
+        <footer style="position:absolute">
                 <%@include file="../include/footer.jsp" %>    
         </footer>
     </body>

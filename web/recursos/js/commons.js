@@ -96,13 +96,14 @@ function validarCambioClave(form,event) {
             return false;
         } else {            
             //validate letter
-            if ( newPassword.match(/[A-z]/) ) {
+            if ( newPassword.match(/[a-z]/) ) {
                 //validate capital letter
                 if ( newPassword.match(/[A-Z]/) ) {
                     //validate number                                 
-                    if (!newPassword.match(/((\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#\$%])*\d(\w|[!@#$%])*(\d)*)/) && newPassword.match(/\d{1}/) ) {
-                        //validate consecutivo
-                        if (!newPassword.match(/(.)\1{2,}/) ) {
+                    //if (!newPassword.match(/((\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#\$%])*\d(\w|[!@#$%])*(\d)*)/) && newPassword.match(/\d{1}/) ) {
+                    if (newPassword.split(/[0-9]/).length - 1 >= 1 && newPassword.split(/[0-9]/).length - 1 <= 3){
+                    //validate consecutivo
+                        if (!newPassword.match(/(.)\1{2,}/) && (newPassword.length > 0) ) {
                             //validate especial
                             if ( newPassword.match(/([!@\*\-\?¡¿+\/.,_#])/ )) {
 
@@ -159,7 +160,7 @@ function ie8SafePreventEvent(e) {
 function colorearValidos(form) {
     var newPassword = new String(form.newpw.value);
     
-    if( newPassword.match(/[A-z]/) ) {
+    if( newPassword.match(/[a-z]/) ) {
         $('#tip6').css('color', 'green');
         $('#tip6_icon').attr('src', '../recursos/icons/ok.png');
     }else{
@@ -175,7 +176,8 @@ function colorearValidos(form) {
         $('#tip5_icon').attr('src', '../recursos/icons/danger.png');
     }
     
-    if(!newPassword.match(/((\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#\$%])*\d(\w|[!@#$%])*(\d)*)/) && newPassword.match(/\d{1}/) ) {
+    //if(!newPassword.match(/((\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#$%])*\d(\w|[!@#\$%])*\d(\w|[!@#$%])*(\d)*)/) && newPassword.match(/\d{1}/) ) {
+    if(newPassword.split(/[0-9]/).length - 1 >= 1 && newPassword.split(/[0-9]/).length - 1 <= 3){
         $('#tip4').css('color', 'green');
         $('#tip4_icon').attr('src', '../recursos/icons/ok.png');
     }else{
@@ -183,7 +185,7 @@ function colorearValidos(form) {
         $('#tip4_icon').attr('src', '../recursos/icons/danger.png');
     }
     
-    if(!newPassword.match(/(.)\1{2,}/) ) {
+    if(!newPassword.match(/(.)\1{2,}/) && (newPassword.length > 0)) {
         $('#tip3').css('color', 'green');
         $('#tip3_icon').attr('src', '../recursos/icons/ok.png');
     }else{

@@ -350,7 +350,7 @@ public class AjusteTransaccionesAction extends ActionSupport
         ReporteTransacciones business = new ReporteTransacciones();
 
         if (this.montoEditar == null || this.montoEditar.equals("")) {
-            this.message = "Monto invalido, intente nuevamente.";
+            this.message = "Monto inválido, intente nuevamente.";
             tipoMessage = "error";
             this.listaUsuariosBusqueda = business.getUsuarios();
             return "listar";
@@ -419,7 +419,7 @@ public class AjusteTransaccionesAction extends ActionSupport
 
         log.info("Estatus seleccionado [" + this.selectedStatus + "] ---- usuario seleccionado [" + this.selectedUsuario + "]  --- fecha inicio [" + this.fechaIni + "] ---- fecha final[" + this.fechaFin + "] ---- filtro [" + this.selectedFiltro + "] ");
 
-        //validos el listado de registros por pagina
+        //válidos el listado de registros por pagina
         if (this.selectedPages.equals("Todos")) {
             this.setSelectedPages("0");
         } else if (this.selectedPages.equals("15 Registros por pág.")) {
@@ -572,8 +572,11 @@ public class AjusteTransaccionesAction extends ActionSupport
                 return "success";
             }
         }
-
-        if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals("")) && !this.opcion.equals("buscarProductosEmpresas")) {
+        if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals("")) && (this.documentoIdentidad != null) && (!this.documentoIdentidad.equals("")) && !this.opcion.equals("buscarProductosEmpresas")) {
+            log.info("tarjeta = " + this.nroTarjeta);
+            this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, this.nroTarjeta);
+        }else{
+            if ((this.nroTarjeta != null) && (!this.nroTarjeta.equals("")) && !this.opcion.equals("buscarProductosEmpresas")) {
             log.info("tarjeta = " + this.nroTarjeta);
             this.tarjetas = business.getTarjetasUsuario(null, this.nroTarjeta);
         }
@@ -582,7 +585,8 @@ public class AjusteTransaccionesAction extends ActionSupport
             //this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, null, this.selectedProducto.trim(), this.selectedEmpresa.trim());
             this.tarjetas = business.getTarjetasUsuario(this.documentoIdentidad, null);
 
-        }
+        }}
+        
 
         if (this.opcion.equals("buscarProductosEmpresas")) {
             DateFormat df2 = new SimpleDateFormat("ddMMyyyy");

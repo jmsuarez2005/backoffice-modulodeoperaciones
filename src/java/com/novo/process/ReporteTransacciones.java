@@ -95,29 +95,42 @@ public class ReporteTransacciones implements BasicConfig {
         if (txt.paisMigra(propMigra, this.pais)) {   
             AjustesDAO dao = new AjustesDAO(appName, dbOracle, pais);
             List<Tarjeta> tarjetas = null;
-            if (documento != null) {
-                tarjetas = dao.getTarjetasDAO(documento, true);
-                dao.closeConection();
-                return tarjetas;
-            }
-            if (nroTarjeta != null) {
-                tarjetas = dao.getTarjetasDAO(nroTarjeta, false);
-                dao.closeConection();
-                return tarjetas;
+            
+            if ((documento != null) && (nroTarjeta != null)){
+                    tarjetas = dao.getTarjetasDAOF(documento, nroTarjeta);
+                    dao.closeConection();
+                    return tarjetas;
+            }else{
+                if (documento != null) {
+                    tarjetas = dao.getTarjetasDAO(documento, true);
+                    dao.closeConection();
+                    return tarjetas;
+                }
+                if (nroTarjeta != null) {
+                    tarjetas = dao.getTarjetasDAO(nroTarjeta, false);
+                    dao.closeConection();
+                    return tarjetas;
+                }
             }
 
         } else {
             AjustesDAOINF dao = new AjustesDAOINF(appName, databases, pais);
             List<Tarjeta> tarjetas = null;
-            if (documento != null) {
-                tarjetas = dao.getTarjetasDAO(documento, true);
+            if ((documento != null) && (nroTarjeta != null)){
+                tarjetas = dao.getTarjetasDAOF(documento, nroTarjeta);
                 dao.closeConection();
                 return tarjetas;
-            }
-            if (nroTarjeta != null) {
-                tarjetas = dao.getTarjetasDAO(nroTarjeta, false);
-                dao.closeConection();
-                return tarjetas;
+            }else{
+                if (documento != null) {
+                    tarjetas = dao.getTarjetasDAO(documento, true);
+                    dao.closeConection();
+                    return tarjetas;
+                }
+                if (nroTarjeta != null) {
+                    tarjetas = dao.getTarjetasDAO(nroTarjeta, false);
+                    dao.closeConection();
+                    return tarjetas;
+                }
             }
         }
         return null;

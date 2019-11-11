@@ -105,7 +105,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <a href="reportesConsultaSaldo.do" download>Descargar Archivo</a>
+                    
+                   <!--<a href="reportesConsultaSaldo.do" download><td><label>Descargar Archivo</label></td></a> -->
+                    <tr>                                    
+                    <td colspan="3" style="text-align:center"><s:submit cssClass="btn btn-primary" value="Descargar Archivo" position="center" action= "reportesConsultaSaldo" onclick="<a href='reportesConsultaSaldo.do' download ></a>"/></td>                   
+                    </tr>
                     
                 </div>   
             </div>           
@@ -113,10 +117,11 @@
         <footer>
             <%@include file="../include/footer.jsp" %>    
         </footer>
+        <!--
         <script>
             var contador = 1;    
             document.getElementById("boton1").addEventListener("click", function(event){
-                event.preventDefault()
+                event.preventDefault();
                 despliegue();
             });
             function despliegue(){                
@@ -124,5 +129,6 @@
                 
             }                        
         </script>
+        -->
     </body>
 </html>

@@ -104,12 +104,10 @@
                                 </tr>
                             </thead>
                             <tbody>                                      
-                                <s:iterator value="ajustex" var="myObj">
+                                <s:iterator value="listSobregiros" var="myObj">
                                   
                                         <tr>
-                                            <td style="width:25%;text-align:center;" colspan="1">                                                
-                                                <s:property value ="fecha"/>
-                                            </td>    
+                                            <td style="width:25%;text-align:center;" colspan="1"><s:property value="fecha"/></td>    
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="tarjeta"/></td>                                            
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="monto"/></td>                                            
                                             <td style="width:25%;text-align:center;" colspan="1"><s:property value="status"/></td>
@@ -126,10 +124,11 @@
         <footer>
             <%@include file="../include/footer.jsp" %>    
         </footer> 
+        <!--
         <script>
             var contador = 1;    
             document.getElementById("boton1").addEventListener("click", function(event){
-                event.preventDefault()
+                event.preventDefault();
                 despliegue();
             });
             function despliegue(){                
@@ -137,6 +136,7 @@
                 
             }                        
         </script>
+        -->
     </body>
 
 
