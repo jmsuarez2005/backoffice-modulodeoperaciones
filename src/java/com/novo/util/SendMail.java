@@ -54,7 +54,7 @@ public class SendMail {
         }
     }
 
-    public static void sendEmailHtml(String smtpServ, String recipients[], String subject, String message, String from, final String user, final String password, String rutaImg)
+    public static void sendEmailHtml(String smtpServ, String recipients[], String subject, String message, String from, String user, String password, String rutaImg)
     {
         boolean debug = true;
         try
