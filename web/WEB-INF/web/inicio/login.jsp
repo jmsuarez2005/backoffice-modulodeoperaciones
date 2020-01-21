@@ -7,6 +7,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <s:bean name="com.novo.util.CountriesUtil" var="country" />
 <!DOCTYPE html>
+
+<%@ page import='com.novo.util.*' %>
 <html>
     
      <%@include file="../include/head_login.jsp" %>
