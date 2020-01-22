@@ -6,6 +6,8 @@ package com.novo.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 
 /**
@@ -29,6 +31,15 @@ public class Version {
         }
         
         return prop;
+        
+    }
+    
+     public static String getAnio(){
+        Calendar fecha = new GregorianCalendar();
+
+        int anio = fecha.get(Calendar.YEAR);
+
+        return String.valueOf(anio);
     }
     
     public static void main(String[] args){
