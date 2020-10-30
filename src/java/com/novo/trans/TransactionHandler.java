@@ -116,7 +116,7 @@ public class TransactionHandler {
             msg = "TEBCATRAN " + sResp;
             setMsgText(msg);
         } else if (!sResp.substring(0, 4).equalsIgnoreCase("0000")) {
-            rc = -4; // "TEBCATRAN ERROR. Operaci�n no realizada";
+            rc = -4; // "TEBCATRAN ERROR. Operación no realizada";
             msg = "TEBCATRAN ERROR. Operación no realizada";
             setMsgText(msg);
         } else {
@@ -146,10 +146,6 @@ public class TransactionHandler {
                 // Plata-Plata
                 ref = sResp.substring(19, 39);
                 log.info("Response - REF:                     [" + ref + "]");
-                /*md5 = sResp.substring(39, 71);
-                 log.info("Response - MD5:                     [" + md5 + "]");
-                 msgText = sResp.substring(71);
-                 log.info("Response - MSG TXT:                 [" + msgText + "]");*/
             }
         }
 
@@ -428,44 +424,19 @@ public class TransactionHandler {
         sSendBuff += mkTransferenciaBuffer(fecExpOrigen, tarjetaDestino, cedulaDestino, fecExpDestino);
         String sResp = cl.sendReceive(sSendBuff);
 
-        if (cl.getERRORTCP()) {
-//                if(cl.getErrTimeout()){
-//                    rev=this.execReversoTransferencia(idCanal, tarjeta, tarjeta, nomcomercio, monto, monto, systemtrace, terminal, fecExpOrigen, tarjetaDestino, cedulaDestino, fecExpDestino, fechahora, numbt);
-//                    log.info("Enviando peticion de reverso de transferencia a novotrans. Rc="+rev);
-//                    if(rev!=0) {//enviando de nuevo peticion de reverso
-//                         log.error("Enviando de nuevo peticion de reverso");
-//                        rev=this.execReversoTransferencia(idCanal, tarjeta, tarjeta, nomcomercio, monto, monto, systemtrace, terminal, fecExpOrigen, tarjetaDestino, cedulaDestino, fecExpDestino, fechahora, numbt);
-//                    }
-//                }
-//			log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operacion. Se envia reverso automaticamente");
-        }
-
         rc = setResponse("109" + idCanal, sResp);
-        if (rc != 0) {
-//            rev=this.execReversoTransferencia(idCanal, tarjeta, tarjeta, nomcomercio, monto, monto, systemtrace, terminal, fecExpOrigen, tarjetaDestino, cedulaDestino, fecExpDestino, fechahora, numbt);
-//            log.info("Enviando peticion de reverso de transferencia a novotrans. Rc="+rev);
-//            if(rev!=0) {//enviando de nuevo peticion de reverso
-//                 log.error("Enviando de nuevo peticion de reverso");
-//                rev=this.execReversoTransferencia(idCanal, tarjeta, tarjeta, nomcomercio, monto, monto, systemtrace, terminal, fecExpOrigen, tarjetaDestino, cedulaDestino, fecExpDestino, fechahora, numbt);
-//            }
-        }
-//		log.info("execTransferencia [End] rc=" + rc + " msg=" + msg + " AuthCode=" + getAuthCode() + " Numbt=" + getNumbt());
-
         return (rc);
     }
 
     public int execReversoTransferencia(String idCanal, String noTarjeta, String expTarjeta, String noTelefono, String monto, String montoOp, String systrace, String sTerminal, String fecExpOrigen, String tarjetaDestino, String cedulaDestino, String fecExpDestino, String fechahora, String numbt) {
         int rc = 0;
-//        log.info("Ejecutando [Start] Reverso de Transferecia="+noTelefono+" Tarjeta="+noTarjeta+" Expiraci�n="+expTarjeta+" monto="+monto+" numbt="+numbt);
         String codRevTransferencia = "110";
 
-        // String sSendBuff = mkSendBuff("107"+idCanal, sTerminal, noTarjeta, expTarjeta, makeMonto(monto), makeMonto(montoOp), fechahora, systrace,noTelefono,fechaFactura);
         String sSendBuff = mkSendBuff(codRevTransferencia + idCanal, sTerminal, noTarjeta, expTarjeta, makeMonto(monto), makeMonto(montoOp), fechahora, systrace);
         sSendBuff += mkTransferenciaBuffer(fecExpOrigen, tarjetaDestino, cedulaDestino, fecExpDestino);
         String sResp = cl.sendReceive(sSendBuff);
 
         rc = setResponse(codRevTransferencia + idCanal, sResp);
-//        log.info("Ejecutando reverso [End] msg="+msg+" autCode="+getAuthCode()+" numbt="+getNumbt());
         return (rc);
     }
 
@@ -489,25 +460,14 @@ public class TransactionHandler {
         if (update) {
             sResp = cl.sendReceive(sSendBuff);
         } else {
-//                    log.debug("sSendBuff["+sSendBuff+"]");
             sResp = "00000000000000000000000000000000000000000000000000000";
             msg = "modo no update (false)";
         }
 
         if (cl.getERRORTCP()) {
-            /*Client clRev = new Client(ip, port, timeout);
-             log.error("ATENCION: ERROR de comunicaciones. No se puede determinar resultado de la operacion. Se envia reverso automaticamente");
-             String sSendRevBuff = mkSendBuff("1021",sComercio, sTerminal, notarjeta,"", makeMonto(monto), fechahora, systrace,"0000");
-             log.error("TRY REVERSO: sSendRevBuff[" + sSendRevBuff + "]");
-             String sRevResp = clRev.sendReceive(sSendRevBuff);
-             int rcRev = setResponse(sRevResp);
-             log.error("REVERSO RESPONSE: rc=" + rcRev + " sRevResp[" + sRevResp + "]");*/
             execReversoCargo(opReverse, sComercio, sTerminal, notarjeta, monto, systrace, fecexp);
         }
         rc = setResponse(sResp);
-//        if (rc != 0) {
-//            execReversoCargo(opReverse,sComercio, sTerminal, notarjeta, monto, systrace, fecexp);
-//        }
         log.info("Ejecutando [End] rc=" + rc + " msg=" + msg + " autCode=" + authCode + " numbt=" + numbt);
 
         return (rc);
@@ -567,9 +527,6 @@ public class TransactionHandler {
             log.error("REVERSO RESPONSE: rc=" + rcRev + " sRevResp[" + sRevResp + "]");
         }
         rc = setResponse(sResp);
-//        if (rc != 0) {
-//            execReversoRecarga(opReverse,sComercio, comercioCobro, ntarjetaCobro, monto, systraceCobro, fecexpCobro);
-//        }
         log.info("Ejecutando [End] rc=" + rc + " msg=" + msg + " autCode=" + authCode + " numbt=" + numbt);
 
         return (rc);
@@ -625,7 +582,6 @@ public class TransactionHandler {
         log.info("execUpdateCard nomcomercio     : " + nomcomercio);
         log.info("execUpdateCard cedula          : " + cedula);
         log.info("execUpdateCard tipo          : " + tipo);
-        //log.info("execUpdateCard nro_organizacion: " + this.nro_organizacion);
         if (systemtrace != null) {
             systemtrace = systemtrace.trim();
         }

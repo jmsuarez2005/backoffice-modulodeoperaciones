@@ -150,7 +150,6 @@ public class RecargasDAOINF extends NovoDAO implements BasicConfig,RecargasQuery
                     }
                 }
             }
-            //dbi.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica del mes "+this.pais);
             log.error("Causa: "+e.getMessage()+" localizado en: "+e.getLocalizedMessage());

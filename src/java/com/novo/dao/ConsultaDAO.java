@@ -13,7 +13,9 @@ import com.novo.model.Tarjeta;
 import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionHandler;
 import java.util.HashMap;
+import java.util.Properties;
 import org.apache.log4j.Logger;
+import static com.novo.util. VariablesUtil.codPais;
 
 /**
  *
@@ -22,41 +24,56 @@ import org.apache.log4j.Logger;
 public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacciones {
 
     private static Logger log = Logger.getLogger(BloqueoDesbloqueoDAO.class);
+    Properties prop;
 
     public ConsultaDAO(String dbproperty, String[] databases, String pais) {
         super(dbproperty, databases, pais);
+        prop = Utils.getConfig("NovoConexionTrans_"+codPais(pais)+".properties");       
     }
 
-    public String Nro_Organizacion() {
-        String organizacion = "";
-
-        if (this.pais.equals("pe")) {
-            organizacion = "717";
-        }
-
-        if (this.pais.equals("peusd")) {
-            organizacion = "716";
-        }
-
-        if (this.pais.equals("ve")) {
-            organizacion = "719";
-        }
-        if (this.pais.equals("co")) {
-            organizacion = "713";
-        }
-
-        return organizacion;
-    }
+//    public String Nro_Organizacion() {
+//        String organizacion = "";
+//        switch (pais){
+//            case "pe":
+//                organizacion = "717";
+//                break;
+//            case"peusd": 
+//                organizacion = "716";
+//                break;
+//            case "ve": 
+//                organizacion = "719";
+//                break;
+//            case "co": 
+//                organizacion = "713";
+//                break;
+//            default:
+//                organizacion = "";
+//        }
+//        return organizacion;
+//    }
 
     public Tarjeta RegistrarConsultaDAO(Tarjeta Tarjeta) {
-        String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM DUAL where ROWNUM = 1";
+           String ip, port, timeout, terminal,nroOrganizacion;
+//        String sql1 = "SELECT ("
+//                + "\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip') AS IP,"
+//                + "\n(SELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port') AS PORT,"
+//                + "\n(SELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal') AS TERMINAL,"
+//                + "\n(SELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout') AS TIMEOUT"
+//                + "\n FROM DUAL where ROWNUM = 1";
 
-        //Dbinterface dbi = (Dbinterface) this.ds.get("informix");
+            
+            ip = prop.getProperty("moduloAjustes_novotran_ip");
+            port = prop.getProperty("moduloAjustes_novotran_port");
+            timeout = prop.getProperty("moduloAjustes_novotran_timeout");
+            terminal = prop.getProperty("moduloAjustes_novotran_terminal");
+            nroOrganizacion = prop.getProperty("nro_organizacion");
+            
+          log.info(ip+","+port+","+timeout+","+terminal+","+nroOrganizacion);
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         Dbinterface dbo2 = (Dbinterface) this.ds.get("oracle");
         dbo2.dbreset();
         TransactionHandler handler = null;
-        String terminal = "";
+        //String terminal = "";
         String nro_cliente = "";
         String tipo_ajuste = "";
         String exptarjeta = "";
@@ -77,20 +94,19 @@ public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacc
         }
         
 
-        if (dbo2.executeQuery(sql1) == 0) {
-            if (dbo2.nextRecord()) {
-                handler = new TransactionHandler(dbo2.getFieldString("IP"), Integer.parseInt(dbo2.getFieldString("PORT")), Integer.parseInt(dbo2.getFieldString("TIMEOUT")));
-                terminal = dbo2.getFieldString("TERMINAL");
-            }
+//        if (dbo2.executeQuery(sql1) == 0) {
+//            if (dbo2.nextRecord()) {
+                    handler = new TransactionHandler(ip, Integer.parseInt(port), Integer.parseInt(timeout));
+//                terminal = dbo2.getFieldString("TERMINAL");
+//            }
+//
+//            dbo2.dbClose();
+//        } else {
+//            dbo2.dbClose();
+//            Tarjeta.setSaldoDisponible("No se pudo consultar el saldo. No se pudo consultar la Base de Datos");
+//            return Tarjeta;
+//        }
 
-            dbo2.dbClose();
-        } else {
-            dbo2.dbClose();
-            Tarjeta.setSaldoDisponible("No se pudo consultar el saldo. No se pudo consultar la Base de Datos");
-            return Tarjeta;
-        }
-
-       // Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         boolean existe = false;
 
         String systrace = "";
@@ -104,7 +120,7 @@ public class ConsultaDAO extends NovoDAO implements BasicConfig, AjustesTransacc
             return Tarjeta;
         }
 
-        handler.execSaldo("1080", systrace, Tarjeta.getNroTarjeta(), terminal, nro_cliente, Nro_Organizacion(), "0",exptarjeta);
+        handler.execSaldo("1080", systrace, Tarjeta.getNroTarjeta(), terminal, nro_cliente, nroOrganizacion, "0",exptarjeta);
 
         if (handler.getRespCode().equals("00")) {
             Tarjeta.setSaldoDisponible(Utils.formatMontoGenerico(Double.parseDouble(handler.getSaldoDisponible()) / 100.0D, "Pe"));

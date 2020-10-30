@@ -90,7 +90,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         dbi.dbreset();
         for (Tarjeta tarjetaAux : tarjetas) {
             dbi.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbi.executeQuery(sql) == 0) {
@@ -114,7 +113,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
 
         if (!nombreEmpresa.equals("")) {
             dbi.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             sql = "select acrif from empresas where acnomciacorto like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             log.info("sql [" + sql + "]");
             if (dbi.executeQuery(sql) == 0) {
@@ -193,7 +191,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
 
         if (!nombreEmpresa.equals("")) {
             dbi.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             sql = "select acrif from empresas where acnomciacorto like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             log.info("sql [" + sql + "]");
             if (dbi.executeQuery(sql) == 0) {
@@ -249,7 +246,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         dbi.dbreset();
         for (Tarjeta tarjetaAux : tarjetas) {
             dbi.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
             sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbi.executeQuery(sql) == 0) {
@@ -819,8 +815,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
             if (dbo.executeQuery(comparoDNI) == 0) {
                 if (dbo.nextRecord()) {
                     log.debug("YA EXISTE UN DNI [" + dni + "] A ACTUALIZAR REGISTRADA EN TARJETAHABIENTE");
-//                    dbo.dbClose();
-//                    return "error3" + dni;
                     // si ya existe el proceso nocturno se encarga de borrar/actualizar en esta tabla
                     exist = true;
                 }
@@ -979,7 +973,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         for (String idAjuste : idAjustes) {
             filtro = filtro + "'" + idAjuste + "'";
         }
-        //filtro = filtro.substring(0, filtro.length() - 1) + ")";
         String ActualizarMonto = "update novo_detalle_ajustes set monto = " + monto + " , ID_CODIGO_AJUSTE='" + tipoAJusteEditar + "' , "
                 + "DESCRIPCION = (select descripcion from NOVO_CODIGO_AJUSTES where ID_AJUSTE = '" + tipoAJusteEditar + "') where id_REGISTRO in " + filtro + ")";
         dbo.dbreset();
@@ -1186,16 +1179,10 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
                         if (dbi.executeQuery(sql) == 0) {
                             while (dbi.nextRecord()) {
                                 //Cedula ya existe registrado para otro usuario
-                                //nombre = dbi.getFieldString("NOMBRES");
-                                //apellido = dbi.getFieldString("APELLIDOS");
                                 log.info("CEDULA ENCONTRADA [" + dni + "]: " + nombre + " " + apellido);
                                 flag = true;
                                 break;
                             }
-//                            if (flag) {
-                            //RESPUESTA CON EL NOMBRE Y APELLIDO DEL TARJETA HABIENTE QUE CONTIENE LA CEDULA EN EL CAMPO DE ACTUALIZAR
-                            //return "-3" + dni + ":" + nombre + " " + apellido;
-//                            }
                         } else {
                             return "-1";
                         }
@@ -1229,7 +1216,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         camposAux = getCamposActualizacionDAO("0");
         camposAux2 = new ArrayList<CamposActualizacion>();
         for (Tarjeta tarjeta : tarjetas) {
-            //sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote, idpersona,  nombre1, direccion, telefono1, fechanac, apellido1, codarea1, nombre2, apellido2, nombretienda)"+17
             sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote,customstate,holdresponsecode,idpersona,nombre1,apellido1,nombre2,apellido2,nombretienda,subsidiary,companyid,cod_misc1,cod_misc2,cod_misc3,intcompany)"
                     + "VALUES( '" + idLote + "', '" + tarjeta.getNroTarjeta().trim() + "',  current,'" + idLote + "' , CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR)";
             for (CamposActualizacion campo : campos) {
@@ -1237,7 +1223,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
                     camposAux2.add(campoAux);
                     if (campo.getIdCampo().equals(campoAux.getIdCampo())) {
                         sql = sql.replaceFirst("CAMPOVALOR", "'" + campo.getValor() + "'");
-                        //break;
 
                         //if agregado del modulo actual en produccion
                         if (campo.getIdCampo().equals("4")) {
@@ -1388,7 +1373,6 @@ public class AjustesDAOINF extends NovoDAO implements BasicConfig, AjustesTransa
         log.info("GENERA DETALLES LOTES");
         log.info("----------------------");
         for (Tarjeta tarjeta : tarjetas) {
-            //sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote, idpersona,  nombre1, direccion, telefono1, fechanac, apellido1, codarea1, nombre2, apellido2, nombretienda)"+17
             sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote,customstate,holdresponsecode,idpersona,nombre1,apellido1,nombre2,apellido2,nombretienda,subsidiary,companyid,cod_misc1,cod_misc2,cod_misc3,intcompany)"
                     + "VALUES( '" + idLote + "', '" + tarjeta.getNroTarjeta().trim() + "',  current,'" + idLote + "' , CAMPOVALOR, CAMPOVALOR,"
                     + " '" + tarjeta.getIdExtPer() + "' , ";

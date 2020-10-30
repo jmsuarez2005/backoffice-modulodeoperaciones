@@ -82,7 +82,6 @@ public class EmisionesDAOINF extends NovoDAO implements BasicConfig,EmisionesQue
                     }
                 }
             }
-            //dbi.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica del dia "+this.pais);
             log.error("Causa: "+e);
@@ -137,7 +136,6 @@ public class EmisionesDAOINF extends NovoDAO implements BasicConfig,EmisionesQue
                     }
                 }
             }
-            //dbi.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica del mes "+this.pais);
             log.error("Causa: "+e);

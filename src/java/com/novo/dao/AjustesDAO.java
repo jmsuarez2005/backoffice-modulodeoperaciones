@@ -92,8 +92,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         dbo2.dbreset();
         for (Tarjeta tarjetaAux : tarjetas) {
             dbo2.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
-            ////sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
             sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
@@ -113,13 +111,10 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         String sql = "";
         Dbinterface dbo = ds.get("oracle");
         Dbinterface dbo2 = ds.get("oracle");
-        //Dbinterface dbi = ds.get("informix");
         String rif = "";
 
         if (!nombreEmpresa.equals("")) {
             dbo2.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
-            ////sql = "select acrif from empresas where acnomciacorto like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             sql = "select LTRIM(CIRIF_CLIENTE,'0') AS acrif from MAESTRO_CLIENTES_TEBCA where NOMBRE_CORTO like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
@@ -174,8 +169,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         dbo2.dbreset();
         for (Tarjeta tarjetaAux : tarjetas) {
             dbo2.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
-            /////sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
             sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
@@ -200,8 +193,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
 
         if (!nombreEmpresa.equals("")) {
             dbo2.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
-            //////sql = "select acrif from empresas where acnomciacorto like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             sql = "select LTRIM(CIRIF_CLIENTE,'0') AS acrif from MAESTRO_CLIENTES_TEBCA where NOMBRE_CORTO like '%" + nombreEmpresa.toUpperCase().trim() + "%'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
@@ -257,8 +248,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         dbo2.dbreset();
         for (Tarjeta tarjetaAux : tarjetas) {
             dbo2.dbreset();
-            //sql = "select acnombre from teb_productos where SUBSTR(acnumcuentai,1,8) ='" + tarjetaAux.getNroTarjeta().substring(0,8) + "'";
-            //////sql = "select acnomciacorto from empresas where acrif = '" + tarjetaAux.getIdExtEmp() + "'";
             sql = "select NOMBRE_CORTO AS acnomciacorto from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') = '" + tarjetaAux.getIdExtEmp() + "'";
             log.info("sql [" + sql + "]");
             if (dbo2.executeQuery(sql) == 0) {
@@ -329,7 +318,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         List<Tarjeta> tarjetas = new ArrayList<Tarjeta>();
         String sql = "";
         Dbinterface dbo = ds.get("oracle");
-        //Dbinterface dbi = ds.get("informix");
         sql="select * from MAESTRO_PLASTICO_TEBCA where nro_cuenta = '0000" + filtro2 + "' and id_ext_per = '" + filtro1 + "'";
         dbo.dbreset();
         log.info("sql [" + sql + "]");
@@ -347,7 +335,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
           log.error("No fue posible obtener una tarjeta válida");  
           
         }
-        //dbi.dbreset();
 
         for (Tarjeta tarjetaAux : tarjetas) {
             dbo.dbreset();
@@ -369,7 +356,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
 
         }
         dbo.dbClose();
-        //dbi.dbClose();
         return tarjetas;
     }
 
@@ -400,7 +386,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
     public List<Empresa> getEmpresasDAO() {
         //Dbinterface dbi = ds.get("informix");
         Dbinterface dbo = ds.get("oracle");
-        //String sql = "select accodcia, acnomcia, acrif,acnomciacorto  from empresas where cstatus = 'A' order by acnomciacorto asc";
         String sql = "select COD_CLIENTE AS accodcia, NOM_CLIENTE AS acnomcia, LTRIM(CIRIF_CLIENTE,'0') AS acrif,NOMBRE_CORTO AS acnomciacorto  from MAESTRO_CLIENTES_TEBCA where cstatus = 'A' order by NOMBRE_CORTO asc";
         List<Empresa> empresas = new ArrayList<Empresa>();
         Empresa empresa = new Empresa();
@@ -696,7 +681,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
 
         List<String> usuarios = new ArrayList<String>();
 
-        // String sql = "select idusuario from teb_adm_usuario where acestatus = 'A' order by idusuario";
         String sql = "select idusuario from teb_adm_usuario where acestatus = 'A' order by idusuario";
         dbo.dbreset();
         log.info("sql [" + sql + "]");
@@ -747,7 +731,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
     //Metodo agregado del actual en produccion updateCampos
     public String updateCampos(String tarjeta, String nombre, String apellido, String dni, String pais) {
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
-        //Dbinterface dbi = (Dbinterface) this.ds.get("informix");
 
         String id = "";
         String ConsultaCliente = "select LTRIM (NRO_CLIENTE,0) AS NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA WHERE NRO_CUENTA='0000" + tarjeta + "'";
@@ -790,21 +773,12 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             return "error";
         }
 
-//        if (dbi.executeQuery(ActualizarSQL) == 0) {
-//            dbi.dbClose();
-//            log.info("Informix - total de registros afectados =" + dbi.rowsCount);
-//        } else {
-//            dbi.dbClose();
-//            log.error("Informix - Error actualizando los campos");
-//            return "error";
-//        }
         return "success";
     }
 
     //Metodo agregado del actual en produccion updateCampos
     public String updateAfiliacion(String tarjeta, String nombre, String apellido, String dni, String pais) {
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
-        //Dbinterface dbi = (Dbinterface) this.ds.get("informix");
 
         String id = "";
         boolean exist = false;
@@ -831,8 +805,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             if (dbo.executeQuery(comparoDNI) == 0) {
                 if (dbo.nextRecord()) {
                     log.debug("YA EXISTE UN DNI [" + dni + "] A ACTUALIZAR REGISTRADA EN TARJETAHABIENTE");
-//                    dbo.dbClose();
-//                    return "error3" + dni;
                     // si ya existe el proceso nocturno se encarga de borrar/actualizar en esta tabla
                     exist = true;
                 }
@@ -914,11 +886,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                 log.error("Oracle - Error actualizando los campos");
                 return "error";
             }
-
-//            if (dbi.executeQuery(ActualizarSQL) == 0) {
-//                dbi.dbClose();
-//                log.info("Informix - total de registros afectados =" + dbi.rowsCount);
-//            if (dbi.rowsCount == 0 && pais.equalsIgnoreCase("ve")) { // 0 = no se encontro registro, se procede a insertar un nuevo registro con los datos del tarjetahabiente
             if (dbo.rowsCount == 0 && pais.equalsIgnoreCase("ve")) { // 0 = no se encontro registro, se procede a insertar un nuevo registro con los datos del tarjetahabiente
 
                 String ConsultaTH = "select ID_EXT_PER FROM TARJETAHABIENTE WHERE ID_EXT_PER = '" + dni + "'";
@@ -951,7 +918,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                     InsertarSQL = InsertarSQL + "null,";
                 }
 
-//                InsertarSQL = InsertarSQL + "null,null,null,null,null,null,null,null,null,null,current,null)";
                 InsertarSQL = InsertarSQL + "null,null,null,null,null,null,null,null,null,null,sysdate,null)";
                 log.info("ORACLE - SQL [" + InsertarSQL + "]");
 
@@ -965,11 +931,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                     return "error";
                 }
             }
-//            } else {
-//                dbi.dbClose();
-//                log.error("Informix - Error actualizando los campos");
-//                return "error";
-//            }
 
         }
 
@@ -993,7 +954,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         for (String idAjuste : idAjustes) {
             filtro = filtro + "'" + idAjuste + "'";
         }
-        //filtro = filtro.substring(0, filtro.length() - 1) + ")";
         String ActualizarMonto = "update novo_detalle_ajustes set monto = " + monto + " , ID_CODIGO_AJUSTE='" + tipoAJusteEditar + "' , "
                 + "DESCRIPCION = (select descripcion from NOVO_CODIGO_AJUSTES where ID_AJUSTE = '" + tipoAJusteEditar + "') where id_REGISTRO in " + filtro + ")";
         dbo.dbreset();
@@ -1152,7 +1112,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         SimpleDateFormat fecha = new SimpleDateFormat("yyMMdd");
         fechanumlote = fecha.format(new Date());
 
-        //String sql = "select max(acnumlote) + 1 as LOTE from teb_lote where accodcia = '1' and to_char(dtfechorcarga,'%y%m%d') =" + fechanumlote + "";
         String sql = "select max(acnumlote) + 1 as LOTE from teb_lote where accodcia = '1' and to_char(dtfechorcarga,'YYYYMMDD') =" + fechanumlote + "";
 
         if (dbo.executeQuery(sql) == 0) {
@@ -1171,7 +1130,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
     }
 
     public String makeUpdatesDAO(List<Tarjeta> tarjetas, List<CamposActualizacion> campos, String usuario, String pais) throws SQLException {
-        //Dbinterface dbi = ds.get("informix");
         Dbinterface dbo = ds.get("oracle");
         dbo.dbreset();
         String idLote = "";
@@ -1203,16 +1161,10 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                         if (dbo.executeQuery(sql) == 0) {
                             while (dbo.nextRecord()) {
                                 //Cedula ya existe registrado para otro usuario
-                                //nombre = dbo.getFieldString("NOMBRES");
-                                //apellido = dbo.getFieldString("APELLIDOS");
                                 log.info("CEDULA ENCONTRADA [" + dni + "]: " + nombre + " " + apellido);
                                 flag = true;
                                 break;
                             }
-//                            if (flag) {
-                            //RESPUESTA CON EL NOMBRE Y APELLIDO DEL TARJETA HABIENTE QUE CONTIENE LA CEDULA EN EL CAMPO DE ACTUALIZAR
-                            //return "-3" + dni + ":" + nombre + " " + apellido;
-//                            }
                         } else {
                             return "-1";
                         }
@@ -1226,7 +1178,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         }
 
         String sql = "INSERT INTO teb_lote(ACIDLOTE, accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga, acnumlote)"
-                //+ "VALUES( '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', current, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Actualizacion', (select acprefix from teb_productos where '" + tarjetas.get(0).getNroTarjeta() + "' between acnumcuentai and acnumcuentaf and acnumcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
                 + "VALUES(SEQ_ACIDLOTE_TEB_LOTE.NEXTVAL, '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', sysdate, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Actualizacion', (select PREFIX from CONFIG_PRODUCTOS where '" + tarjetas.get(0).getNroTarjeta() + "' between numcuentai and numcuentaf and numcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
         log.info("sql [" + sql + "]: makeUpdatesDAO() se inserta el lote");
         if (dbo.executeQuery(sql) == 0) {
@@ -1248,7 +1199,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         camposAux = getCamposActualizacionDAO("0");
         camposAux2 = new ArrayList<CamposActualizacion>();
         for (Tarjeta tarjeta : tarjetas) {
-            //sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote, idpersona,  nombre1, direccion, telefono1, fechanac, apellido1, codarea1, nombre2, apellido2, nombretienda)"+17
             sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote,customstate,holdresponsecode,idpersona,nombre1,apellido1,nombre2,apellido2,nombretienda,subsidiary,companyid,cod_misc1,cod_misc2,cod_misc3,intcompany)"
                     + "VALUES( '" + idLote + "', '" + tarjeta.getNroTarjeta().trim() + "',  sysdate,'" + idLote + "' , CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR, CAMPOVALOR)";
             for (CamposActualizacion campo : campos) {
@@ -1256,7 +1206,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
                     camposAux2.add(campoAux);
                     if (campo.getIdCampo().equals(campoAux.getIdCampo())) {
                         sql = sql.replaceFirst("CAMPOVALOR", "'" + campo.getValor() + "'");
-                        //break;
 
                         //if agregado del modulo actual en produccion
                         if (campo.getIdCampo().equals("4")) {
@@ -1343,7 +1292,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         }
         ////////////////////////////////////////////////////////////////////
 
-        ///////////////////////////////////////////////////////////////////
         //SE VALIDA SI LA EMPRESA EXISTE
         String empresasInexis = "";
         List<String> empresas1 = new ArrayList<String>();
@@ -1358,7 +1306,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
             }
         }
         if (!empresas.equals("")) {
-            //sql = "select acrif from empresas where acrif in (" + empresas.substring(0, empresas.length() - 1) + ")";
             sql = "select LTRIM(CIRIF_CLIENTE,'0') AS acrif from MAESTRO_CLIENTES_TEBCA where LTRIM(CIRIF_CLIENTE,'0') in (" + empresas.substring(0, empresas.length() - 1) + ")";
             log.info("sql [" + sql + "]");
             dbo.dbreset();
@@ -1388,7 +1335,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         ////////////////////////////////////////////////////////////////////
 
         sql = "INSERT INTO teb_lote( ACIDLOTE,accodgrupo,accodcia, ctipolote, nmonto, ncantregs, dtfechorvalor, accodusuarioc, dtfechorcarga, accodusuarioa, dtfechorauto, accodusuarioa2, dtfechorauto2, dtfechorproceso, nrechazos, nid_trans, actipoauto, accanal, cestatus, obs, actipoproducto, acxmlext, achist, acnocuenta, idordens, cfacturacion, montocomision, montoiva, montorecarga, acnumlote)"
-//                + "VALUES( '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', current, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Afiliacion', (select acprefix from teb_productos where '" + tarjetas.get(0).getNroTarjeta() + "' between acnumcuentai and acnumcuentaf and acnumcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
                 + "VALUES(SEQ_ACIDLOTE_TEB_LOTE.NEXTVAL, '0101010101', '1','A', 0.00, " + tarjetas.size() + ", NULL, '" + usuario + "', sysdate, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3', 'Afiliacion', (select PREFIX from CONFIG_PRODUCTOS where '" + tarjetas.get(0).getNroTarjeta() + "' between numcuentai and numcuentaf and numcuentai not like '00000000%'), NULL, '0', NULL, NULL, NULL, 0.00, 0.00, 0.00, " + acnumlote + ")";
         log.info("sql [" + sql + "]: makeAfiliacionDAO() se inserta el lote");
         dbo.dbreset();
@@ -1411,7 +1357,6 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         log.info("GENERA DETALLES LOTES");
         log.info("----------------------");
         for (Tarjeta tarjeta : tarjetas) {
-            //sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote, idpersona,  nombre1, direccion, telefono1, fechanac, apellido1, codarea1, nombre2, apellido2, nombretienda)"+17
             sql = "INSERT INTO tebca_lote_ad( numlote, notarjeta, dttimestamp,  idlote,customstate,holdresponsecode,idpersona,nombre1,apellido1,nombre2,apellido2,nombretienda,subsidiary,companyid,cod_misc1,cod_misc2,cod_misc3,intcompany)"
                     + "VALUES( '" + idLote + "', '" + tarjeta.getNroTarjeta().trim() + "',  sysdate,'" + idLote + "' , CAMPOVALOR, CAMPOVALOR,"
                     + " '" + tarjeta.getIdExtPer() + "' , ";

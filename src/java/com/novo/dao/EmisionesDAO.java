@@ -70,7 +70,6 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
             Dbinterface dbo=ds.get(oracle);
             dbo.dbreset();
         
@@ -83,7 +82,6 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            //dbo.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica en el dia "+this.pais);
             log.error("Causa: "+e);
@@ -126,7 +124,6 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
             Dbinterface dbo=ds.get(oracle);
             dbo.dbreset();
         
@@ -139,7 +136,6 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            //dbo.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona jurídica en el mes "+this.pais);
             log.error("Causa: "+e);
@@ -194,7 +190,6 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            //dbo.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural en el mes "+this.pais);
             log.error("Causa: "+e);
@@ -246,7 +241,6 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
                     }
                 }
             }
-            //dbo.dbClose();
         } catch (Exception e) {
             log.error("Se capturó una excepción al intentar obtener tarjetas emitidas persona natural en el dia "+this.pais);
             log.error("Causa: "+e);
@@ -256,8 +250,6 @@ public class EmisionesDAO extends NovoDAO implements BasicConfig,EmisionesQuery{
         log.info("obtenerTarjEmitidasPersonaNatDiaVe [cantidad: "+cantidad+"]");
         return cantidad;
     }
-    
-    
     
     @Override
     public void closeConection() {
