@@ -33,49 +33,6 @@ public class Client {
         this.timeOut = timeOut;
         this.ERRORTCP=false;
     }
-        
-//    public String sendReceive(String sendData) {
-//        String sRec = "";
-//        try {
-//            Socket server = new Socket(ip, port );
-//            
-//            log.info("connect to ip["+ip+"] port["+port+"]");
-//            log.info("send["+sendData+"]");
-//            
-//            server.setSoTimeout(timeOut );
-//            //server.setTcpNoDelay(false);
-//            //server.setSoLinger(false, 0);
-//            
-//            InputStream sin = server.getInputStream( );
-//            OutputStream sout = server.getOutputStream( );
-//            
-//            PrintWriter psout = new PrintWriter( sout, true );
-//            
-//            
-//            ERRORTCP=true;
-//            psout.println(sendData);
-//            psout.println();
-//            
-//            // read a newline or carriage return delimited string
-//            BufferedReader bsin = new BufferedReader( new InputStreamReader( sin ) );
-//            String respData = bsin.readLine( );
-//            
-//            sRec = respData;
-//            log.info("receive["+sRec+"]");
-//            
-//            server.close( );
-//            ERRORTCP=false;
-//            
-//        //} catch (IOException e ) {
-//        } catch (Exception e ) {
-//            String sErr = e.getMessage();
-//            log.error("Socket ERROR -->["+sErr+"]");
-//            sRec = "ERROR : "+sErr;
-//            
-//        }
-//        
-//        return sRec;
-//    }
     
     public String sendReceive(String sendData) {
         String sRec = "";
@@ -96,7 +53,7 @@ public class Client {
             
             ERRORTCP=true;
             psout.println(sendData);
-            psout.println();
+            //psout.println();
             // read a newline or carriage return delimited string
             BufferedReader bsin = new BufferedReader( new InputStreamReader( sin ) );
             String s = null;
@@ -120,10 +77,6 @@ public class Client {
             
             server.close( );
             ERRORTCP=false;
-//            } catch (Exception e ) {
-//                String sErr = e.getMessage();
-//                 sRec = "ERROR : "+sErr;
-//            }
 
         } catch (SocketTimeoutException e ) {
             String sErr = e.getMessage();

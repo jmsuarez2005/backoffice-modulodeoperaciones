@@ -11,12 +11,15 @@ import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.TBloqueo;
+import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionHandler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import org.apache.log4j.Logger;
+import static com.novo.util. VariablesUtil.codPais;
 
 /**
  *
@@ -26,6 +29,7 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
 
     private List<TBloqueo> bloqueo;
     private static Logger log = Logger.getLogger(BloqueoDesbloqueoDAO.class);
+    Properties prop;
     List<Ajuste> ajustes;
 
     public List<Ajuste> getAjustes() {
@@ -34,6 +38,7 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
 
     public BloqueoDesbloqueoDAO(String dbproperty, String[] databases, String pais) {
         super(dbproperty, databases, pais);
+        prop = Utils.getConfig("NovoConexionTrans_"+codPais(pais)+".properties");          
     }
 
     public void setAjustes(List<Ajuste> ajustes) {
@@ -88,45 +93,54 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
         return tipoBloqueo;
     }
 
-    public String Nro_Organizacion() {
-        String organizacion = "";
-
-        if (this.pais.equals("pe")) {
-            organizacion = "717";
-        }
-
-        if (this.pais.equals("peusd")) {
-            organizacion = "716";
-        }
-
-        if (this.pais.equals("ve")) {
-            organizacion = "719";
-        }
-        if (this.pais.equals("co")) {
-            organizacion = "713";
-        }
-
-        return organizacion;
-    }
+//    public String Nro_Organizacion() {
+//        String organizacion = "";
+//        switch (pais){
+//            case "pe":
+//                organizacion = "717";
+//                break;
+//            case"peusd": 
+//                organizacion = "716";
+//                break;
+//            case "ve": 
+//                organizacion = "719";
+//                break;
+//            case "co": 
+//                organizacion = "713";
+//                break;
+//            default:
+//                organizacion = "";
+//        }
+//        return organizacion;
+//    }
 
     public String RegistrarBloqueoDesblqueoDAO(String Tarjeta, String idUsuario, String selectedBloqueo) {
-        //String sql2 = "Select NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA";
+        String ip, port, timeout, terminal,nroOrganizacion;
         String uf = "";
         String uf2 = "";
         String trn = "";
         String res="";
-//        String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM systables where tabid = 1";
-        String sql1 = "SELECT (\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n) AS IP,\n--UNION\n(\nSELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n) AS PORT,\n--UNION\n(\nSELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n) AS TERMINAL,\n--UNION\n(\nSELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n) AS TIMEOUT\n FROM DUAL where ROWNUM = 1";
+//        String sql1 = "SELECT ("
+//                + "\nSELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip') AS IP,"
+//                + "\n(SELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port') AS PORT,"
+//                + "\n(SELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal') AS TERMINAL,"
+//                + "\n(SELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout') AS TIMEOUT"
+//                + "\n FROM DUAL where ROWNUM = 1";
 
-        //Dbinterface dbi = (Dbinterface) this.ds.get("informix");
+            ip = prop.getProperty("moduloAjustes_novotran_ip");
+            port = prop.getProperty("moduloAjustes_novotran_port");
+            timeout = prop.getProperty("moduloAjustes_novotran_timeout");
+            terminal = prop.getProperty("moduloAjustes_novotran_terminal");
+            nroOrganizacion = prop.getProperty("nro_organizacion");
+            
+            log.info(ip+","+port+","+timeout+","+terminal+","+nroOrganizacion);
+            
         Dbinterface dbo2 = (Dbinterface) this.ds.get("oracle");
         dbo2.dbreset();
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbo.dbreset();
         TransactionHandler handler = null;
-        String terminal = "";
-        //String nro_cliente = "";
-        //String tipo_ajuste = "";
+        //String terminal = "";
         String exptarjeta = "";
 
         String sql6 = "select substr(fec_expira,3) || substr(fec_expira,0,2) as fec_expira from MAESTRO_CONSOLIDADO_TEBCA where nro_cuenta = '0000" + Tarjeta.substring(0, 14) + "00" + "'";
@@ -142,17 +156,17 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
             return "error";
         }
 
-        if (dbo2.executeQuery(sql1) == 0) {
-            if (dbo2.nextRecord()) {
-                handler = new TransactionHandler(dbo2.getFieldString("IP"), Integer.parseInt(dbo2.getFieldString("PORT")), Integer.parseInt(dbo2.getFieldString("TIMEOUT")));
-                terminal = dbo2.getFieldString("TERMINAL");
-            }
-
-            dbo2.dbClose();
-        } else {
-            dbo2.dbClose();
-            return "error";
-        }
+//        if (dbo2.executeQuery(sql1) == 0) {
+//            if (dbo2.nextRecord()) {
+                handler = new TransactionHandler(ip, Integer.parseInt(port), Integer.parseInt(timeout));
+//                terminal = dbo2.getFieldString("TERMINAL");
+////            }
+//
+//            dbo2.dbClose();
+//        } else {
+//            dbo2.dbClose();
+//            return "error";
+//        }
 
         boolean existe = false;
 
@@ -172,7 +186,7 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
             }
 
             //enviando operacion a novotrans
-            handler.execBloqueo("0", systrace, Tarjeta, terminal, trn, "", Nro_Organizacion(), selectedBloqueo, exptarjeta);
+            handler.execBloqueo("0", systrace, Tarjeta, terminal, trn, "", nroOrganizacion, selectedBloqueo, exptarjeta);
 
             if (handler.getRespCode().equals("00")) {
                 String sql = "insert into novo_bloqueo (NRO_TARJETA,USUARIO_INGRESO,TIPO_BLOQUE,DESCRIPCION,CANAL) VALUES ('" + Tarjeta + "','" + idUsuario + "','" + selectedBloqueo + "', '" + handler.getRespCode() + "', 'OPE')";

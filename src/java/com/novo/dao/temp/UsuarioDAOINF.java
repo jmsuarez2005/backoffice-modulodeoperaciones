@@ -99,7 +99,6 @@ public class UsuarioDAOINF extends NovoDAO implements BaseQueryINF, RCConfig {
                     Perfil aux = new Perfil();
                     aux.setIdPerfil(dbi.getFieldString("idperfil"));
                     aux.setDescripcion(dbi.getFieldString("acdesc"));
-                    //aux.setFunciones(this.obtenerFuncionesPerfil(aux.getIdPerfil()));
                     perfiles.add(aux);
                 }
             }

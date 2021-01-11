@@ -61,7 +61,6 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
 
         ValoresRen reno = new ValoresRen();
 
-        //Dbinterface dbi = (Dbinterface) ds.get("informix");
         Dbinterface dbo = (Dbinterface) ds.get("oracle");
         dbo.dbreset();
         log.info("SQL [" + sql1 + "]");
@@ -202,9 +201,6 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             filtroUpdate = filtroUpdate + "'" + tarjeta + "',";
         }
         log.info("Pais:" + pais);
-//        if(!pais.equalsIgnoreCase("VE")){
-//            rifFiltro = "'000000000'||";
-//        }
         
         filtro = filtro.substring(0, filtro.length() - 1) + ")";
         filtroUpdate = filtroUpdate.substring(0, filtroUpdate.length() - 1) + ")";
@@ -215,7 +211,6 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
                 + "INNER JOIN MAESTRO_CLIENTES_TEBCA M ON LTRIM(M.CIRIF_CLIENTE,'0') = LTRIM(MCT.ID_EXT_EMP,'0')  \n"
                 + "WHERE MPT.NRO_CUENTA IN  " + filtro + " \n"
                 + "AND MPT.CON_ESTATUS in (1,2,4) AND (SUBSTR(MCT.FEC_EXPIRA,3,4)||SUBSTR(MCT.FEC_EXPIRA,1,2)) <= to_char(sysdate,'YYMM') "
-//                + "AND TO_NUMBER(SUBSTR(MCT.FEC_EXPIRA,3,2)||SUBSTR(MCT.FEC_EXPIRA,1,2)) >= TO_NUMBER(TO_CHAR(SYSDATE,'YYMM'))"
                 + "AND MPT.FEC_BAJA IS NULL";
 
         log.info("sql [" + sql + "]");
@@ -277,11 +272,6 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
         if(c > 0){            
             tarjetasInexis = tarjetasInexis.substring(0, tarjetasInexis.length() - 1);
             log.info("TARJETAS NO VÁLIDAS:" + tarjetasInexis);
-//            renovacion = new Renovacion();
-//            renovacion.setNro_tarjeta(nroTarjeta);
-//            renovacion.setRespuesta("errorT" + tarjetasInexis);
-//            listarenovar.clear();
-//            listarenovar.add(renovacion);
             dbo.dbClose();
             return listarenovar1;
         }else{
@@ -311,8 +301,7 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             }
 
             dbo2.dbClose();
-            //renovacion.setRespuesta("Ok");
-            //listarenovar.add(renovacion);
+
             return listarenovar;
         } else {
             //TARJETAS INEXISTENTES Y/O NO VALIDAS PARA RENOVACION
@@ -340,10 +329,6 @@ public class RenovacionDAO extends NovoDAO implements BasicConfig, AjustesTransa
             listarenovar1.add(renovacion);
             return listarenovar1;
         } else {
-            //renovacion = new Renovacion();
-            //renovacion.setRespuesta("Tarjeta ya en Renovación");
-            //listarenovar1.clear();
-            //listarenovar1.add(renovacion);
             return listarenovar1;
         }
     }

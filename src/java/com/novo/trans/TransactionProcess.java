@@ -36,7 +36,6 @@ public class TransactionProcess extends NovoDAO implements TransactionProcessCon
         nroOrganizacion = prop.getProperty("nro_organizacion");        
         TransactionHandler th = new TransactionHandler(ip, Integer.parseInt(port), Integer.parseInt(timeout));
         th.setNroOrganizacion(nroOrganizacion);
-        //trans.setRc(th.execSaldo(ID_BALANCE, systrace, tarjeta.getNroTarjeta(), terminal, "CONSULTA POR TRASLADO", "0", "0"));
         String fechExpira = tarjeta.getFechaExpiracion().substring(2,4) +tarjeta.getFechaExpiracion().substring(0,2);
         trans.setRc(th.execCobro(ID_CARGO, tarjeta.getNroTarjeta(), tarjeta.getMonto(), systrace, nroOrganizacion, terminal, "CARGO POR TRASLADO", fechExpira, true, null));
         trans.setTransRespCode(th.getRespCode());

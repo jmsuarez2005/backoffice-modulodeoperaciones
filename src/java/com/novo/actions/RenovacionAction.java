@@ -68,6 +68,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
     private String propMigra;
     private TextUtil txt = new TextUtil();
     private String contentType;
+    private Workbook workbook;
     
     public RenovacionAction() {
         this.prop = Utils.getConfig("oracleRegEx.properties");
@@ -149,7 +150,7 @@ public class RenovacionAction extends ActionSupport implements BasicConfig {
         try {
 //          InputStream buffer = new File(file2.getAbsolutePath());
 
-            Workbook workbook = WorkbookFactory.create(new File(file2.getAbsolutePath()));
+                workbook = WorkbookFactory.create(new File(file2.getAbsolutePath()));
             Sheet sheet = workbook.getSheetAt(0);
             String tarjetaString = "";
             int i = 0;

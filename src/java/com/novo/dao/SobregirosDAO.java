@@ -12,6 +12,7 @@ import com.novo.model.Ajuste;
 import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionHandler;
 import com.novo.trans.TransactionProcess;
+import static com.novo.util.VariablesUtil.codPais;
 import com.opensymphony.xwork2.ActionContext;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,6 +27,7 @@ import org.apache.log4j.Logger;
 public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransacciones {
 
     private static Logger log = Logger.getLogger(SobregirosDAO.class);
+    Properties prop;
     List<Ajuste> ajustes;
 
     public List<Ajuste> getAjustes() {
@@ -34,6 +36,7 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
 
     public SobregirosDAO(String dbproperty, String[] databases, String pais) {
         super(dbproperty, databases, pais);
+        prop = Utils.getConfig("NovoConexionTrans_"+codPais(pais)+".properties");       
     }
 
     public void setAjustes(List<Ajuste> ajustes) {
@@ -77,55 +80,60 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
         return cont1;
     }
     
-        public String Nro_Organizacion() {
-            String organizacion = "";
-
-            if (this.pais.equals("pe")) {
-                organizacion = "717";
-            }
-
-            if (this.pais.equals("peusd")) {
-                organizacion = "716";
-            }
-
-            if (this.pais.equals("ve")) {
-                organizacion = "719";
-            }
-            if (this.pais.equals("co")) {
-                organizacion = "713";
-            }
-
-            return organizacion;
-        }
+//    public String Nro_Organizacion() {
+//        String organizacion = "";
+//        switch (pais){
+//            case "pe":
+//                organizacion = "717";
+//                break;
+//            case"peusd": 
+//                organizacion = "716";
+//                break;
+//            case "ve": 
+//                organizacion = "719";
+//                break;
+//            case "co": 
+//                organizacion = "713";
+//                break;
+//            default:
+//                organizacion = "";
+//        }
+//        return organizacion;
+//    }
     
     public String RegistrarSobregirosDAO(String Tarjeta, String Monto, String idUsuario, String selectedAjuste) {
 
         String sql2 = "Select NRO_CLIENTE FROM MAESTRO_PLASTICO_TEBCA";
+        String ip, port, timeout, terminal,nroOrganizacion;
+//        String sql1 = "SELECT (\n"
+//                + "SELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n"
+//                + ") AS IP,\n"
+//                + "--UNION\n"
+//                + "(\n"
+//                + "SELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n"
+//                + ") AS PORT,\n"
+//                + "--UNION\n"
+//                + "(\n"
+//                + "SELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n"
+//                + ") AS TERMINAL,\n"
+//                + "--UNION\n"
+//                + "(\n"
+//                + "SELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n"
+//                + ") AS TIMEOUT\n"
+//                + " FROM DUAL where ROWNUM = 1";
 
-        String sql1 = "SELECT (\n"
-                + "SELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip'\n"
-                + ") AS IP,\n"
-                + "--UNION\n"
-                + "(\n"
-                + "SELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port'\n"
-                + ") AS PORT,\n"
-                + "--UNION\n"
-                + "(\n"
-                + "SELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal'\n"
-                + ") AS TERMINAL,\n"
-                + "--UNION\n"
-                + "(\n"
-                + "SELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout'\n"
-                + ") AS TIMEOUT\n"
-                + " FROM DUAL where ROWNUM = 1";
-
-        //Dbinterface dbi = ds.get("informix");
-        Dbinterface dbo2 = ds.get("oracle");
+            ip = prop.getProperty("moduloAjustes_novotran_ip");
+            port = prop.getProperty("moduloAjustes_novotran_port");
+            timeout = prop.getProperty("moduloAjustes_novotran_timeout");
+            terminal = prop.getProperty("moduloAjustes_novotran_terminal");
+            nroOrganizacion = prop.getProperty("nro_organizacion");
+            
+            log.info(ip+","+port+","+timeout+","+terminal+","+nroOrganizacion);
+        //Dbinterface dbo2 = ds.get("oracle");
         Dbinterface dbo = ds.get("oracle");
 
-        dbo2.dbreset();
+        //dbo2.dbreset();
         TransactionHandler handler = null;
-        String Terminal = "";
         String nro_cliente = "";
         String tipo_ajuste = "";
         String exptarjeta = "";
@@ -143,17 +151,17 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
             return "error";
         }
 
-        if (dbo2.executeQuery(sql1) == 0) {
-            if (dbo2.nextRecord()) {
-                handler = new TransactionHandler(dbo2.getFieldString("IP"), Integer.parseInt(dbo2.getFieldString("PORT")), Integer.parseInt(dbo2.getFieldString("TIMEOUT")));
-                Terminal = dbo2.getFieldString("TERMINAL");
-            }
-
-            dbo2.dbClose();
-        } else {
-            dbo2.dbClose();
-            return "error";
-        }
+//        if (dbo2.executeQuery(sql1) == 0) {
+//            if (dbo2.nextRecord()) {
+                handler = new TransactionHandler(ip, Integer.parseInt(port), Integer.parseInt(timeout));
+//                Terminal = dbo2.getFieldString("TERMINAL");
+//            }
+//
+//            //dbo2.dbClose();
+//        } else {
+//            //dbo2.dbClose();
+//            return "error";
+//        }
 
         String sql5 = "select count(*) as respuesta from novo_sobregiros where nro_tarjeta=" + Tarjeta + " and estatus=3";
 
@@ -176,7 +184,7 @@ public class SobregirosDAO extends NovoDAO implements BasicConfig, AjustesTransa
                 }
             }
 
-            handler.execBloqueo("0", systrace, Tarjeta, Terminal, "SERVICIO DE BLOQUEO", "nro_cliente", Nro_Organizacion(), "PB", exptarjeta);
+            handler.execBloqueo("0", systrace, Tarjeta, terminal, "SERVICIO DE BLOQUEO", "nro_cliente", nroOrganizacion, "PB", exptarjeta);
 
             if (handler.getRespCode().equals("00")) {
 

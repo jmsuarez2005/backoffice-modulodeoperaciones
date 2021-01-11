@@ -44,10 +44,8 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         String query = obtenerUsuarioQuery.replace("$IDUSUARIO", idUsuario);
 
-        //log.info("Ejecutando [" + query + "]" + UsuarioDAO.INFORMIX);
         log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
             Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
 
             dbo.dbreset();
@@ -92,7 +90,6 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
             Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
             dbo.dbreset();
 
@@ -101,7 +98,6 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
                     Perfil aux = new Perfil();
                     aux.setIdPerfil(dbo.getFieldString("idperfil"));
                     aux.setDescripcion(dbo.getFieldString("acdesc"));
-                    //aux.setFunciones(this.obtenerFuncionesPerfil(aux.getIdPerfil()));
                     perfiles.add(aux);
                 }
             }
@@ -130,7 +126,6 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
             Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
             dbo.dbreset();
 
@@ -161,7 +156,6 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
         try {
-           // Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
             Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
             dbo.dbreset();
 
@@ -195,7 +189,6 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
             Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
             dbo.dbreset();
             if (dbo.executeQuery(query) != 0) {
@@ -222,7 +215,6 @@ public class UsuarioDAO extends NovoDAO implements BaseQuery, RCConfig {
 
         log.info("Ejecutando [" + query + "]" + UsuarioDAO.ORACLE);
         try {
-            //Dbinterface dbi = ds.get(UsuarioDAO.INFORMIX);
             Dbinterface dbo = ds.get(UsuarioDAO.ORACLE);
             dbo.dbreset();
             if (dbo.executeQuery(query) != 0) {

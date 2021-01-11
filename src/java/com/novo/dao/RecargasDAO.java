@@ -111,7 +111,6 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            //////dbo.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona natural del mes "+this.pais);
             log.error("Causa: "+e);
@@ -179,7 +178,6 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            //////dbo.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona natural del dia "+this.pais);
             log.error("Causa: "+e);
@@ -223,7 +221,6 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
             Dbinterface dbo=ds.get(oracle);
             dbo.dbreset();
         
@@ -237,7 +234,6 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            //dbo.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica del dia "+this.pais);
             log.error("Causa: "+e);
@@ -293,7 +289,6 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
         
         log.info("Ejecutando ["+query+"]");
         try{
-            //Dbinterface dbi=ds.get(informix);
             Dbinterface dbo=ds.get(oracle);
             dbo.dbreset();
         
@@ -307,7 +302,6 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
                     }
                 }
             }
-            //dbo.dbClose();
         } catch (Exception e){
             log.error("Se capturó una excepción al intentar obtener monto recargas persona juridica mes "+this.pais);
             log.error("Causa: "+e.getMessage()+" localizado en: "+e.getLocalizedMessage());
@@ -345,11 +339,11 @@ public class RecargasDAO extends NovoDAO implements BasicConfig,RecargasQuery{
             query = recargasAbonosMaestroDiaCoQuery
                     .replace("$BINES$", properties.getProperty("binesRecargaMaestroCo"));
             
-        }else if(this.pais.equals(pe)){
-            //query = recargasPersonaNatPeQuery;
-        }else if(this.pais.equals(ve)){
-            //query = recargasPersonaNatVeQuery;
-        }else if(this.pais.equals(peusd)){
+//        }else if(this.pais.equals(pe)){
+//            //query = recargasPersonaNatPeQuery;
+//        }else if(this.pais.equals(ve)){
+//            //query = recargasPersonaNatVeQuery;
+//        }else if(this.pais.equals(peusd)){
             
         }
         query = query.replace("$FECHA", day + "/" + month + "/" + year);
