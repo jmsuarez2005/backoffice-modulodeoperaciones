@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import org.apache.log4j.Logger;
-import static com.novo.util. VariablesUtil.codPais;
+import static com.novo.util.VariablesUtil.codPais;
 
 /**
  *
