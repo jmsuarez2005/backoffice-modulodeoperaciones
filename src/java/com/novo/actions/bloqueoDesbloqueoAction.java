@@ -88,7 +88,6 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
         //Fin valida sesion
 
         ReporteTransacciones business = new ReporteTransacciones();
-        //this.tipoAjustes = business.getTipoAjustes();
         this.tipoBloqueo = business.getTipoBloqueo();
         return "success";
     }
@@ -246,7 +245,6 @@ public class bloqueoDesbloqueoAction extends ActionSupport implements BasicConfi
                 log.info("tarjeta [" + tarjetaString + "] ");
 
                 i++;
-                //log.info("por favor" + sheet.getRow(i));
             } while ((!tarjetaString.equals("")) && (sheet.getRow(i) != null));
 
             if (i > 500) {

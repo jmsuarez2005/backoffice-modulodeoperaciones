@@ -126,7 +126,7 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
 //                + "\n(SELECT ACVALUE AS TERMINAL FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_terminal') AS TERMINAL,"
 //                + "\n(SELECT ACVALUE AS TIMEOUT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_timeout') AS TIMEOUT"
 //                + "\n FROM DUAL where ROWNUM = 1";
-
+       try{
             ip = prop.getProperty("moduloAjustes_novotran_ip");
             port = prop.getProperty("moduloAjustes_novotran_port");
             timeout = prop.getProperty("moduloAjustes_novotran_timeout");
@@ -134,9 +134,11 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
             nroOrganizacion = prop.getProperty("nro_organizacion");
             
             log.info(ip+","+port+","+timeout+","+terminal+","+nroOrganizacion);
-            
-        Dbinterface dbo2 = (Dbinterface) this.ds.get("oracle");
-        dbo2.dbreset();
+       //        Dbinterface dbi = (Dbinterface) this.ds.get("informix");
+        //        dbi.dbreset();
+//        
+//        Dbinterface dbo2 = (Dbinterface) this.ds.get("oracle");
+//        dbo2.dbreset();
         Dbinterface dbo = (Dbinterface) this.ds.get("oracle");
         dbo.dbreset();
         TransactionHandler handler = null;
@@ -244,10 +246,15 @@ public class BloqueoDesbloqueoDAO extends NovoDAO implements BasicConfig, Ajuste
         }
 
         return "existe";
+    }catch (Exception e){
+            log.error(e.getCause());
+            log.error(e.getMessage());
+            return "error";
+        }
     }
 
     public void closeConection() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.shutdownDatabases();
     }
 
     public List<TBloqueo> getBloqueo() {

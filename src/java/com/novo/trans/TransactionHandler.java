@@ -355,7 +355,7 @@ public class TransactionHandler {
      * @return -5; //"ATENCION RESPONSE["+respCode+"] NOT ZERO. Operacion no
      * realizada";
      */
-    public int execSaldo(String idCanal, String systemtrace, String tarjeta, String terminal, String nomcomercio, String cedula, String montoComision, String expTarjeta) {
+    public int execSaldo(String idCanal, String systemtrace, String tarjeta, String terminal, String cedula, String nomcomercio, String montoComision, String expTarjeta) {
         int rc = 0;
         log.info("execSaldo [Start]");
         log.info("execSaldo idCanal         : " + idCanal);
