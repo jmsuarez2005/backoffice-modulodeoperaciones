@@ -120,6 +120,7 @@ public class BloqueoDesbloqueoDAOINF extends NovoDAO implements BasicConfig, Aju
         String uf = "";
         String uf2 = "";
         String trn = "";
+        try{
 //     String sql1 = "SELECT (\n"
 //                + "SELECT ACVALUE AS IP FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_ip') AS IP,"
 //                + "\n(SELECT  ACVALUE AS PORT FROM TEB_PARAMETERS WHERE ACNAME = 'moduloAjustes_novotran_port') AS PORT,"
@@ -243,12 +244,18 @@ public class BloqueoDesbloqueoDAOINF extends NovoDAO implements BasicConfig, Aju
             dbo.dbClose();
             return "error";
         }
-
+        
         return "existe";
+        
+        }catch (Exception e){
+            log.error(e.getCause());
+            log.error(e.getMessage());
+            return "error";
+        }
     }
 
     public void closeConection() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.shutdownDatabases();
     }
 
     public List<TBloqueo> getBloqueo() {
