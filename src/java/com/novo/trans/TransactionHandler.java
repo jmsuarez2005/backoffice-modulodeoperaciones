@@ -8,7 +8,6 @@ import com.novo.objects.util.Utils;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 import java.util.TimeZone;
 import org.apache.log4j.Logger;
 

@@ -1,0 +1,355 @@
+@charset "utf-8";
+
+*, *:focus {
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -moz-box-sizing: border-box;   
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  outline: none !important;
+}
+
+@font-face { 
+    font-family: "Proxima-Nova-Bold";    
+    font-style: normal;
+    font-weight: 300;
+    src: url(../fonts/ProximaNovaAlt-Extrabold.ttf); 
+    src: url(../fonts/proximanova-regular.eot);
+	src: url(../fonts/proximanova-regular.eot?#iefix) format("embedded-opentype"), url(../fonts/proximanova-regular.woff2) format("woff2"), url(../fonts/proximanova-regular.woff) format("woff"), url(../fonts/proximanova-regular.ttf) format("truetype"), url(../fonts/proximanova-regular.svg#proximanova_regular) format("svg");
+}
+
+@font-face { 
+    font-family: "Proxima-Nova";    
+    font-style: normal;
+    font-weight: 300;
+    src: url(../fonts/proximanova-semibold.eot);
+	src: url(../fonts/proximanova-semibold.eot?#iefix) format("embedded-opentype"), url(../fonts/proximanova-semibold.woff2) format("woff2"), url(../fonts/proximanova-semibold.woff) format("woff"), url(../fonts/proximanova-semibold.ttf) format("truetype"), url(../fonts/proximanova-semibold.svg#proximanova_semibold) format("svg");
+    src: url(../fonts/ProximaNovaScOsf-Thin.ttf);
+    src: url(../fonts/proximanova-regular.eot);
+	src: url(../fonts/proximanova-regular.eot?#iefix) format("embedded-opentype"), url(../fonts/proximanova-regular.woff2) format("woff2"), url(../fonts/proximanova-regular.woff) format("woff"), url(../fonts/proximanova-regular.ttf) format("truetype"), url(../fonts/proximanova-regular.svg#proximanova_regular) format("svg");
+}
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+}
+
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+input, button, select, a, .label, .foot_left, .foot_right, .foot_center {
+    font-family: 'Proxima-Nova';
+    color: #555;
+}
+
+header {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color: #0b56a3;
+    padding: 0px;
+    box-shadow: 0 2px 0 rgba(51,51,51,.15);
+    flex: initial;
+    display: flex;
+    align-items: center;
+}
+
+header .title {
+    font-size: 32px;
+    color: #FFFFFF;
+    font-family: 'Proxima-Nova';
+    line-height: 90px;
+    font-weight: bold;
+}
+
+.cont {
+    background: transparent url(../images/fondo-login.png) no-repeat;
+    background-size: cover;
+    height: auto;
+    padding: 1px 0px;
+}
+
+.cont-title {
+    padding: 20px 0 0 0;
+    max-height: 350px;
+}
+
+.logo {
+    float: left;
+    padding: 0px 0px 0 0;
+    margin: 0px 20px 0px 25px;
+    width: auto;
+    height: 70px;
+}
+
+.form {
+    background-color: rgba(255,255,255,0.3);
+    width: 360px;
+    max-width: 361px;
+    height: auto !important;
+    border-radius: 4px;
+    box-shadow: 0px 1px 6px 0px rgba(0,0,0,.1);
+    margin: 5px 0 79px 0;
+}
+
+.frm {
+    width: 230px;
+    max-width: 231px;
+    height: auto !important;
+    border-radius: 4px;
+    padding: 20px 0px;
+    margin: 0 12px 0 0;
+}
+
+.cont, .form {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -o-flex: 1;
+    -moz-flex: 1; 
+    -webkit-flex: 1;
+    filter: 1;
+    flex: 1;  
+}
+
+input, .button-1, .button-2 {
+    padding: 18px 0 5px 20%;
+    width: 230px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #828282;
+    margin: 3px 0;
+}
+
+select {
+    padding: 8px 0 0px 40px;
+    width: 230px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #828282;
+    margin: 3px 0;
+}
+
+.button {
+    padding: 4px 30px;
+    font-size: 20px;
+    border-radius: 4px;
+    background-color: #0b56a3;
+    color: #fff;
+    border-color:#0b56a3;
+    margin: 0px 0 0 0;
+    font-family: "Proxima-Nova-Bold";
+    width: 230px;
+}
+
+.button:hover, .button-1:hover, .button-2:hover, .btn:hover, .btn-cerrar:hover {
+    background: #005fc1;
+    border: 1px solid #245580;
+    cursor: pointer;
+}
+
+/*Modal de Error*/
+.msg {
+    position: absolute;
+    background-color: rgba(0,0,0,0.3);
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+}
+
+.modal-msg {
+    width: 40%;
+    margin: auto;
+    background: white;
+    margin-top: 10%;
+    min-height: auto;
+    box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, .5), 
+                0 -2px 0 #F44337;
+}
+
+.modal-msg-2 {
+    width: 40%;
+    margin: auto;
+    background: white;
+    min-height: auto;
+    box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, .5), 
+                0 -2px 0 #F44337;
+}
+
+.body-modal {
+    padding: 15px;
+}
+
+.msg-error {
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    margin: auto;
+    top: 8%;
+    font-family: 'Proxima-Nova';
+    color: #555;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.modal-text-2 {
+    text-align: justify;
+}
+
+.modal-title {
+    font-weight: bold;
+    color: #f44336;
+}
+
+.modal-msg, .modal-msg-2, .footer-modal {
+    background: white;
+    padding: 10px;
+    border-top: solid 1px rgba(187,187,187,0.5);
+    border-radius: 5px;
+}
+
+.modal-msg, .modal-msg-2 {
+    padding: 0px;
+}
+
+ .footer-modal {
+     height: 55px;
+ }
+
+.btn, .btn-cerrar {
+    width: 70px;
+    padding: 5px 0 2px 0px;
+    font-size: 16px;
+    background-color: #0b56a3;
+    color: #fff;
+    border: 1px solid #245580;
+    float: right;
+    border-radius: 4px;
+}
+
+/*Auntenticación*/
+
+.authenticate {
+    font-family: 'Proxima-Nova';
+    font-weight: bold;
+    font-size: 16px;
+    color: #0b56a3;
+    padding: 50px 0;
+}
+
+/* Gestión de Tickets */
+input.text-user {
+    background-color: #FFF; 
+    color: #555;
+    border-left: 0;
+}
+
+input.text-pass {
+    background-color: #FFF; 
+    color: #555;
+    border-left: 0;
+}
+
+.icon-user {
+    background: #fff url(../images/sprite-ui.png) 4px 0px no-repeat;
+    background-size: 25px; 
+    color: #828282;
+}
+
+.icon-pass {
+    background: #fff url(../images/sprite-ui.png) 4px -34px no-repeat;
+    background-size: 25px; 
+    color: #828282;
+}
+
+.icon-pais {
+    background: #fff url(../images/sprite-ui.png) 4px -66px no-repeat;
+    background-size: 25px; 
+    color: #ababab;   
+}
+
+/* Atencion al Usuario: Gestión Centro de Contacto */
+/* NovoAdmin: Gestión Administrativa y Operativa */
+.label {
+margin: -33px 0px 8px 251px;
+}
+
+.button-1 {
+    width: 110px;
+    padding: 5px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    background-color: #0b56a3;
+    color: #fff;
+    border-color:#0b56a3;
+    margin: 5px 5px 0 0;
+}
+
+.button-2 {
+    width: 110px;
+    padding: 5px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    background-color: #0b56a3;
+    color: #fff;
+    border-color:#0b56a3;
+    margin: 5px 0 0 5px;
+}
+
+/* NovoReport: Gestión de Reportes */
+
+/* Gestión de Operaciones: Cuentas/Tarjetas */
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+footer {
+    width: 100%;
+    height: 75px;
+    bottom: 0;
+    background-color: #e2e3e4;
+    overflow: hidden;
+}
+
+.columns1 {
+    font-size:11px;
+    margin: 30px 0 30px 30px; 
+    color: #555;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: left;
+}
+
+.columns2 {
+    font-size:11px;
+    margin: 30px 0 30px 30%; 
+    color: #555;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: left;
+}
+
+.columns3 {
+    font-size:11px;
+    margin: 25px 30px 0 0px;
+    color: #555;
+    float: right;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: left;
+}
+
+img {
+    height: 28px;
+}

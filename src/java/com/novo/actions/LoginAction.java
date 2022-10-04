@@ -9,7 +9,6 @@ import com.novo.constants.RCConfig;
 import com.novo.process.UsuarioProc;
 import com.novo.process.temp.UsuarioProcINF;
 import com.novo.util.TextUtil;
-import com.novo.util.Utils;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.Properties;

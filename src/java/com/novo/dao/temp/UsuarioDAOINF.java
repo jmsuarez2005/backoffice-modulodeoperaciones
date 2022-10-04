@@ -4,8 +4,8 @@
  */
 package com.novo.dao.temp;
 
-import com.novo.constants.temp.BaseQueryINF;
 import com.novo.constants.RCConfig;
+import com.novo.constants.temp.BaseQueryINF;
 import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.model.Funcion;

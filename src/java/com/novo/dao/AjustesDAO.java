@@ -267,7 +267,7 @@ public class AjustesDAO extends NovoDAO implements BasicConfig, AjustesTransacci
         String sql = "";
         Dbinterface dbo = ds.get("oracle");
         //Dbinterface dbi = ds.get("informix");
-        sql="select * from MAESTRO_PLASTICO_TEBCA where ";
+        sql="select * from MAESTRO_PLASTICO_TEBCA where CON_ESTATUS in ('1','2') and ";
         if (banderaFiltro == false) {
             sql = sql + "nro_cuenta = '0000" + filtro + "'";
         } else {

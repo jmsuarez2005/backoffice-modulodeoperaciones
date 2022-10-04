@@ -12,10 +12,9 @@ import com.novo.database.NovoDAO;
 import com.novo.model.Tarjeta;
 import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionHandler;
-import java.util.HashMap;
+import static com.novo.util.VariablesUtil.codPais;
 import java.util.Properties;
 import org.apache.log4j.Logger;
-import static com.novo.util. VariablesUtil.codPais;
 
 /**
  *

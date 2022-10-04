@@ -4,7 +4,6 @@
  */
 package com.novo.trans;
 
-import com.novo.actions.SobregirosAction;
 import com.novo.constants.TransactionProcessConstants;
 import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;

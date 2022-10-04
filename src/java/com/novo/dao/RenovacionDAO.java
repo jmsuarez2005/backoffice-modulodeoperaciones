@@ -11,7 +11,6 @@ import com.novo.database.Dbinterface;
 import com.novo.database.NovoDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.Renovacion;
-import com.novo.model.Tarjeta;
 import com.novo.model.ValoresRen;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

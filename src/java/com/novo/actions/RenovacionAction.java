@@ -13,7 +13,6 @@ import com.novo.model.Ajuste;
 import com.novo.model.Empresa;
 import com.novo.model.Producto;
 import com.novo.model.Renovacion;
-import com.novo.model.Tarjeta;
 import com.novo.model.UsuarioSesion;
 import com.novo.model.ValoresRen;
 import com.novo.objects.util.Utils;

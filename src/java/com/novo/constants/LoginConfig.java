@@ -3,8 +3,6 @@
  * and open the template in the editor.
  */
 package com.novo.constants;
-
-import com.novo.util.Utils;
 /**
  *
  * @author jorojas

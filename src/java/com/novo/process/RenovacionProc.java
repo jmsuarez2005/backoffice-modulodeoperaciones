@@ -7,23 +7,16 @@ package com.novo.process;
 
 import static com.novo.constants.BasicConfig.appName;
 import static com.novo.constants.BasicConfig.dbOracle;
-//import static com.novo.constants.BasicConfig.databases;
 import com.novo.dao.RenovacionDAO;
 import com.novo.model.Ajuste;
 import com.novo.model.Renovacion;
-import com.novo.model.UsuarioSesion;
-import com.novo.model.ValoresRen;
-import com.novo.objects.util.Utils;
 import com.opensymphony.xwork2.ActionContext;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import org.apache.log4j.Logger;
 

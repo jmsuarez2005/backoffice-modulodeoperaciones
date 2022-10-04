@@ -16,10 +16,9 @@ import com.novo.trans.TransactionHandler;
 import static com.novo.util.VariablesUtil.codPais;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import org.apache.log4j.Logger;
 import java.util.Properties;
+import org.apache.log4j.Logger;
 
 /**
  *

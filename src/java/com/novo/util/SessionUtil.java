@@ -6,7 +6,6 @@
 package com.novo.util;
 
 import static com.novo.constants.BasicConfig.USUARIO_SESION;
-import com.novo.interceptors.SessionInterceptor;
 import com.novo.model.UsuarioSesion;
 import com.opensymphony.xwork2.ActionContext;
 import java.text.DateFormat;

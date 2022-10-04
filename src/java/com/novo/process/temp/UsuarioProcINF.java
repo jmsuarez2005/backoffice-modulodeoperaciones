@@ -11,7 +11,6 @@ import com.novo.model.Funcion;
 import com.novo.model.Perfil;
 import com.novo.model.ResponseRC;
 import com.novo.model.UsuarioSesion;
-import com.novo.util.Utils;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.logging.Level;

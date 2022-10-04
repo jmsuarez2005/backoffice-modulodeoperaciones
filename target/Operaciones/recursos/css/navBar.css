@@ -1,0 +1,90 @@
+/* 
+    Document   : navBar
+    Created on : 20/05/2014, 11:07:45 AM
+    Author     : jorojas
+    Description:
+        Hoja de estilos para la barra de navegación
+*/
+
+root { 
+    display: block;
+}
+
+ul#navBar 
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+    text-shadow: 0px -0.5px 1px #fff;
+    /*font-weight: bold;*/
+    /*display: table-cell;
+    vertical-align: middle;*/
+}
+
+ul#navBar li
+{
+    float: left;
+    position: relative;
+    font-size: 13px;
+
+    /*background-color: #ededed;*/
+}
+
+ul#navBar li li
+{
+    font-size: 12px;
+    background-color: #e5e5e5;
+}
+
+ul#navBar li li li
+{
+    background-color: #e5e5e5;
+}
+
+ul#navBar ul 
+{
+    margin: 0;
+    padding: 0 30px 0 0;
+    list-style: none;
+    text-align: left;
+    /*box-shadow: 0px 2px 2px 0px #CCC;*/
+    display: none;
+}
+ul#navBar li:hover > ul 
+{
+    display: block;
+    position: absolute;
+}
+ul#navBar a:link, ul#navBar a:visited
+{
+    display: block;
+    min-width: 110px;
+    padding: 10px 5px;
+    text-decoration: none;
+    color: #0e5b8c;
+}
+ul#navBar ul a:link, ul#navBar ul a:visited 
+{
+    min-width: 135px;
+}
+ul#navBar a:hover, ul#navBar a:active
+{
+    color:#61badc;
+    -webkit-transition: color 0.3s; /* For Safari 3.1 to 6.0 */
+    transition: color 0.3s;
+    /*color: #61badc;*/
+    /* color: #fff; */
+    /* background-color: #dddddd; */
+}
+ul#navBar ul ul
+{
+    position: absolute;
+    top: 0;
+    left: 100%;
+    display: none;
+}
+ul#navBar ul li:hover ul
+{
+    display: block;
+}

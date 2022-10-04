@@ -4,7 +4,6 @@
  */
 package com.novo.util;
 
-import com.novo.process.ReporteActividadDiariaProc;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;

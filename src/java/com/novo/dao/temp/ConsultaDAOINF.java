@@ -13,7 +13,6 @@ import com.novo.model.Tarjeta;
 import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionHandler;
 import static com.novo.util.VariablesUtil.codPais;
-import java.util.HashMap;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 

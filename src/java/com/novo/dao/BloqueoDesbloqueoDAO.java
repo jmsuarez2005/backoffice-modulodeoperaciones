@@ -13,13 +13,12 @@ import com.novo.model.Ajuste;
 import com.novo.model.TBloqueo;
 import com.novo.objects.util.Utils;
 import com.novo.trans.TransactionHandler;
+import static com.novo.util.VariablesUtil.codPais;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import org.apache.log4j.Logger;
-import static com.novo.util.VariablesUtil.codPais;
 
 /**
  *

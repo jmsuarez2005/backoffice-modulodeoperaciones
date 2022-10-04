@@ -8,7 +8,6 @@ import com.novo.constants.BasicConfig;
 import com.novo.dao.AjustesDAO;
 import com.novo.dao.BloqueoDesbloqueoDAO;
 import com.novo.dao.temp.AjustesDAOINF;
-import com.novo.dao.temp.BloqueoDesbloqueoDAOINF;
 import com.novo.model.Ajuste;
 import com.novo.model.CamposActualizacion;
 import com.novo.model.Empresa;
